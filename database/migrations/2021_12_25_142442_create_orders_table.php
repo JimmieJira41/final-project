@@ -20,8 +20,8 @@ class CreateOrdersTable extends Migration
             $table->string('id_item');
             $table->integer('number');
             $table->string('create_by');
-            $table->timestamp('create_at')->useCurrent();
-            $table->timestamp('update_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
             
         });
     }

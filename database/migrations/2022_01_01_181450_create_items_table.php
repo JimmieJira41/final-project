@@ -19,7 +19,8 @@ class CreateItemsTable extends Migration
             $table->string('description_item');
             $table->string('id_stock');
             $table->integer('total_use');
-            $table->timestamp('create_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

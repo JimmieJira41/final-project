@@ -27,7 +27,7 @@ class CustomerManagement extends Controller
         }
     }
     public function update(Request $request){
-        $customer = customer::find($request['id']);
+        $customer = customer::find($request['id_order']);
         $time = Carbon::now();
         $customer->firstname_customer = $request->firstname_customer;
         $customer->lastname_customer = $request->lastname_customer;
@@ -42,7 +42,7 @@ class CustomerManagement extends Controller
         }
     }
     public function delete(Request $request){
-        $customer = customer::where('id_customer',$request['id'])->delete();
+        $customer = customer::where('id_customer',$request['id_order'])->delete();
 
     }
     public function getAll(){
@@ -50,7 +50,7 @@ class CustomerManagement extends Controller
         return response()->json($customer);
     }
     public function searchById(Request $request){
-        $customer = customer::find($request['id_customer']);
+        $customer = customer::find($request['id_order']);
         return response()->json($customer);
     } 
 }

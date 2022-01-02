@@ -18,8 +18,8 @@ class CreateStocksTable extends Migration
             $table->string('title_stock');
             $table->string('description_stock');
             $table->integer('total_stock');
-            $table->timestamp('create_at')->useCurrent();
-            $table->timestamp('update_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
