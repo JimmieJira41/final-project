@@ -17,6 +17,7 @@ class CreateCustomersTable extends Migration
             $table->id('id_customer');
             $table->string('firstname_customer');
             $table->string('lastname_customer');
+            $table->string('tel_customer');
             $table->string('default_id_address');
             $table->string('id_addresses');
             $table->timestamp('created_at')->useCurrent();

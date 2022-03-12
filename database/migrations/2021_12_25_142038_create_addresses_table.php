@@ -16,10 +16,15 @@ class CreateAddressesTable extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id('id_address');
             $table->string('description_address');
+            $table->string('province_address');
+            $table->string('amphure_address');
+            $table->string('tombon_address');
+            $table->string('zipcode_address');
+            $table->string('id_customer');
         });
     }
 
-    /**
+    /**`
      * Reverse the migrations.
      *
      * @return void
@@ -29,3 +34,4 @@ class CreateAddressesTable extends Migration
         Schema::dropIfExists('addresses');
     }
 }
+

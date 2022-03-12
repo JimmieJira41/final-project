@@ -16,3 +16,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/admin', function () {
+    return view('admin');
+});
+Route::get('/order', function () {
+    return view('order');
+});
+Route::get('/stock', function () {
+    return view('stock');
+});
+Route::get('/customer', function () {
+    return view('customer');
+});
+Route::get('/item', function () {
+    return view('item');
+});
+Route::get('/analysis', function () {
+    return view('analysis');
+});
+

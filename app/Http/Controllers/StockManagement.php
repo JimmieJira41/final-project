@@ -12,42 +12,85 @@ class StockManagement extends Controller
 {
     public function create(Request $request){
         $time = Carbon::now();
-        $stock = new stock();
-        $stock->id_stock = $request['id_stock'];
-        $stock->title_stock = $request['title_stock'];
-        $stock->description_stock = $request['description_stock'];
-        $stock->total_stock = $request['total_stock'];
-        $stock->created_at = $time;
-        $stock->updated_at = $time;
-        if($stock->save()){
-            return response()->json($stock);
+        if(!$request['title_stock']){
+            return response("please enter title_stock!");
+        }
+        if(!$request['description_stock']){
+            return response("please enter description_stock!");
+        }
+        if(!$request['total_stock']){
+            return response("please enter total_stock!");
+        }
+      
+        $stock_exist = stock::where('title_stock', $request['title_stock'])
+        ->where('total_stock', $request['total_stock'])
+        ->first();
+        if($stock_exist !== null){
+            return response("This stock is already exist!", 400);
         }else{
-            return response("update stock successfully");
+            $stock = new stock();
+            $stock->title_stock = $request['title_stock'];
+            $stock->description_stock = $request['description_stock'];
+            $stock->total_stock = $request['total_stock'];
+            $stock->created_at = $time;
+            $stock->updated_at = $time;
+            if($stock->save()){
+                return response("update stock success", 201);
+            }else{
+                return response("update stock fail", 417);
+            }
         }
     }
     public function update(Request $request){
         $time = Carbon::now();
+        if(!$request['id_stock']){
+            return response("please enter id_stock!");
+        }
         $stock = stock::find($request['id_stock']);
-        $stock->id_stock = $request['id_stock'];
-        $stock->title_stock = $request['title_stock'];
-        $stock->description_stock = $request['description_stock'];
-        $stock->total_stock = $request['total_stock'];
-        $stock->updated_at = $time;
-        if($stock->update()){
-            return response()->json($stock);
+        if($stock){
+            if($request['title_stock']){
+                $stock->title_stock = $request['title_stock'];
+            }
+            if($request['description_stock']){
+                $stock->description_stock = $request['description_stock'];
+            }
+            if($request['total_stock']){
+                $stock->total_stock = $request['total_stock'];
+            }
+    
+            $stock->updated_at = $time;
+            if($stock->update()){
+                return response("update stock successful!", 200);
+            }else{
+                return response("update stock fail!", 417);
+            }
         }else{
-            return response("update stock successfully");
+            return response("This stock is not found!", 400);
         }
     }
+       
     public function delete(Request $request){
-        stock::where('id_stock',$request['id_stock'])->delete();
+        if(stock::where('id_stock',$request['id_stock'])->delete()){
+            return response("delete stock success!", 200);   
+        }else{
+            return response("delete stock fail!", 400);
+        }
     }
     public function getAll(){
-        $stock = stock::all();
-        return response()->json($stock);
+        return response()->json(stock::all());
     }
-    public function searchById(Request $request){
-        $stock = stock::find($request['id_stock']);
-        return response()->json($stock);
+    public function getStockById(Request $request){
+        $stock = stock::where('id_stock', $request->keyword)->get();
+        if($stock){
+            return response()->json($stock);
+        }
+    }
+    public function searchStock(Request $request){
+        $stock = stock::where("id_stock", "LIKE", "%" .$request->keyword. "%")
+        ->orWhere("title_stock", "LIKE", "%" .$request->keyword. "%")
+        ->get();
+        if($stock){
+            return response()->json($stock);
+        }
     } 
 }
