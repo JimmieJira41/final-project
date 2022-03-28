@@ -24,6 +24,16 @@
                     />
                 </div>
                 <div class="col">
+                    <label for="cost_item">ราคา</label>
+                    <input
+                        v-model="cost_item"
+                        type="text"
+                        class="form-control text-center"
+                        id="cost_item"
+                        placeholder="ราคาสินค้า"
+                    />
+                </div>
+                <div class="col">
                     <label for="id_stock">สต็อกสินค้าที่ใช้</label>
                     <select
                         class="form-select"
@@ -39,13 +49,13 @@
                     </select>
                 </div>
                 <div class="col">
-                    <label for="total_use">จำนวน</label>
+                    <label for="total_use">จำนวนสินค้าต่อกล่อง</label>
                     <input
                         v-model="total_use"
                         type="number"
                         class="form-control text-center"
                         id="total_use"
-                        placeholder="0"
+                        placeholder="จำนวนสินค้า"
                     />
                 </div>
             </div>
@@ -69,8 +79,9 @@ export default {
         return {
             title_item: "",
             description_item: "",
+            cost_item: "",
             id_stock: null,
-            total_use: 0,
+            total_use: "",
             stock_list: []
         };
     },
@@ -86,6 +97,7 @@ export default {
             const itemObj = {};
             itemObj.title_item = this.title_item;
             itemObj.description_item = this.description_item;
+            itemObj.cost_item = this.cost_item;
             itemObj.id_stock = this.id_stock;
             itemObj.total_use = this.total_use;
             console.log(itemObj);

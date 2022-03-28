@@ -17,6 +17,12 @@ use App\Models\history;
 
 use Carbon\Carbon;
 
+use App\Exports\CustomerContactExport;
+use App\Models\response;
+use Maatwebsite\Excel\Facades\Excel;
+
+use Illuminate\Support\Facades\DB;
+
 use function PHPSTORM_META\type;
 use function PHPUnit\Framework\isType;
 
@@ -56,6 +62,7 @@ class OrderManagement extends Controller
                     $order->updated_at = $time;
                     $order->id_item = $item_save['id_item'];
                     $order->number = $item_save['number'];
+                    $order->cost_order = $item_save['cost_item'];
                     if ($cal_total_use > $stock->total_stock) {
                         return response("This stock is not enough to use!");
                     } else {
@@ -111,6 +118,7 @@ class OrderManagement extends Controller
                             if ($request['create_by']) {
                                 $order->create_by = $request['create_by'];
                             }
+                            $order->cost_order = $item_input['cost_item'];
                             $order->updated_at = $time;
                             $cal_total_use = $item[0]['total_use'] * $item_input['number'];
                             if ($cal_total_use > $stock_update->total_stock) {
@@ -176,6 +184,50 @@ class OrderManagement extends Controller
         }
         return response()->json($orderListResponse);
     }
+    public function getAllOrderGroupByItem()
+    {
+        $orderListResponse = [];
+        $orderList = DB::table('orders')
+            ->select('id_item', DB::raw('SUM(number) as total_number'))
+            ->groupBy('id_item')
+            ->get();
+        foreach ($orderList as $order) {
+            $item = item::where('id_item', $order->id_item)->get();
+            $order->item = $item;
+            array_push($orderListResponse, $order);
+        }
+        return response()->json($orderListResponse);
+    }
+    public function getAllOrderGroupByCustomer()
+    {
+        $orderListResponse = [];
+        $orderOfCustomer = [];
+        $idCustomerList = DB::table('orders')
+            ->select('id_customer')
+            ->groupBy('id_customer')
+            ->get();
+        $customerList = customer::all();
+        $orderList = order::all(['id_customer', 'id_item', 'number'])->sortByDesc('created_at');
+        foreach ($idCustomerList as $idCustomer) {
+            $orderResponse = new response();
+            $orderResponse->id_customer = $idCustomer->id_customer;
+            foreach ($customerList as $customer) {
+                if ($idCustomer->id_customer == $customer['id_customer']) {
+                    $orderResponse->name_customer = strval($customer['firstname_customer'] . " " . $customer['lastname_customer']);
+                    foreach ($orderList as $order) {
+                        if ($order->id_customer == $idCustomer->id_customer) {
+                            $item = item::where('id_item', $order->id_item)->get();
+                            $order->item = $item;
+                            array_push($orderOfCustomer, $order);
+                        }
+                    }
+                    $orderResponse->orderList = $orderOfCustomer;
+                }
+            }
+            array_push($orderListResponse, $orderResponse);
+        }
+        return response()->json($orderListResponse);
+    }
     public function getOrderById(Request $request)
     {
         $order = order::where('id_order', $request->keyword)->get()->first();
@@ -188,17 +240,28 @@ class OrderManagement extends Controller
         return response()->json($order);
     }
 
-    // public function getOrderByCustomerId(Request $request)
-    // {
-    //     $itemList = [];
-    //     $orderList = order::where('id_customer', $request->keyword)->get();
-    //     foreach($orderList as $order){
-    //         $item = item::where('id_item', $order->id_item)->get()->first();
-    //         $item->number = $$order->number
-    //         $order->item = $item;
-    //     }
-    //     return response()->json($orderList);
-    // }
+
+    public function getAllOrderGroupByCustomerId(Request $request)
+    {
+        $orderListResponse = [];
+        $orderOfCustomer = [];
+        $orderResponse = new response();
+        $customer = customer::where('id_customer', $request->keyword)->get()->first();
+        $address = address::where('id_address', $customer->default_id_address)->get()->first();
+        $orderList = order::select(['id_order', 'id_customer', 'id_item', 'number', 'cost_order'])->where('id_customer', $request->keyword)->get();
+        foreach ($orderList as $order) {
+            if ($order->id_customer == $customer->id_customer) {
+                $item = item::where('id_item', $order->id_item)->get()->first();
+                $order->item = $item;
+                array_push($orderOfCustomer, $order);
+            }
+        }
+        $orderResponse->customer = $customer;
+        $orderResponse->address = $address;
+        $orderResponse->orderList = $orderOfCustomer;
+        // array_push($orderListResponse, $orderResponse);
+        return response()->json($orderResponse);
+    }
 
     public function cutOffOrder()
     {
@@ -211,16 +274,20 @@ class OrderManagement extends Controller
                 $history->id_customer = $order->id_customer;
                 $history->id_address = $order->id_address;
                 $history->number = $order->number;
+                $history->cost_order = $order->cost_order;
                 $history->created_at = $order->created_at;
                 $history->create_by = $order->create_by;
                 $history->updated_at = $order->updated_at;
-                if ($history->save()) {
-                    order::truncate();
-                }
+                $history->save();
             }
-        return response()->json($history);
+            order::truncate();
+            return response()->json($history);
         } else {
-        return response()->json('not have order!');
+            return response()->json('not have order!');
         }
+    }
+    public function exportExcel()
+    {
+        return Excel::download(new CustomerContactExport, 'history.xlsx');
     }
 }

@@ -9,7 +9,5 @@ class history extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = null;
-
-    public $incrementing = false;
+    protected $primaryKey = 'id_history';
 }

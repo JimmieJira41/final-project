@@ -12,7 +12,7 @@ library.add(far);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 import VueSweetalert2 from 'vue-sweetalert2';
-import  { ModelListSelect } from 'vue-search-select'
+import VueNextSelect from 'vue-next-select'
 import 'sweetalert2/dist/sweetalert2.min.css';
 import App from './vue/app.vue'
 import Home from './vue/home.vue'
@@ -21,6 +21,7 @@ import CreateAdmin from './vue/page/admin/component/create-admin.vue'
 import Customer from './vue/page/customer/customer.vue'
 import CreateCustomer from './vue/page/customer/component/create-customer.vue'
 import UpdateCustomer from './vue/page/customer/component/update-customer.vue'
+import ViewCustomer from './vue/page/customer/component/view-customer.vue'
 import Order from './vue/page/order/order.vue'
 import CreateOrder from './vue/page/order/component/create-order.vue'
 import UpdateOrder from './vue/page/order/component/update-order.vue'
@@ -69,6 +70,11 @@ const routes = [
         component: UpdateCustomer
     },
     {
+        path: '/customer/view-customer/:id',
+        name: 'ViewCustomer',
+        component: ViewCustomer
+    },
+    {
         path: '/order',
         name: 'Order',
         component: Order
@@ -79,7 +85,7 @@ const routes = [
         component: CreateOrder
     },
     {
-        path: '/order/update-order/:id_customer/:id_order/:id_item',
+        path: '/order/update-order/:id_customer',
         name: 'UpdateOrder',
         component: UpdateOrder
     },
@@ -127,6 +133,7 @@ const router = createRouter({
 
 const app = createApp(App);
 app.component("font-awesome-icon",FontAwesomeIcon);
-app.component("model-list-select",ModelListSelect);
+app.component('vue-select', VueNextSelect);
+// app.component('VueCharts',VueCharts);
 app.use(VueSweetalert2, options);
 app.use(router).mount('#app');

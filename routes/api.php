@@ -3,9 +3,11 @@
 use App\Http\Controllers\AddressManagement;
 use App\Http\Controllers\CustomerManagement;
 use App\Http\Controllers\AdminManagement;
+use App\Http\Controllers\AnalysisManagement;
 use App\Http\Controllers\OrderManagement;
 use App\Http\Controllers\StockManagement;
 use App\Http\Controllers\ItemManagement;
+use App\Http\Controllers\HistoryManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,9 +45,13 @@ Route::prefix('order')->group(function(){
     Route::put('/update-order', [OrderManagement::class, 'update']);
     Route::delete('/delete-order', [OrderManagement::class, 'delete']);
     Route::get('/get-all-order', [OrderManagement::class, 'getAll']);
-    Route::get('/get-order/{keyword}', [OrderManagement:: class, 'getOrderById']);
+    Route::get('/get-order/{keyword}', [OrderManagement:: class, 'getAllOrderGroupByCustomerId']);
+    Route::get('/get-order-group-by-item',[OrderManagement::class, 'getAllOrderGroupByItem']);
+    Route::get('/get-order-group-by-customer',[OrderManagement::class, 'getAllOrderGroupByCustomer']);
     Route::get('/get-order-by-customer/{keyword}', [OrderManagement:: class, 'getOrderByCustomerId']);
     Route::post('/cut-off-order',[OrderManagement::class, 'cutOffOrder']);
+    Route::get('/get-label-excel-file',[OrderManagement::class, 'exportExcel']);
+
 });
 Route::prefix('stock')->group(function(){
     Route::post('/new-stock',[StockManagement::class, 'create']);
@@ -70,4 +76,12 @@ Route::prefix('address')->group(function(){
     Route::get('/get-all-province', [AddressManagement::class, 'getProvinces']);
     Route::get('/get-amphures/{keyword}', [AddressManagement::class, 'getAmphures']);
     Route::get('/get-tombons/{keyword}', [AddressManagement:: class, 'getTombons']);
+    Route::get('/get-zipcode/{keyword}', [AddressManagement:: class, 'getZipcode']);
+});
+Route::prefix('history')->group(function(){
+    Route::get('/get-history-by-customer-id/{keyword}',[HistoryManagement::class, 'getHistoryByCustomerId']);
+    Route::get('/get-all-history-order',[HistoryManagement::class, 'getAllHistoryOrder']);
+});
+Route::prefix('analysis')->group(function(){
+    Route::post('/get-data-analysis',[AnalysisManagement::class, 'getAnlysis']);
 });

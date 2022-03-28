@@ -18,10 +18,12 @@ class CreateCustomersTable extends Migration
             $table->string('firstname_customer');
             $table->string('lastname_customer');
             $table->string('tel_customer');
-            $table->string('default_id_address');
-            $table->string('id_addresses');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
+            $table->text('line_contact_customer')->nullable();
+            $table->text('facebook_contact_customer')->nullable();
+            $table->string('default_id_address')->nullable();
+            $table->string('id_addresses')->nullable();
+            $table->date('created_at')->useCurrent();
+            $table->date('updated_at')->useCurrent();
         });
     }
 

@@ -19,6 +19,9 @@ class ItemManagement extends Controller
         if(!$request['description_item']){
             return response("please enter description_item!");
         }
+        if(!$request['cost_item']){
+            return response("please enter cost_item!");
+        }
         if(!$request['id_stock']){
             return response("please enter id_stock!");
         }
@@ -34,6 +37,7 @@ class ItemManagement extends Controller
             $item = new item();
             $item->title_item = $request['title_item'];
             $item->description_item = $request['description_item'];
+            $item->cost_item = $request['cost_item'];
             $item->id_stock = $request['id_stock'];
             $item->total_use = $request['total_use'];
             $item->created_at = $time;
@@ -57,6 +61,9 @@ class ItemManagement extends Controller
             }
             if($request['description_item']){
                 $item->description_item = $request['description_item'];
+            }
+            if($request['cost_item']){
+                $item->cost_item = $request['cost_item'];
             }
             if($request['id_stock']){
                 $item->id_stock = $request['id_stock'];

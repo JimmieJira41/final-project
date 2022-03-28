@@ -1,6 +1,7 @@
 <template>
     <div class="table-response card shadow border-0 p-3">
         <h3>รายการสินค้า</h3>
+        <hr>
         <table class="table table-borderless">
             <thead>
                 <tr>

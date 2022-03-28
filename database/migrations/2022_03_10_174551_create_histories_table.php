@@ -14,14 +14,16 @@ class CreateHistoriesTable extends Migration
     public function up()
     {
         Schema::create('histories', function (Blueprint $table) {
+            $table->id('id_history');
             $table->string('id_order');
             $table->string('id_customer');
             $table->string('id_address');
             $table->string('id_item');
             $table->integer('number');
+            $table->integer('cost_order')->default(0);
             $table->string('create_by');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
+            $table->date('created_at')->useCurrent();
+            $table->date('updated_at')->useCurrent();
             
         });
     }

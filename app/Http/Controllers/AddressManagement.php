@@ -10,6 +10,8 @@ use App\Models\tombons;
 
 use App\Models\provinces;
 
+use App\Models\zipcode;
+
 use Illuminate\Http\Request;
 
 class AddressManagement extends Controller
@@ -50,12 +52,17 @@ class AddressManagement extends Controller
     }
 
     public function getAmphures(Request $request){
-        $amphureList = amphures::where('province_id',$request['id_province'])->get()->first();
+        $amphureList = amphures::where('province_id',$request['keyword'])->get();
         return response()->json($amphureList);
     }
 
     public function getTombons(Request $request){
-        $tombonList = tombons::where('amphure_id',$request['id_amphure'])->get()->first();
+        $tombonList = tombons::where('amphure_id',$request['keyword'])->get();
+        return response()->json($tombonList);
+    }
+
+    public function getZipcode(Request $request){
+        $tombonList = zipcode::where('tombon_id',$request['keyword'])->get();
         return response()->json($tombonList);
     }
 }

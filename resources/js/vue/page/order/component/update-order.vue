@@ -1,448 +1,567 @@
 <template>
-    <div class="container card borderless shadow p-3">
-        <form class="form-group">
-            <h3>ข้อมูลรายการสั่งซื้อ</h3>
-            <hr />
-            <h4>ข้อมูลผู้สั่งซื้อ</h4>
-            <div class="row p-2">
-                <div class="row">
-                    <div class="col-12">
-                        <select
-                            v-model="customerSelected"
-                            v-on:change="selectCustomer()"
-                        >
-                            <option
-                                v-for="(customer, index) in customerList"
-                                v-bind:key="index"
-                                v-bind:value="{
-                                    id_customer: customer.id_customer,
-                                    firstname_customer:
-                                        customer.firstname_customer,
-                                    lastname_customer:
-                                        customer.lastname_customer,
-                                    tel_customer: customer.tel_customer,
-                                    description_address_customer: customer.address.description_address,
-                                    province_address_customer: customer.address.province_address,
-                                    amphure_address_customer: customer.address.amphure_address,
-                                    tombon_address_customer: customer.address.tombon_address,
-                                    zipcode_address_customer: customer.address.zipcode_address
-                                }"
-                                v-bind:selected="customer.selected"
-                            >
-                                {{
-                                    customer.firstname_customer +
-                                    " " +
-                                    customer.lastname_customer
-                                }}
-                            </option>
-                        </select>
-                        <!-- <label for="keyword_search_customer"></label>
-                        <input
-                            v-model="keyword_search_customer"
-                            type="text"
-                            class="form-control"
-                            id="keyword_search_customer"
-                            placeholder=""
-                        /> -->
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <label for="firstname_customer">ชื่อ</label>
-                        <input
-                            v-model="firstname_customer"
-                            type="text"
-                            class="form-control"
-                            id="firstname_customer"
-                            placeholder=""
-                        />
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <label for="lastname_customer">นามสกุล</label>
-                        <input
-                            v-model="lastname_customer"
-                            type="text"
-                            class="form-control"
-                            id="lastname_customer"
-                            placeholder=""
-                        />
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <label for="tel_customer">เบอร์โทรศัพท์</label>
-                        <input
-                            v-model="tel_customer"
-                            type="tel"
-                            class="form-control"
-                            id="tel_customer"
-                            placeholder=""
-                        />
-                    </div>
-                    <h3 class="my-3">ข้อมูลที่อยู่</h3>
-                    <div class="col-12">
-                        <label for="description_address_customer"
-                            >รายละเอียด</label
-                        >
-                        <textarea
-                            v-model="description_address_customer"
-                            type="textarea"
-                            class="form-control"
-                            id="description_address_customer"
-                            placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
-                        />
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <label for="province_address_customer">จังหวัด</label>
-                        <input
-                            v-model="province_address_customer"
-                            type="text"
-                            class="form-control"
-                            id="province_address_customer"
-                            placeholder=""
-                        />
-                        <!-- <select>
-                        <option></option>
-                    </select> -->
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <label for="amphure_address_customer">อำเภอ</label>
-                        <input
-                            v-model="amphure_address_customer"
-                            type="text"
-                            class="form-control"
-                            id="amphure_address_customer"
-                            placeholder=""
-                        />
-                        <!-- <select>
-                        <option></option>
-                    </select> -->
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <label for="tombon_address_customer">ตำบล</label>
-                        <input
-                            v-model="tombon_address_customer"
-                            type="text"
-                            class="form-control"
-                            id="tombon_address_customer"
-                            placeholder=""
-                        />
-                        <!-- <select>
-                        <option></option>
-                    </select> -->
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <label for="zipcode_address_customer">รหัสไปรษณี</label>
-                        <input
-                            v-model="zipcode_address_customer"
-                            type="text"
-                            class="form-control"
-                            id="zipcode_address_customer"
-                            placeholder=""
-                        />
-                        <!-- <select>
-                        <option></option>
-                    </select> -->
-                    </div>
-                    <!-- <h4 class="my-3 text-center">ข้อมูลที่อยู่</h4> -->
-                </div>
-                <hr class="my-4" />
-                <h4 class="text-center">ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
-                <div class="text-end pb-2">
-                    <button
-                        class="btn btn-primary"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#itemListModal"
-                    >
-                        เลือกรายการสินค้า
-                    </button>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="row">รายการ</th>
-                            <th scope="row">รายละเอียด</th>
-                            <th scope="row">จำนวน</th>
-                            <th class="text-center" scope="row" colspan="3">
-                                จัดการ
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody v-if="isItemSelectedTableReady">
-                        <tr
-                            v-for="(item, index) in itemChecked"
-                            v-bind:key="index"
-                        >
-                            <td>{{ item.title_item }}</td>
-                            <td>{{ item.description_item }}</td>
-                            <td>
-                                <div class="col">
-                                    <input
-                                        v-model="itemChecked[index].number"
-                                        type="number"
-                                        class="form-control text-center"
-                                        id="number"
-                                    />
-                                </div>
-                            </td>
-                            <!-- <td
-                                class="text-center"
-                                v-on:click="removeItemSelected(item.id_item)"
-                            >
-                                <i class="fas fa-trash-alt"></i>
-                            </td> -->
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </form>
-        <div class="my-3 text-end">
+  <div class="container card borderless shadow p-3">
+    <form class="form-group">
+      <h3>ข้อมูลรายการสั่งซื้อ</h3>
+      <hr />
+      <div class="row">
+        <div class="row">
+          <div class="col-6">
+            <h4><i class="fas fa-user-alt"></i> ข้อมูลผู้สั่งซื้อ</h4>
+          </div>
+          <div class="col-6 text-end">
             <button
-                class="btn btn-primary mx-1 col-1"
-                v-on:click="submitUpdateOrder()"
+              class="btn btn-primary mx-2"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#customerListModal"
             >
-                ยืนยัน
+              เลือกรายชื่อลูกค้า
             </button>
             <button
-                class="btn btn-danger mx-1 col-1"
-                v-on:click="this.$router.go(-1)"
+              class="btn btn-warning"
+              type="button"
+              @click="clearCustomerSelected()"
             >
-                ยกเลิก
+              เคลียร์ข้อมูลลูกค้า
             </button>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="firstname_customer">ชื่อ</label>
+            <input
+              :disabled="isDisable"
+              v-model="firstname_customer"
+              type="text"
+              class="form-control"
+              id="firstname_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="lastname_customer">นามสกุล</label>
+            <input
+              :disabled="isDisable"
+              v-model="lastname_customer"
+              type="text"
+              class="form-control"
+              id="lastname_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="tel_customer">เบอร์โทรศัพท์</label>
+            <input
+              :disabled="isDisable"
+              v-model="tel_customer"
+              type="tel"
+              class="form-control"
+              id="tel_customer"
+              placeholder=""
+            />
+          </div>
+          <h4 class="my-3">ข้อมูลที่อยู่</h4>
+          <div class="col-12">
+            <label for="description_address_customer">รายละเอียด</label>
+            <textarea
+              :disabled="isDisable"
+              v-model="description_address_customer"
+              type="textarea"
+              class="form-control"
+              id="description_address_customer"
+              placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="province_address_customer">จังหวัด</label>
+            <input
+              :disabled="isDisable"
+              v-model="province_address_customer"
+              type="text"
+              class="form-control"
+              id="province_address_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="amphure_address_customer">อำเภอ</label>
+            <input
+              :disabled="isDisable"
+              v-model="amphure_address_customer"
+              type="text"
+              class="form-control"
+              id="amphure_address_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="tombon_address_customer">ตำบล</label>
+            <input
+              :disabled="isDisable"
+              v-model="tombon_address_customer"
+              type="text"
+              class="form-control"
+              id="tombon_address_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="zipcode_address_customer">รหัสไปรษณี</label>
+            <input
+              :disabled="isDisable"
+              v-model="zipcode_address_customer"
+              type="text"
+              class="form-control"
+              id="zipcode_address_customer"
+              placeholder=""
+            />
+          </div>
+        </div>
+        <hr class="my-4" />
+        <h4 class="text-center">ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
+        <div class="text-end pb-2">
+          <button
+            :disabled="
+              customerSelected == undefined || customerSelected == null
+            "
+            class="btn btn-primary"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#itemListModal"
+          >
+            เลือกรายการสินค้า
+          </button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="row" class="w-20">รายการ</th>
+              <th scope="row" class="w-20">รายละเอียด</th>
+              <th scope="row" class="w-20">จำนวนกล่อง</th>
+              <th scope="row" class="w-20">ราคาต่อกล่อง</th>
+              <th scope="row" class="w-20">ราคารวม</th>
+              <th class="text-center" scope="row" colspan="3">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody v-if="isItemSelectedTableReady">
+            <tr v-for="(item, index) in itemListChecked" v-bind:key="index">
+              <td>{{ item.title_item }}</td>
+              <td>{{ item.description_item }}</td>
+              <td>
+                <input
+                  v-model="item.number"
+                  type="number"
+                  class="form-control text-center"
+                  id="number"
+                  v-bind:change="calCost(item.number, item.cost_item, index)"
+                />
+              </td>
+              <td>
+                <p>{{ item.cost_item }}</p>
+              </td>
+              <td>{{ item.total_cost }}</td>
+              <td class="text-center" v-on:click="removeItem(item.id_item)">
+                <i class="fas fa-trash-alt"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="my-3 text-end">
+      <button
+        :disabled="validateNumberItem()"
+        class="btn btn-primary mx-1 col-1"
+        v-on:click="submitUpdateOrder()"
+      >
+        ยืนยัน
+      </button>
+      <button
+        class="btn btn-danger mx-1 col-1"
+        v-on:click="this.$router.go(-1)"
+      >
+        ยกเลิก
+      </button>
     </div>
+  </div>
 
-    <div
-        class="modal fade"
-        tabindex="-1"
-        id="itemListModal"
-        aria-labelledby="itemListModalLabel"
-        aria-hidden="true"
-    >
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">รายการสินค้า</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                    ></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="row"></th>
-                                <th scope="row" colspan="2" class="text-center">
-                                    รายละเอียด
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="isReadyItemTable">
-                            <tr
-                                v-for="(item, index) in itemList"
-                                v-bind:key="index"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="{{item.title_item}}"
-                                    v-on:change="!item.isSelected"
-                                    v-model="itemChecked"
-                                    v-bind:value="{
-                                        id_item: item.id_item,
-                                        title_item: item.title_item,
-                                        description_item: item.description_item,
-                                    }"
-                                />
-                                <td>{{ item.title_item }}</td>
-                                <td>{{ item.description_item }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >
-                        ยกเลิก
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        v-on:click="submitItemSelect()"
-                        data-bs-dismiss="modal"
-                    >
-                        ยืนยัน
-                    </button>
-                </div>
-            </div>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    id="itemListModal"
+    aria-labelledby="itemListModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">รายการสินค้า</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="row"></th>
+                <th scope="row" colspan="2" class="text-center">รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody v-if="isReadyItemTable">
+              <tr v-for="(item, index) in itemList" v-bind:key="index">
+                <input
+                  type="checkbox"
+                  id="{{item.title_item}}"
+                  v-on:change="!item.isSelected"
+                  v-model="itemChecked"
+                  v-bind:value="item.id_item"
+                />
+                <td>{{ item.title_item }}</td>
+                <td>{{ item.description_item }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            :disabled="!itemChecked.length > 0"
+            type="button"
+            class="btn btn-primary"
+            v-on:click="selectItem()"
+            data-bs-dismiss="modal"
+          >
+            ยืนยัน
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    id="customerListModal"
+    aria-labelledby="customerListModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">รายชื่อลูกค้า</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="row"></th>
+                <th scope="row">ชื่อ - นามสกุล</th>
+              </tr>
+            </thead>
+            <tbody v-if="isReadyItemTable">
+              <tr v-for="(customer, index) in customerList" v-bind:key="index">
+                <input
+                  type="radio"
+                  id="{{customer.id_customer}}"
+                  v-model="customerSelected"
+                  v-bind:value="customer.id_customer"
+                />
+                <td>
+                  {{
+                    customer.firstname_customer +
+                    " " +
+                    customer.lastname_customer
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            v-on:click="selectCustomer()"
+            data-bs-dismiss="modal"
+          >
+            ยืนยัน
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
-    data: function () {
-        return {
-            // keyword
-            id_order: '',
-            keyword_search_customer: "",
-            // item
-            itemList: [],
-            itemChecked: [],
-            // customer
-            id_customer: "",
-            customerList: [],
-            customerSelected: "",
-            firstname_customer: "",
-            lastname_customer: "",
-            tel_customer: "",
-            // address
-            description_address_customer : "",
-            province_address_customer : "",
-            amphure_address_customer : "",
-            tombon_address_customer : "",
-            zipcode_address_customer : "",
-            // stock
-            title_stock: "",
-            description_stock: "",
-            total_stock: 0,
-            number: 0,
-            isItemSelectedTableReady: false,
-            isReadyItemTable: false,
-        };
+  data: function () {
+    return {
+      keyword_search_customer: "",
+      itemList: [],
+      customerList: [],
+      customerSelected: undefined,
+      itemChecked: [],
+      itemListChecked: [],
+      tempItemListChecked: [],
+      title_stock: "",
+      id_customer: "",
+      firstname_customer: "",
+      lastname_customer: "",
+      tel_customer: "",
+      description_stock: "",
+      total_stock: 0,
+      // total_cost: 0,
+      number: 0,
+      // address
+      description_address_customer: "",
+      province_address_customer: "",
+      amphure_address_customer: "",
+      tombon_address_customer: "",
+      zipcode_address_customer: "",
+      // data
+      isItemSelectedTableReady: false,
+      isReadyItemTable: false,
+      isDisable: false,
+    };
+  },
+  methods: {
+    calCost(number, cost, index) {
+      if(number == 0){
+        this.itemListChecked[index].total_cost = number * cost;
+      }
+      if (number && cost){
+        this.itemListChecked[index].total_cost = number * cost;
+      }
     },
-    methods: {
-        submitItemSelect(){
-            this.isItemSelectedTableReady = true;
-            console.log(this.itemChecked);
-        },
-       selectCustomer() {
-            console.log(this.customerSelected);
-            this.firstname_customer = this.customerSelected.firstname_customer;
-            this.lastname_customer = this.customerSelected.lastname_customer;
-            this.tel_customer = this.customerSelected.tel_customer;
-            this.description_address_customer = this.customerSelected.description_address_customer;
-            this.province_address_customer = this.customerSelected.province_address_customer;
-            this.amphure_address_customer = this.customerSelected.amphure_address_customer;
-            this.tombon_address_customer = this.customerSelected.tombon_address_customer;
-            this.zipcode_address_customer = this.customerSelected.zipcode_address_customer;
-            console.log(
-                this.firstname_customer +
-                    this.lastname_customer +
-                    this.tel_customer+ 
-                    this.description_address_customer
-            );
-        },
-        getAllCustomer() {
-            axios.get("/api/customer/get-all-customer").then((response) => {
-                response.data.map((customer) =>{
-                    if(customer.id_customer == this.id_customer){
-                        customer.selected = true;
-                    }else{
-                        customer.selected = false;
-                    }
-                })
-                this.customerList = response.data;
-            });
-        },
-         getAllItem() {
-            axios.get("/api/item/get-all-item").then((response) => {
-                if (response) {
-                    response.data.map((item) =>{
-                        item.isSeleted = false;
-                    })
-                    this.itemList = response.data;
-                    this.isReadyItemTable = true;
-                }
-            });
-        },
-        getOrder(id_order) {
-            axios.get("/api/order/get-order/" + id_order ).then((response) => {
-                if(response){
-                    console.log(response);
-                    this.firstname_customer = response.data.customer.firstname_customer;
-                    this.lastname_customer = response.data.customer.lastname_customer;
-                    this.tel_customer = response.data.customer.tel_customer;
-                    this.description_address_customer = response.data.address.description_address;
-                    this.province_address_customer = response.data.address.province_address;
-                    this.amphure_address_customer = response.data.address.amphure_address;
-                    this.tombon_address_customer = response.data.address.tombon_address;
-                    this.zipcode_address_customer = response.data.address.zipcode_address;
-                    this.itemChecked.push(response.data.item);
-                    this.itemChecked.map((item)=>{
-                        item.number = response.data.number;
-                    })
-                    this.isItemSelectedTableReady = true;
-                    console.log(this.itemChecked);
-                }
-            });
-        },
-        getCustomer(keyword_search_customer) {
-            axios
-                .get("/api/customer/get-customer/" + keyword_search_customer)
-                .then((response) => {
-                    if (response) {
-                        this.firstname_customer = response.data.firstname_customer;
-                        this.lastname_customer = response.data.lastname_customer;
-                        this.tel_customer = response.data.tel_customer;
-                        this.description_address_customer = response.data.address.description_address;
-                        this.province_address_customer = response.data.address.province_address;
-                        this.amphure_address_customer = response.data.address.amphure_address;
-                        this.tombon_address_customer = response.data.address.tombon_address;
-                        this.zipcode_address_customer = response.data.address.zipcode_address;
-                        this.getOrderByCustomerId(keyword_search_customer);
-                    }
+    removeItem(id_item) {
+      console.log("click delete : " + id_item);
+      console.log(this.itemListChecked.length);
+      this.itemChecked = [];
+      this.tempItemListChecked = [];
+      this.itemListChecked.map((item) => {
+        if (item.id_item != id_item) {
+          this.tempItemListChecked.push(item);
+          this.itemChecked.push(item.id_item);
+        }
+      });
+      console.log(this.itemListChecked.length);
+      this.itemListChecked = this.tempItemListChecked;
+    },
+    selectItem() {
+      if (this.itemListChecked.length > 0) {
+        this.itemListChecked = [];
+      }
+      console.log(this.itemList);
+      this.itemChecked.forEach((i, index) => {
+        this.itemList.forEach((item) => {
+          if (item.id_item == i) {
+            this.itemListChecked.push(item);
+            console.log(this.itemListChecked + " " + index);
+            this.itemListChecked[index].number = 0;
+            this.itemListChecked[index].total_cost = 0;
+          }
+        });
+      });
+      console.log(this.itemListChecked);
+      // this.itemListChecked = this.itemChecked;
+      this.isItemSelectedTableReady = true;
+    },
+    validateNumberItem() {
+      console.log(this.itemChecked.length);
+      return this.itemChecked == 0;
+    },
+    selectCustomer() {
+      let customerSelected = this.customerList.find(
+        (customer) => customer.id_customer == this.customerSelected
+      );
+      console.log(customerSelected);
+      this.id_customer = customerSelected.id_customer;
+      this.firstname_customer = customerSelected.firstname_customer;
+      this.lastname_customer = customerSelected.lastname_customer;
+      this.tel_customer = customerSelected.tel_customer;
+      this.description_address_customer =
+        customerSelected.address.description_address;
+      this.province_address_customer =
+        customerSelected.address.province_address;
+      this.amphure_address_customer = customerSelected.address.amphure_address;
+      this.tombon_address_customer = customerSelected.address.tombon_address;
+      this.zipcode_address_customer = customerSelected.address.zipcode_address;
+      this.isDisable = true;
+    },
+    clearCustomerSelected() {
+      this.customerSelected = null;
+      this.isDisable = false;
+      this.firstname_customer = "";
+      this.lastname_customer = "";
+      this.tel_customer = "";
+      this.description_address_customer = "";
+      this.province_address_customer = "";
+      this.amphure_address_customer = "";
+      this.tombon_address_customer = "";
+      this.zipcode_address_customer = "";
+    },
+    getAllCustomer() {
+      axios.get("/api/customer/get-all-customer").then((response) => {
+        response.data.map((customer) => {
+          if (customer.id_customer == this.id_customer) {
+            this.customerSelected = customer.id_customer;
+          }
+        });
+        this.customerList = response.data;
+      });
+    },
+    getAllItem() {
+      axios.get("/api/item/get-all-item").then((response) => {
+        if (response) {
+          response.data.map((item) => {
+            item.isSeleted = false;
+          });
+          this.itemList = response.data;
+          this.isReadyItemTable = true;
+        }
+      });
+    },
+    getOrder(id_customer) {
+      axios.get("/api/order/get-order/" + id_customer).then((response) => {
+        if (response) {
+          console.log(response);
+          this.firstname_customer = response.data.customer.firstname_customer;
+          this.lastname_customer = response.data.customer.lastname_customer;
+          this.tel_customer = response.data.customer.tel_customer;
+          this.description_address_customer =
+            response.data.address.description_address;
+          this.province_address_customer =
+            response.data.address.province_address;
+          this.amphure_address_customer = response.data.address.amphure_address;
+          this.tombon_address_customer = response.data.address.tombon_address;
+          this.zipcode_address_customer = response.data.address.zipcode_address;
+          response.data.orderList.forEach((order) =>{
+            console.log(order);
+            order.item.id_order = order.id_order;
+            order.item.number = order.number;
+            this.itemListChecked.push(order);
+          });
+          this.itemListChecked.forEach((item) => {
+            this.itemChecked.push(item.id_item);
+          });
+          this.isItemSelectedTableReady = true;
+          console.log(this.itemChecked);
+          console.log(this.itemListChecked);
+
+        }
+      });
+    },
+    getCustomer(keyword_search_customer) {
+      axios
+        .get("/api/customer/get-customer/" + keyword_search_customer)
+        .then((response) => {
+          if (response) {
+            this.customerList.push(response.data.id_customer);
+            console.log(this.customerList);
+            this.firstname_customer = response.data.firstname_customer;
+            this.lastname_customer = response.data.lastname_customer;
+            this.tel_customer = response.data.tel_customer;
+            this.description_address_customer =
+              response.data.address.description_address;
+            this.province_address_customer =
+              response.data.address.province_address;
+            this.amphure_address_customer =
+              response.data.address.amphure_address;
+            this.tombon_address_customer = response.data.address.tombon_address;
+            this.zipcode_address_customer =
+              response.data.address.zipcode_address;
+            this.getOrderByCustomerId(keyword_search_customer);
+          }
+        });
+    },
+    submitUpdateOrder() {
+      const orderObj = {};
+      let orderNotReady = true;
+      orderObj.id_order = this.id_order;
+      orderObj.id_customer = this.id_customer;
+      orderObj.id_address = 1;
+      orderObj.items = this.itemListChecked;
+      orderObj.create_by = "jimmie";
+      console.log(orderObj);
+      orderNotReady = this.itemListChecked.some(
+        (item) => item.number == "" || item.number == 0 || item.number == null
+      );
+      if (orderNotReady) {
+        this.$swal({
+          title: "แจ้งเตือน",
+          text: "กรุณากรอกจำนวนสินค้า",
+          icon: "info",
+          // showCancelButton: true,
+          confirmButtonText: "ยืนยัน",
+          // cancelButtonText: "ยกเลิก",
+        });
+      } else {
+        this.$swal({
+          title: "แจ้งเตือน",
+          text: "คุณต้องการอัพเดรตสต็อกสินค้าใหม่ ใช่หรือไม่ ?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "ยืนยัน",
+          cancelButtonText: "ยกเลิก",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios.put("/api/order/update-order", orderObj).then((response) => {
+              if (response) {
+                this.$swal({
+                  title: "อัพเดรตสำเร็จ",
+                  icon: "success",
+                  confirmButtonText: "ยืนยัน",
+                }).then((result) => {
+                  this.$router.go(-1);
                 });
-        },
-        submitUpdateOrder() {
-            const orderObj = {};
-            orderObj.id_order = this.id_order;
-            orderObj.id_customer = this.customerSelected.id_customer;
-            orderObj.id_address = 1;
-            orderObj.items = this.itemChecked;
-            orderObj.create_by = "jimmie";
-            console.log(orderObj);
-            this.$swal({
-                title: "แจ้งเตือน",
-                text: "คุณต้องการอัพเดรตสต็อกสินค้าใหม่ ใช่หรือไม่ ?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "ยืนยัน",
-                cancelButtonText: "ยกเลิก"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios
-                        .put("/api/order/update-order", orderObj)
-                        .then((response) => {
-                            if (response) {
-                                this.$router.go(-1);
-                            }
-                        });
-                }
+              }
             });
-        },
+          }
+        });
+      }
     },
-    mounted() {
-        this.id_customer = this.$route.params.id_customer;
-        this.id_order = this.$route.params.id_order;
-        this.id_item = this.$route.params.id_item;
-        // this.getCustomer(this.id_customer);
-        this.getOrder(this.id_order)
-        this.getAllCustomer();
-        this.getAllItem();
-    },
+  },
+  mounted() {
+    this.id_customer = this.$route.params.id_customer;
+    // this.id_order = this.$route.params.id_order;
+    // this.id_item = this.$route.params.id_item;
+    // this.getCustomer(this.id_customer);
+    this.getOrder(this.id_customer);
+    this.getAllCustomer();
+    this.getAllItem();
+  },
 };
 </script>
 <style scoped>
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Firefox */
 input[type="number"] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 </style>

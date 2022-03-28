@@ -15,9 +15,8 @@ class CreateTombonsTable extends Migration
     {
         Schema::create('tombons', function (Blueprint $table) {
             $table->text('id');
-            $table->text('zip_code');
+            $table->text('code');
             $table->text('name_th');
-            $table->text('name_en');
             $table->text('amphure_id');
         });
     }

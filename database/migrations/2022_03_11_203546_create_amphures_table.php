@@ -15,8 +15,8 @@ class CreateAmphuresTable extends Migration
     {
         Schema::create('amphures', function (Blueprint $table) {
             $table->text('id');
+            $table->text('code');
             $table->text('name_th');
-            $table->text('name_en');
             $table->text('province_id');
         });
     }
