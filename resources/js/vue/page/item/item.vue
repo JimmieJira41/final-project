@@ -14,6 +14,11 @@ import TableItemList from './component/table-item-list.vue'
 export default{
     components:{
         'TableItemList' : TableItemList
-    }
+    },
+  data: function () {
+    return {
+      side_bar: true,
+    };
+  },
 }
 </script>

@@ -5,7 +5,7 @@
         <table class="table table-borderless">
             <thead>
                 <tr>
-                    <th scope="row">Username</th>
+                    <th scope="row">ชื่อบัญชี</th>
                     <th scope="row">ชื่อ</th>
                     <th scope="row">เบอร์โทรศัพท์</th>
                     <!-- <th scope="row">Create At</th> -->
@@ -19,7 +19,7 @@
                     <td>{{ admin.tel_admin }}</td>
                     <!-- <td>{{ admin.created_at }}</td> -->
                     <td class="text-center" v-on:click="viewDetailAdmin(admin.id_admin)"><router-link to="/admin/craete-admin"><i class="fas fa-eye"></i></router-link></td>
-                    <td class="text-center" ><i class="fas fa-cog"></i></td>
+                    <td class="text-center" ><router-link to="/admin/update-admin/"><i class="fas fa-cog"></i></router-link></td>
                     <td class="text-center" v-on:click="deleteAdmin(admin.id_admin)"><i class="fas fa-trash-alt"></i></td>
                 </tr>
             </tbody>    

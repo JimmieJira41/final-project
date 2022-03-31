@@ -83,6 +83,7 @@ export default {
   },
   data: function () {
     return {
+      side_bar: true,
       dataAnalysis: {},
       type_date: "day",
       start_date_selected: false,

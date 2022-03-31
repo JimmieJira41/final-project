@@ -14,6 +14,11 @@ import TableStockList from './component/table-stock-list.vue'
 export default{
     components:{
         'TableStockList' : TableStockList
-    }
+    },
+    data: function () {
+    return {
+      side_bar: true,
+    };
+  },
 }
 </script>

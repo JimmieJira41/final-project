@@ -1,9 +1,14 @@
 <template>
-    <div class="container-fluid row px-0">
+    <div v-if="side_bar" class="container-fluid row px-0">
         <div class="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 bg-white shadow" style="height:100vh">
             <Menu></Menu>
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 content pt-5">
+            <router-view />
+        </div>
+    </div>
+    <div v-else class="container h-100 d-flex justify-content-center">
+       <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 content pt-5">
             <router-view />
         </div>
     </div>

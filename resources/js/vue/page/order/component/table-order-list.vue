@@ -83,9 +83,11 @@
             <td>{{ index + 1 }}</td>
             <td>{{ order.name_customer }}</td>
             <td>
-              <p v-for="(item, index) in order.orderList" v-bind:key="index">
-                {{ item.item[0].title_item }}
-              </p>
+              <ul>
+                <li v-for="(item, index) in order.orderList" v-bind:key="index">
+                  {{ item.item[0].title_item }} => {{item.number}} กล่อง
+                </li>
+              </ul>
             </td>
             <!-- <td>{{ order.created_at }}</td> -->
             <!-- <td>{{ admin.created_at }}</td> -->

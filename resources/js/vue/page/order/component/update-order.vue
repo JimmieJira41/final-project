@@ -323,6 +323,7 @@ export default {
       customerSelected: undefined,
       itemChecked: [],
       itemListChecked: [],
+      currentItemListChecked: [],
       tempItemListChecked: [],
       title_stock: "",
       id_customer: "",
@@ -347,10 +348,10 @@ export default {
   },
   methods: {
     calCost(number, cost, index) {
-      if(number == 0){
+      if (number == 0) {
         this.itemListChecked[index].total_cost = number * cost;
       }
-      if (number && cost){
+      if (number && cost) {
         this.itemListChecked[index].total_cost = number * cost;
       }
     },
@@ -358,28 +359,42 @@ export default {
       console.log("click delete : " + id_item);
       console.log(this.itemListChecked.length);
       this.itemChecked = [];
-      this.tempItemListChecked = [];
+      this.currentItemListChecked = [];
       this.itemListChecked.map((item) => {
         if (item.id_item != id_item) {
-          this.tempItemListChecked.push(item);
+          this.currentItemListChecked.push(item);
           this.itemChecked.push(item.id_item);
         }
       });
       console.log(this.itemListChecked.length);
-      this.itemListChecked = this.tempItemListChecked;
+      this.itemListChecked = this.currentItemListChecked;
     },
     selectItem() {
       if (this.itemListChecked.length > 0) {
         this.itemListChecked = [];
       }
       console.log(this.itemList);
-      this.itemChecked.forEach((i, index) => {
+      this.itemChecked.forEach((i) => {
         this.itemList.forEach((item) => {
           if (item.id_item == i) {
             this.itemListChecked.push(item);
-            console.log(this.itemListChecked + " " + index);
-            this.itemListChecked[index].number = 0;
-            this.itemListChecked[index].total_cost = 0;
+            let indexList = this.itemListChecked.length - 1;
+            let tempItemList = [];
+            this.tempItemListChecked.forEach((tempItem) => {
+              tempItemList.push(tempItem.id_item);
+            });
+            let indexTarget = tempItemList.indexOf(
+              this.itemListChecked[indexList].id_item
+            );
+            if (indexTarget != -1) {
+              this.itemListChecked[indexList].number =
+                this.tempItemListChecked[indexTarget].number;
+              this.itemListChecked[indexList].total_cost =
+                this.tempItemListChecked[indexTarget].total_cost;
+            } else {
+              this.itemListChecked[indexList].number = 0;
+              this.itemListChecked[indexList].total_cost = 0;
+            }
           }
         });
       });
@@ -456,19 +471,19 @@ export default {
           this.amphure_address_customer = response.data.address.amphure_address;
           this.tombon_address_customer = response.data.address.tombon_address;
           this.zipcode_address_customer = response.data.address.zipcode_address;
-          response.data.orderList.forEach((order) =>{
+          response.data.orderList.forEach((order) => {
             console.log(order);
             order.item.id_order = order.id_order;
             order.item.number = order.number;
-            this.itemListChecked.push(order);
+            this.itemListChecked.push(order.item);
           });
           this.itemListChecked.forEach((item) => {
             this.itemChecked.push(item.id_item);
           });
+          this.tempItemListChecked = this.itemListChecked;
           this.isItemSelectedTableReady = true;
           console.log(this.itemChecked);
           console.log(this.itemListChecked);
-
         }
       });
     },
@@ -498,14 +513,34 @@ export default {
     submitUpdateOrder() {
       const orderObj = {};
       let orderNotReady = true;
-      orderObj.id_order = this.id_order;
+      // orderObj.id_order = this.id_order;
       orderObj.id_customer = this.id_customer;
       orderObj.id_address = 1;
+      let tempList = [];
+      this.tempItemListChecked.forEach((temp) => {
+        tempList.push(temp.id_item);
+      });
+      this.itemListChecked.forEach((item) => {
+        let index = tempList.indexOf(item.id_item);
+        if (index != -1) {
+          item.id_order = this.tempItemListChecked[index].id_order;
+        } else {
+          item.id_order = "";
+        }
+      });
       orderObj.items = this.itemListChecked;
+      this.tempItemListChecked.forEach((tempItem) =>{
+        if(this.itemChecked.indexOf(tempItem.id_item) == -1){
+          orderObj.items.push({
+            id_order : tempItem.id_order,
+            id_item : ""
+          })
+        }
+      })
       orderObj.create_by = "jimmie";
       console.log(orderObj);
       orderNotReady = this.itemListChecked.some(
-        (item) => item.number == "" || item.number == 0 || item.number == null
+        (item) => item.number == "" || item.number == 0
       );
       if (orderNotReady) {
         this.$swal({

@@ -15,6 +15,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import VueNextSelect from 'vue-next-select'
 import 'sweetalert2/dist/sweetalert2.min.css';
 import App from './vue/app.vue'
+import Login from './vue/page/register/login.vue'
 import Home from './vue/home.vue'
 import Admin from './vue/page/admin/admin.vue'
 import CreateAdmin from './vue/page/admin/component/create-admin.vue'
@@ -41,6 +42,11 @@ const options = {
 const routes = [
     {
         path: '/',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/home',
         name: 'Home',
         component: Home
     },
