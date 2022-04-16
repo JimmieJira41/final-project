@@ -1,6 +1,6 @@
 <template>
   <div class="container card borderless shadow p-3">
-    <form class="form-group">
+    <form class="form-group p-2">
       <h3>ข้อมูลรายการสั่งซื้อ</h3>
       <hr />
       <div class="row">
@@ -137,7 +137,11 @@
             <tr>
               <th scope="row" class="w-20">รายการ</th>
               <th scope="row" class="w-20">รายละเอียด</th>
-              <th scope="row" class="w-20">จำนวนกล่อง</th>
+              <th scope="row" class="w-20 text-center">จำนวนกล่อง</th>
+              <th scope="row" class="w-20 text-center">โปรโมชั่น</th>
+              <th scope="row" class="w-20 text-center">
+                เพิ่มพิเศษ (กิโลกรัม)
+              </th>
               <th scope="row" class="w-20">ราคาต่อกล่อง</th>
               <th scope="row" class="w-20">ราคารวม</th>
               <th class="text-center" scope="row" colspan="3">จัดการ</th>
@@ -147,14 +151,37 @@
             <tr v-for="(item, index) in itemListChecked" v-bind:key="index">
               <td>{{ item.title_item }}</td>
               <td>{{ item.description_item }}</td>
-              <td>
+              <td class="w-20">
                 <input
                   v-model="item.number"
                   type="number"
                   class="form-control text-center"
+                  placeholder="กรุณากรอกจำนวน"
                   id="number"
                   v-bind:change="calCost(item.number, item.cost_item, index)"
                 />
+              </td>
+              <td class="text-center">
+                <select class="form-select"
+                    v-model="item.id_promotion"
+                >
+                  <option value="">เลือกโปรโมชั่น</option>
+                  <option
+                    v-for="(promotion, index) in promotionList"
+                    v-bind:key="index"
+                    :value="promotion.id_promotion"
+                  >
+                    {{ promotion.title_promotion }}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <input 
+                v-model="item.extra_number"
+                type="number"
+                id="extra_number"
+                placeholder="กรุณากรอกจำนวนเพิ่มเติม"
+                class="form-control text-center" />
               </td>
               <td>
                 <p>{{ item.cost_item }}</p>
@@ -342,14 +369,19 @@ export default {
       tel_customer: "",
       description_stock: "",
       total_stock: 0,
+      status_order: false,
+      status_payment: false,
       // total_cost: 0,
-      number: 0,
+      number: "",
       // address
+      id_address: "",
       description_address_customer: "",
       province_address_customer: "",
       amphure_address_customer: "",
       tombon_address_customer: "",
       zipcode_address_customer: "",
+      // promotion
+      promotionList: [],
       // data
       isItemSelectedTableReady: false,
       isReadyItemTable: false,
@@ -357,6 +389,14 @@ export default {
     };
   },
   methods: {
+    prepareOrder() {
+      axios.get("/api/order/prepare-order").then((response) => {
+        if (response) {
+          console.log(response.data);
+          this.id_order = response.data.id_order;
+        }
+      });
+    },
     calCost(number, cost, index) {
       if (number && cost)
         this.itemListChecked[index].total_cost = number * cost;
@@ -385,7 +425,7 @@ export default {
           if (item.id_item == i) {
             this.itemListChecked.push(item);
             console.log(this.itemListChecked + " " + index);
-            this.itemListChecked[index].number = 0;
+            this.itemListChecked[index].number = "";
             this.itemListChecked[index].total_cost = 0;
           }
         });
@@ -411,6 +451,7 @@ export default {
         customerSelected.address.description_address;
       this.province_address_customer =
         customerSelected.address.province_address;
+      this.id_address = customerSelected.default_id_address;
       this.amphure_address_customer = customerSelected.address.amphure_address;
       this.tombon_address_customer = customerSelected.address.tombon_address;
       this.zipcode_address_customer = customerSelected.address.zipcode_address;
@@ -431,9 +472,9 @@ export default {
     getAllCustomer() {
       axios.get("/api/customer/get-all-customer").then((response) => {
         this.customerList = response.data;
-        this.customerList.forEach((customer)=>{
+        this.customerList.forEach((customer) => {
           customer.select = false;
-        })
+        });
         this.tempCustomerList = this.customerList;
       });
     },
@@ -442,6 +483,9 @@ export default {
         if (response) {
           response.data.map((item) => {
             item.isSeleted = false;
+            item.id_promotion = "";
+            item.number_promotion = "";
+            item.extra_number = "";
           });
           this.itemList = response.data;
           console.log(this.itemList);
@@ -449,25 +493,47 @@ export default {
         }
       });
     },
+    getAllPromotion() {
+      axios.get("/api/promotion/get-all-promotion").then((response) => {
+        if (response) {
+          this.promotionList = response.data;
+          this.isTablePromotionListReady = true;
+        }
+      });
+    },
     searchCustomer() {
       console.log(this.customerSelected);
       console.log(this.keyword_search_customer);
-      if(this.keyword_search_customer == "" || this.keyword_search_customer == 0 || this.keyword_search_customer == null){
+      if (
+        this.keyword_search_customer == "" ||
+        this.keyword_search_customer == 0 ||
+        this.keyword_search_customer == null
+      ) {
         this.customerList = this.tempCustomerList;
-      }else{
-        this.customerList = this.tempCustomerList.filter((customer) => customer.firstname_customer.includes(this.keyword_search_customer) || customer.lastname_customer.includes(this.keyword_search_customer))
+      } else {
+        this.customerList = this.tempCustomerList.filter(
+          (customer) =>
+            customer.firstname_customer.includes(
+              this.keyword_search_customer
+            ) ||
+            customer.lastname_customer.includes(this.keyword_search_customer)
+        );
       }
       console.log(this.customerList);
-      
     },
     submitCreateOrder() {
       const orderObj = {};
       let orderNotReady = true;
+      orderObj.id_order = this.id_order;
       orderObj.id_customer = this.id_customer;
-      orderObj.id_address = 1;
+      orderObj.name_customer =
+        this.firstname_customer + " " + this.lastname_customer;
+      orderObj.id_address = this.id_address;
       orderObj.items = this.itemListChecked;
       orderObj.create_by = "jimmie";
-      console.log(orderObj);
+      (orderObj.status_order = this.status_order),
+        (orderObj.status_payment = this.status_payment),
+        console.log(orderObj);
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0 || item.number == null
       );
@@ -507,8 +573,10 @@ export default {
     },
   },
   mounted() {
+    this.prepareOrder();
     this.getAllCustomer();
     this.getAllItem();
+    this.getAllPromotion();
   },
 };
 </script>

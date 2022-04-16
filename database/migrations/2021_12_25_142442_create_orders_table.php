@@ -14,12 +14,14 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id('id_order');
+            $table->string('id_order');
+            $table->string('id_sub_order');
+            $table->string('name_customer');
             $table->string('id_customer');
             $table->string('id_address');
-            $table->string('id_item');
-            $table->integer('number');
-            $table->integer('cost_order')->default(0);
+            $table->boolean('status_order');
+            $table->boolean('status_payment');
+            $table->integer('total_cost_order')->default(0);
             $table->string('create_by');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

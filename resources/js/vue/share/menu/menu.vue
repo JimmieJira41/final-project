@@ -11,7 +11,7 @@
             <ul class="navbar-nav w-100 d-flex flex-sm-column justify-content-center align-self-center text-center">
             <li class="active py-3">
                 <a href="javascript:;">
-                <p><i class="fas fa-home"></i> <router-link to="/">หน้าหลัก</router-link></p>
+                <p><i class="fas fa-home fs-3"></i> <router-link to="/">หน้าหลัก</router-link></p>
                 </a>
             </li>
             <li class="py-3">
@@ -27,6 +27,11 @@
             <li class="py-3">
                 <a href="javascript:;">
                 <p><i class="fas fa-carrot fs-3"></i> <router-link to="/item">จัดการข้อมูลสินค้า</router-link></p>
+                </a>
+            </li>
+             <li class="py-3">
+                <a href="javascript:;">
+                <p><i class="fas fa-tag fs-3"></i> <router-link to="/promotion">จัดการโปรโมชั่น</router-link></p>
                 </a>
             </li>
             <li class="py-3">

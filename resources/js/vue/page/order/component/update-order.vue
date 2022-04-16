@@ -1,6 +1,6 @@
 <template>
   <div class="container card borderless shadow p-3">
-    <form class="form-group">
+    <form class="form-group p-2">
       <h3>ข้อมูลรายการสั่งซื้อ</h3>
       <hr />
       <div class="row">
@@ -10,19 +10,19 @@
           </div>
           <div class="col-6 text-end">
             <button
-              class="btn btn-primary mx-2"
+              class="btn btn-warning mx-2"
+              type="button"
+              @click="clearCustomerSelected()"
+            >
+              เคลียร์ข้อมูลลูกค้า
+            </button>
+            <button
+              class="btn btn-primary"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#customerListModal"
             >
               เลือกรายชื่อลูกค้า
-            </button>
-            <button
-              class="btn btn-warning"
-              type="button"
-              @click="clearCustomerSelected()"
-            >
-              เคลียร์ข้อมูลลูกค้า
             </button>
           </div>
         </div>
@@ -120,6 +120,21 @@
         <hr class="my-4" />
         <h4 class="text-center">ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
         <div class="text-end pb-2">
+          <h4>
+            สถานะการชำระเงิน :
+            <p v-if="!status_payment" class="text-danger">ค้างชำระเงิน</p>
+            <p v-else class="text-success">ชำระเงินแล้ว</p>
+          </h4>
+          <button
+            :disabled="
+              customerSelected == undefined || customerSelected == null
+            "
+            class="btn btn-warning mx-2"
+            type="button"
+            v-on:click="status_payment = true"
+          >
+            อัพเดรตสถานะรายการสั่งซื้อ
+          </button>
           <button
             :disabled="
               customerSelected == undefined || customerSelected == null
@@ -137,7 +152,11 @@
             <tr>
               <th scope="row" class="w-20">รายการ</th>
               <th scope="row" class="w-20">รายละเอียด</th>
-              <th scope="row" class="w-20">จำนวนกล่อง</th>
+              <th scope="row" class="w-20 text-center">จำนวนกล่อง</th>
+              <th scope="row" class="w-20 text-center">โปรโมชั่น</th>
+              <th scope="row" class="w-20 text-center">
+                เพิ่มพิเศษ (กิโลกรัม)
+              </th>
               <th scope="row" class="w-20">ราคาต่อกล่อง</th>
               <th scope="row" class="w-20">ราคารวม</th>
               <th class="text-center" scope="row" colspan="3">จัดการ</th>
@@ -155,6 +174,26 @@
                   id="number"
                   v-bind:change="calCost(item.number, item.cost_item, index)"
                 />
+              </td>
+              <td class="text-center">
+                <select class="form-select" v-model="item.id_promotion">
+                  <option selected>เลือกโปรโมชั่น</option>
+                  <option
+                    v-for="(promotion, index) in promotionList"
+                    v-bind:key="index"
+                    :value="promotion.id_promotion"
+                  >
+                    {{ promotion.title_promotion }}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <input
+                  v-model="item.extra_number"
+                  type="number"
+                  id="extra_number"
+                  class="form-control text-center" />
+                  <i class="far fa-clipboard"></i>
               </td>
               <td>
                 <p>{{ item.cost_item }}</p>
@@ -327,6 +366,8 @@ export default {
       tempItemListChecked: [],
       title_stock: "",
       id_customer: "",
+      id_order: "",
+      status_payment: false,
       firstname_customer: "",
       lastname_customer: "",
       tel_customer: "",
@@ -340,6 +381,8 @@ export default {
       amphure_address_customer: "",
       tombon_address_customer: "",
       zipcode_address_customer: "",
+      // promotion
+      promotionList: [],
       // data
       isItemSelectedTableReady: false,
       isReadyItemTable: false,
@@ -378,15 +421,22 @@ export default {
         this.itemList.forEach((item) => {
           if (item.id_item == i) {
             this.itemListChecked.push(item);
+            console.log("itemListChecked : " + this.itemListChecked.length);
             let indexList = this.itemListChecked.length - 1;
+            console.log("indexList : " + indexList);
+            console.log("item: " + this.itemListChecked[indexList].id_item);
             let tempItemList = [];
             this.tempItemListChecked.forEach((tempItem) => {
-              tempItemList.push(tempItem.id_item);
+              tempItemList.push(parseInt(tempItem.id_item));
             });
+            console.log(tempItemList);
             let indexTarget = tempItemList.indexOf(
               this.itemListChecked[indexList].id_item
             );
+            console.log(this.itemListChecked[indexList].id_item);
+
             if (indexTarget != -1) {
+              console.log("indeTarget : " + indexTarget);
               this.itemListChecked[indexList].number =
                 this.tempItemListChecked[indexTarget].number;
               this.itemListChecked[indexList].total_cost =
@@ -457,10 +507,18 @@ export default {
         }
       });
     },
-    getOrder(id_customer) {
-      axios.get("/api/order/get-order/" + id_customer).then((response) => {
+    getAllPromotion() {
+      axios.get("/api/promotion/get-all-promotion").then((response) => {
         if (response) {
-          console.log(response);
+          this.promotionList = response.data;
+          this.isTablePromotionListReady = true;
+        }
+      });
+    },
+    getOrder(id_order) {
+      axios.get("/api/order/get-order/" + id_order).then((response) => {
+        if (response) {
+          this.id_customer = response.data.customer.id_customer;
           this.firstname_customer = response.data.customer.firstname_customer;
           this.lastname_customer = response.data.customer.lastname_customer;
           this.tel_customer = response.data.customer.tel_customer;
@@ -471,11 +529,9 @@ export default {
           this.amphure_address_customer = response.data.address.amphure_address;
           this.tombon_address_customer = response.data.address.tombon_address;
           this.zipcode_address_customer = response.data.address.zipcode_address;
-          response.data.orderList.forEach((order) => {
-            console.log(order);
-            order.item.id_order = order.id_order;
-            order.item.number = order.number;
-            this.itemListChecked.push(order.item);
+          this.status_payment = response.data.status_payment;
+          response.data.subOrders.forEach((order) => {
+            this.itemListChecked.push(order);
           });
           this.itemListChecked.forEach((item) => {
             this.itemChecked.push(item.id_item);
@@ -513,32 +569,38 @@ export default {
     submitUpdateOrder() {
       const orderObj = {};
       let orderNotReady = true;
-      // orderObj.id_order = this.id_order;
+      orderObj.id_order = this.id_order;
       orderObj.id_customer = this.id_customer;
+      orderObj.name_customer = String(
+        this.firstname_customer + " " + this.lastname_customer
+      );
       orderObj.id_address = 1;
-      let tempList = [];
-      this.tempItemListChecked.forEach((temp) => {
-        tempList.push(temp.id_item);
-      });
-      this.itemListChecked.forEach((item) => {
-        let index = tempList.indexOf(item.id_item);
-        if (index != -1) {
-          item.id_order = this.tempItemListChecked[index].id_order;
-        } else {
-          item.id_order = "";
-        }
-      });
-      orderObj.items = this.itemListChecked;
-      this.tempItemListChecked.forEach((tempItem) =>{
-        if(this.itemChecked.indexOf(tempItem.id_item) == -1){
-          orderObj.items.push({
-            id_order : tempItem.id_order,
-            id_item : ""
-          })
-        }
-      })
+      orderObj.subOrders = this.itemListChecked;
       orderObj.create_by = "jimmie";
-      console.log(orderObj);
+      orderObj.status_payment = this.status_payment;
+      // let tempList = [];
+      // this.tempItemListChecked.forEach((temp) => {
+      //   tempList.push(temp.id_item);
+      // });
+      // this.itemListChecked.forEach((item) => {
+      //   let index = tempList.indexOf(item.id_item);
+      //   if (index != -1) {
+      //     item.id_order = this.tempItemListChecked[index].id_order;
+      //   } else {
+      //     item.id_order = "";
+      //   }
+      // });
+      // orderObj.items = this.itemListChecked;
+      // this.tempItemListChecked.forEach((tempItem) =>{
+      //   if(this.itemChecked.indexOf(tempItem.id_item) == -1){
+      //     orderObj.items.push({
+      //       id_order : tempItem.id_order,
+      //       id_item : ""
+      //     })
+      //   }
+      // })
+      // orderObj.create_by = "jimmie";
+      // console.log(orderObj);
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0
       );
@@ -578,13 +640,14 @@ export default {
     },
   },
   mounted() {
-    this.id_customer = this.$route.params.id_customer;
+    this.id_order = this.$route.params.id_order;
     // this.id_order = this.$route.params.id_order;
     // this.id_item = this.$route.params.id_item;
     // this.getCustomer(this.id_customer);
-    this.getOrder(this.id_customer);
+    this.getOrder(this.id_order);
     this.getAllCustomer();
     this.getAllItem();
+    this.getAllPromotion();
   },
 };
 </script>

@@ -96,6 +96,10 @@ class AdminManagement extends Controller
     public function getAll(){
         return response()->json(admin::all());
     }
+    public function getAdminById(Request $request){
+        $admin = admin::where('id_admin', $request->keyword)->get()->first();
+        return response()->json($admin);
+    }
     public function searchAdmin(Request $request){
         $admin = admin::where("id_admin", "LIKE", "%" .$request['id_admin']. "%")
         ->orWhere("username_admin", "LIKE", "%" .$request['username_admin']. "%")

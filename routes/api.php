@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderManagement;
 use App\Http\Controllers\StockManagement;
 use App\Http\Controllers\ItemManagement;
 use App\Http\Controllers\HistoryManagement;
+use App\Http\Controllers\PromotionManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,17 +39,19 @@ Route::prefix('admin')->group(function(){
     Route::put('/update-admin', [AdminManagement::class, 'update']);
     Route::delete('/delete-admin', [AdminManagement::class, 'delete']);
     Route::get('/get-all-admin', [AdminManagement::class, 'getAll']);
+    Route::get('/get-admin/{keyword}', [AdminManagement::class, 'getAdminById']);
     Route::get('/search-admin/{keyword}', [AdminManagement:: class, 'searchAdmin']);
 });
 Route::prefix('order')->group(function(){
+    Route::get('/prepare-order',[OrderManagement::class, 'prepareOrder']);
     Route::post('/new-order',[OrderManagement::class, 'create']);
     Route::put('/update-order', [OrderManagement::class, 'update']);
     Route::delete('/delete-order', [OrderManagement::class, 'delete']);
     Route::get('/get-all-order', [OrderManagement::class, 'getAll']);
-    Route::get('/get-order/{keyword}', [OrderManagement:: class, 'getAllOrderGroupByCustomerId']);
+    Route::get('/get-order/{keyword}', [OrderManagement:: class, 'getOrderbyId']);
     Route::get('/get-order-group-by-item',[OrderManagement::class, 'getAllOrderGroupByItem']);
     Route::get('/get-order-group-by-customer',[OrderManagement::class, 'getAllOrderGroupByCustomer']);
-    Route::get('/get-order-by-customer/{keyword}', [OrderManagement:: class, 'getOrderByCustomerId']);
+    Route::get('/get-order-by-customer/{keyword}', [OrderManagement:: class, 'getAllOrderGroupByCustomerId']);
     Route::post('/cut-off-order',[OrderManagement::class, 'cutOffOrder']);
     Route::get('/get-label-excel-file',[OrderManagement::class, 'exportExcel']);
 
@@ -81,6 +84,12 @@ Route::prefix('address')->group(function(){
 Route::prefix('history')->group(function(){
     Route::get('/get-history-by-customer-id/{keyword}',[HistoryManagement::class, 'getHistoryByCustomerId']);
     Route::get('/get-all-history-order',[HistoryManagement::class, 'getAllHistoryOrder']);
+});
+Route::prefix('promotion')->group(function(){
+    Route::post('/new-promotion',[PromotionManagement::class, 'createPromotion']);
+    Route::post('/update-promotion',[PromotionManagement::class, 'updatePromotion']);
+    Route::get('/get-all-promotion',[PromotionManagement::class, 'getAllPromotion']);
+    Route::get('/get-promotion-by-id/{keyword}',[PromotionManagement::class, 'getPromotionByIdPromotion']);
 });
 Route::prefix('analysis')->group(function(){
     Route::post('/get-data-analysis',[AnalysisManagement::class, 'getAnlysis']);

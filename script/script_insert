@@ -1,0 +1,15 @@
+INSERT INTO public.customers(
+	 firstname_customer, lastname_customer, tel_customer, line_contact_customer, facebook_contact_customer, default_id_address, id_addresses, created_at, updated_at)
+	VALUES ('ณัฐดนัย', 'จิระกังวาน', '0901325797', '', '', '1', '1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.addresses(
+	description_address, province_address, amphure_address, tombon_address, zipcode_address, id_customer, created_at, updated_at)
+	VALUES ('332/16', 'เชียงใหม่', 'ฝาง', 'สันทราย', '50110', '1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.items(
+	title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+	VALUES ('ส้มเบอร์ผิวลาย 3 * 10', 'ส้มเบอร์ 3 ผิวลาย 10 กิโลกรัม', 399, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.stocks(
+	title_stock, description_stock, total_stock, created_at, updated_at)
+	VALUES ('ส้มเบอร์ 3 ผิวลาย', 'ส้มเบอร์ 3 ผิวลาย', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

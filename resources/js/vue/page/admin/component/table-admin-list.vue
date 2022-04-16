@@ -19,7 +19,7 @@
                     <td>{{ admin.tel_admin }}</td>
                     <!-- <td>{{ admin.created_at }}</td> -->
                     <td class="text-center" v-on:click="viewDetailAdmin(admin.id_admin)"><router-link to="/admin/craete-admin"><i class="fas fa-eye"></i></router-link></td>
-                    <td class="text-center" ><router-link to="/admin/update-admin/"><i class="fas fa-cog"></i></router-link></td>
+                    <td class="text-center" ><router-link :to="'/admin/update-admin/' + admin.id_admin"><i class="fas fa-cog"></i></router-link></td>
                     <td class="text-center" v-on:click="deleteAdmin(admin.id_admin)"><i class="fas fa-trash-alt"></i></td>
                 </tr>
             </tbody>    

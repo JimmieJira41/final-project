@@ -19,6 +19,7 @@ import Login from './vue/page/register/login.vue'
 import Home from './vue/home.vue'
 import Admin from './vue/page/admin/admin.vue'
 import CreateAdmin from './vue/page/admin/component/create-admin.vue'
+import UpdateAdmin from './vue/page/admin/component/update-admin.vue'
 import Customer from './vue/page/customer/customer.vue'
 import CreateCustomer from './vue/page/customer/component/create-customer.vue'
 import UpdateCustomer from './vue/page/customer/component/update-customer.vue'
@@ -32,6 +33,9 @@ import UpdateItem from './vue/page/item/component/update-item.vue'
 import Stock from './vue/page/stock/stock.vue'
 import CreateStock from './vue/page/stock/component/create-stock.vue'
 import UpdateStock from './vue/page/stock/component/update-stock.vue'
+import Promotion from './vue/page/promotion/promotion.vue';
+import CreatePromotion from './vue/page/promotion/component/create-promotion.vue';
+import UpdatePromotion from './vue/page/promotion/component/update-promotion.vue';
 import Analysis from './vue/page/analysis/analysis.vue'
 
 const options = {
@@ -59,6 +63,11 @@ const routes = [
         path: '/admin/craete-admin',
         name: 'CreateAdmin',
         component: CreateAdmin
+    },
+    {
+        path: '/admin/update-admin/:id',
+        name: 'UpdateAdmin',
+        component: UpdateAdmin
     },
     {
         path: '/customer',
@@ -91,7 +100,7 @@ const routes = [
         component: CreateOrder
     },
     {
-        path: '/order/update-order/:id_customer',
+        path: '/order/update-order/:id_order',
         name: 'UpdateOrder',
         component: UpdateOrder
     },
@@ -124,6 +133,21 @@ const routes = [
         path: '/stock/update-stock/:id',
         name: 'UpdateStcok',
         component: UpdateStock
+    },
+    {
+        path: '/promotion',
+        name: 'Promotion',
+        component: Promotion
+    },
+    {
+        path: '/promotion/create-promotion',
+        name: 'CreatePromotion',
+        component: CreatePromotion
+    },
+    {
+        path: '/promotion/update-promotion/:id',
+        name: 'UpdatePromotion',
+        component: UpdatePromotion
     },
     {
         path: '/analysis',
