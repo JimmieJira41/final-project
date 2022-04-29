@@ -4,122 +4,135 @@
       <h3>ข้อมูลรายการสั่งซื้อ</h3>
       <hr />
       <div class="row">
-        <div class="row">
-          <div class="col-6">
-            <h4><i class="fas fa-user-alt"></i> ข้อมูลผู้สั่งซื้อ</h4>
-          </div>
-          <div class="col-6 text-end">
-            <button
-              class="btn btn-primary mx-2"
-              type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#customerListModal"
-            >
-              เลือกรายชื่อลูกค้า
-            </button>
-            <button
-              class="btn btn-warning"
-              type="button"
-              @click="clearCustomerSelected()"
-            >
-              เคลียร์ข้อมูลลูกค้า
-            </button>
-          </div>
+        <!-- <div class="row"> -->
+        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+          <h4><i class="fas fa-user-alt"></i> ข้อมูลผู้สั่งซื้อ</h4>
         </div>
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-            <label for="firstname_customer">ชื่อ</label>
-            <input
-              :disabled="isDisable"
-              v-model="firstname_customer"
-              type="text"
-              class="form-control"
-              id="firstname_customer"
-              placeholder=""
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-            <label for="lastname_customer">นามสกุล</label>
-            <input
-              :disabled="isDisable"
-              v-model="lastname_customer"
-              type="text"
-              class="form-control"
-              id="lastname_customer"
-              placeholder=""
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-            <label for="tel_customer">เบอร์โทรศัพท์</label>
-            <input
-              :disabled="isDisable"
-              v-model="tel_customer"
-              type="tel"
-              class="form-control"
-              id="tel_customer"
-              placeholder=""
-            />
-          </div>
-          <h4 class="my-3">ข้อมูลที่อยู่</h4>
-          <div class="col-12">
-            <label for="description_address_customer">รายละเอียด</label>
-            <textarea
-              :disabled="isDisable"
-              v-model="description_address_customer"
-              type="textarea"
-              class="form-control"
-              id="description_address_customer"
-              placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-            <label for="province_address_customer">จังหวัด</label>
-            <input
-              :disabled="isDisable"
-              v-model="province_address_customer"
-              type="text"
-              class="form-control"
-              id="province_address_customer"
-              placeholder=""
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-            <label for="amphure_address_customer">อำเภอ</label>
-            <input
-              :disabled="isDisable"
-              v-model="amphure_address_customer"
-              type="text"
-              class="form-control"
-              id="amphure_address_customer"
-              placeholder=""
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-            <label for="tombon_address_customer">ตำบล</label>
-            <input
-              :disabled="isDisable"
-              v-model="tombon_address_customer"
-              type="text"
-              class="form-control"
-              id="tombon_address_customer"
-              placeholder=""
-            />
-          </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-            <label for="zipcode_address_customer">รหัสไปรษณี</label>
-            <input
-              :disabled="isDisable"
-              v-model="zipcode_address_customer"
-              type="text"
-              class="form-control"
-              id="zipcode_address_customer"
-              placeholder=""
-            />
-          </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-end">
+          <button
+            class="btn btn-primary mx-2"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#customerListModal"
+          >
+            เลือกรายชื่อลูกค้า
+          </button>
+          <button
+            class="btn btn-warning"
+            type="button"
+            @click="clearCustomerSelected()"
+          >
+            เคลียร์ข้อมูลลูกค้า
+          </button>
+        </div>
+        <!-- </div> -->
+        <!-- <div class="row"> -->
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+          <label for="firstname_customer">ชื่อ</label>
+          <input
+            :disabled="isDisable"
+            v-model="firstname_customer"
+            type="text"
+            class="form-control"
+            id="firstname_customer"
+            placeholder=""
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+          <label for="lastname_customer">นามสกุล</label>
+          <input
+            :disabled="isDisable"
+            v-model="lastname_customer"
+            type="text"
+            class="form-control"
+            id="lastname_customer"
+            placeholder=""
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+          <label for="tel_customer">เบอร์โทรศัพท์</label>
+          <input
+            :disabled="isDisable"
+            v-model="tel_customer"
+            type="tel"
+            class="form-control"
+            id="tel_customer"
+            placeholder=""
+          />
+        </div>
+        <h4 class="my-3">ข้อมูลที่อยู่</h4>
+        <div class="col-12">
+          <label for="description_address_customer">รายละเอียด</label>
+          <textarea
+            :disabled="isDisable"
+            v-model="description_address_customer"
+            type="textarea"
+            class="form-control"
+            id="description_address_customer"
+            placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <label for="province_address_customer">จังหวัด</label>
+          <input
+            :disabled="isDisable"
+            v-model="province_address_customer"
+            type="text"
+            class="form-control"
+            id="province_address_customer"
+            placeholder=""
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <label for="amphure_address_customer">อำเภอ</label>
+          <input
+            :disabled="isDisable"
+            v-model="amphure_address_customer"
+            type="text"
+            class="form-control"
+            id="amphure_address_customer"
+            placeholder=""
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <label for="tombon_address_customer">ตำบล</label>
+          <input
+            :disabled="isDisable"
+            v-model="tombon_address_customer"
+            type="text"
+            class="form-control"
+            id="tombon_address_customer"
+            placeholder=""
+          />
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <label for="zipcode_address_customer">รหัสไปรษณี</label>
+          <input
+            :disabled="isDisable"
+            v-model="zipcode_address_customer"
+            type="text"
+            class="form-control"
+            id="zipcode_address_customer"
+            placeholder=""
+          />
+          <!-- </div> -->
         </div>
         <hr class="my-4" />
         <h4 class="text-center">ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
-        <div class="text-end pb-2">
+        <!-- <div class="row"> -->
+        <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-start pb-2">
+          <v-date-picker mode="date" :masks="masks" v-model="delivery_date">
+            <template #default="{ inputValue, inputEvents }">
+              <label><h5 class="mr-2">รอบจัดส่ง</h5></label>
+              <input
+                class="px-3 py-1 border rounded"
+                :value="inputValue"
+                v-on="inputEvents"
+              />
+            </template>
+          </v-date-picker>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-end">
           <button
             :disabled="
               customerSelected == undefined || customerSelected == null
@@ -131,87 +144,90 @@
           >
             เลือกรายการสินค้า
           </button>
+          <!-- </div> -->
         </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="row" class="w-20">รายการ</th>
-              <th scope="row" class="w-20">รายละเอียด</th>
-              <th scope="row" class="w-20 text-center">จำนวนกล่อง</th>
-              <th scope="row" class="w-20 text-center">โปรโมชั่น</th>
-              <th scope="row" class="w-20 text-center">
-                เพิ่มพิเศษ (กิโลกรัม)
-              </th>
-              <th scope="row" class="w-20">ราคาต่อกล่อง</th>
-              <th scope="row" class="w-20">ราคารวม</th>
-              <th class="text-center" scope="row" colspan="3">จัดการ</th>
-            </tr>
-          </thead>
-          <tbody v-if="isItemSelectedTableReady">
-            <tr v-for="(item, index) in itemListChecked" v-bind:key="index">
-              <td>{{ item.title_item }}</td>
-              <td>{{ item.description_item }}</td>
-              <td class="w-20">
-                <input
-                  v-model="item.number"
-                  type="number"
-                  class="form-control text-center"
-                  placeholder="กรุณากรอกจำนวน"
-                  id="number"
-                  v-bind:change="calCost(item.number, item.cost_item, index)"
-                />
-              </td>
-              <td class="text-center">
-                <select class="form-select"
-                    v-model="item.id_promotion"
-                >
-                  <option value="">เลือกโปรโมชั่น</option>
-                  <option
-                    v-for="(promotion, index) in promotionList"
-                    v-bind:key="index"
-                    :value="promotion.id_promotion"
-                  >
-                    {{ promotion.title_promotion }}
-                  </option>
-                </select>
-              </td>
-              <td>
-                <input 
-                v-model="item.extra_number"
-                type="number"
-                id="extra_number"
-                placeholder="กรุณากรอกจำนวนเพิ่มเติม"
-                class="form-control text-center" />
-              </td>
-              <td>
-                <p>{{ item.cost_item }}</p>
-              </td>
-              <td>{{ item.total_cost }}</td>
-              <td class="text-center" v-on:click="removeItem(item.id_item)">
-                <i class="fas fa-trash-alt"></i>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="row" class="w-20">รายการ</th>
+                <th scope="row" class="w-20">รายละเอียด</th>
+                <th scope="row" class="w-20 text-center">จำนวนกล่อง</th>
+                <th scope="row" class="w-20 text-center">โปรโมชั่น</th>
+                <th scope="row" class="w-20 text-center">
+                  เพิ่มพิเศษ (กิโลกรัม)
+                </th>
+                <th scope="row" class="w-20">ราคาต่อกล่อง</th>
+                <th scope="row" class="w-20">ราคารวม</th>
+                <th class="text-center" scope="row" colspan="3">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody v-if="isItemSelectedTableReady">
+              <tr v-for="(item, index) in itemListChecked" v-bind:key="index">
+                <td>{{ item.title_item }}</td>
+                <td>{{ item.description_item }}</td>
+                <td class="w-20">
+                  <input
+                    v-model="item.number"
+                    type="number"
+                    class="form-control text-center"
+                    placeholder="กรุณากรอกจำนวน"
+                    id="number"
+                    v-bind:change="calCost(item.number, item.cost_item, index)"
+                  />
+                </td>
+                <td class="text-center">
+                  <select class="form-select" v-model="item.id_promotion">
+                    <option value="">เลือกโปรโมชั่น</option>
+                    <option
+                      v-for="(promotion, index) in promotionList"
+                      v-bind:key="index"
+                      :value="promotion.id_promotion"
+                    >
+                      {{ promotion.title_promotion }}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    v-model="item.extra_number"
+                    type="number"
+                    id="extra_number"
+                    placeholder="กรุณากรอกจำนวนเพิ่มเติม"
+                    class="form-control text-center"
+                  />
+                </td>
+                <td>
+                  <p>{{ item.cost_item }}</p>
+                </td>
+                <td>{{ item.total_cost }}</td>
+                <td class="text-center" v-on:click="removeItem(item.id_item)">
+                  <i class="fas fa-trash-alt"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </form>
-    <div class="my-3 text-end">
-      <button
-        :disabled="validateNumberItem()"
-        class="btn btn-primary mx-1 col-1"
-        v-on:click="submitCreateOrder()"
-      >
-        ยืนยัน
-      </button>
-      <button
-        class="btn btn-danger mx-1 col-1"
-        v-on:click="this.$router.go(-1)"
-      >
-        ยกเลิก
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button
+          :disabled="validateNumberItem()"
+          class="btn btn-primary mx-2 "
+          v-on:click="submitCreateOrder()"
+        >
+          ยืนยัน
+        </button>
+        <button
+          class="btn btn-danger"
+          v-on:click="this.$router.go(-1)"
+        >
+          ยกเลิก
+        </button>
+      </div>
     </div>
   </div>
-
   <div
     class="modal fade"
     tabindex="-1"
@@ -351,7 +367,11 @@
   </div>
 </template>
 <script>
+import Datepicker from "vuejs3-datepicker";
 export default {
+  components: {
+    Datepicker,
+  },
   data: function () {
     return {
       keyword_search_customer: "",
@@ -371,6 +391,7 @@ export default {
       total_stock: 0,
       status_order: false,
       status_payment: false,
+      delivery_date: new Date(),
       // total_cost: 0,
       number: "",
       // address
@@ -386,6 +407,10 @@ export default {
       isItemSelectedTableReady: false,
       isReadyItemTable: false,
       isDisable: false,
+      // date
+      masks: {
+        input: "D-MM-YYYY",
+      },
     };
   },
   methods: {
@@ -531,6 +556,11 @@ export default {
       orderObj.id_address = this.id_address;
       orderObj.items = this.itemListChecked;
       orderObj.create_by = "jimmie";
+      orderObj.delivery_date = this.delivery_date
+        .toLocaleString()
+        .split(",")[0]
+        .split("/")
+        .join("-");
       (orderObj.status_order = this.status_order),
         (orderObj.status_payment = this.status_payment),
         console.log(orderObj);

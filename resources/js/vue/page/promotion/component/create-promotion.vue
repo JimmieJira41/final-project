@@ -4,33 +4,43 @@
       <h3>ข้อมูลโปรโมชั่น</h3>
       <hr />
       <div class="row p-3">
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="title_promotion">ชื่อโปรโมชั่น</label>
           <input
             v-model="title_promotion"
             type="text"
-            class="form-control"
+            class="form-control text-center"
             id="title_promotion"
             placeholder="กรอกชื่อโปรโมชั่น"
           />
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="number_promotion">จำนวนที่ใช้ (กิโลกรัม)</label>
           <input
             v-model="number_promotion"
             type="number"
-            class="form-control"
+            class="form-control text-center"
             id="number_promotion"
             placeholder="กรอกจำนวนสินค้าที่่ใช้"
           />
         </div>
       </div>
     </form>
-    <div class="text-end">
-      <button class="btn btn-primary col-2 mx-2" v-on:click="submitNewPromotion()">ยืนยัน</button>
-      <button class="btn btn-secondary col-2" v-on:click="this.$router.go(-1)">
-        ยกเลิก
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button
+          class="btn btn-primary mx-2"
+          v-on:click="submitNewPromotion()"
+        >
+          ยืนยัน
+        </button>
+        <button
+          class="btn btn-danger"
+          v-on:click="this.$router.go(-1)"
+        >
+          ยกเลิก
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -39,7 +49,7 @@ export default {
   data: function () {
     return {
       title_promotion: "",
-      number_promotion: ""
+      number_promotion: "",
     };
   },
   methods: {

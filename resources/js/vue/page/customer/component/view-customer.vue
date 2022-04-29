@@ -2,19 +2,38 @@
   <div class="container card borderless shadow p-3">
     <div class="detail-customer">
       <div class="row">
-        <h3>ข้อมูลลูกค้า</h3>
-        <p class="col-3">ชื่อ : {{ firstname_customer }}</p>
-        <p class="col-3">{{ lastname_customer }}</p>
-        <p class="col-6">เบอร์โทรศัพท์ : {{ tel_customer }}</p>
+        <h3 class="text-center">ข้อมูลลูกค้า</h3>
+        <hr />
+        <div class="col-4">
+          <div class="card p-0">
+            <div class="card-header">ข้อมูลทั่วไป</div>
+            <div class="card-body">
+              <div class="row">
+                <p class="col-6">ชื่อ : {{ firstname_customer }}</p>
+                <p class="col-6">{{ lastname_customer }}</p>
+                <p class="col-12">เบอร์โทรศัพท์ : {{ tel_customer }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <h3>ข้อมูลที่อยู่</h3>
-        <p>รายละเอียด : {{ description_address_customer }}</p>
-        <p class="col-3">จังหวัด : {{ province_address_customer }}</p>
-        <p class="col-3">อำเภอ : {{ amphure_address_customer }}</p>
-        <p class="col-3">ตำบล : {{ tombon_address_customer }}</p>
-        <p class="col-3">รหัสไปรษณี : {{ zipcode_address_customer }}</p>
+        <div class="col-8">
+          <div class="card p-0">
+            <div class="card-header">ข้อมูลที่อยู่</div>
+            <div class="card-body">
+              <div class="row">
+                <p>รายละเอียด : {{ description_address_customer }}</p>
+                <p class="col-3">จังหวัด : {{ province_address_customer }}</p>
+                <p class="col-3">อำเภอ : {{ amphure_address_customer }}</p>
+                <p class="col-3">ตำบล : {{ tombon_address_customer }}</p>
+                <p class="col-3">รหัสไปรษณี : {{ zipcode_address_customer }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="detail-history-customer">
       <h3>ประวัติรายการสั่งซื้อ</h3>
       <div class="row">

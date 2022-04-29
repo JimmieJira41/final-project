@@ -17,7 +17,8 @@ use App\Models\history;
 
 use Carbon\Carbon;
 
-use App\Exports\CustomerContactExport;
+use App\Exports\DHLExport;
+use App\Exports\KerryExport;
 use App\Models\response;
 use App\Models\subOrder;
 use App\Models\promotion;
@@ -136,6 +137,7 @@ class OrderManagement extends Controller
         $order->status_order = $request['status_order'];
         $order->status_payment = $request['status_payment'];
         $order->create_by = $request->create_by;
+        $order->delivery_date = $request->delivery_date;
         if ($order->save()) {
             return response()->json($order);
         }
@@ -293,6 +295,7 @@ class OrderManagement extends Controller
             $order->id_customer = $request['id_customer'];
             $order->id_address = $request['id_address'];
             $order->status_payment = $request['status_payment'];
+            $order->delivery_date = $request['delivery_date'];
             $order->update();
         }
         // foreach(explode(",", $order->subOrder) as $idSubOrder){
@@ -457,26 +460,54 @@ class OrderManagement extends Controller
         }
         return response()->json($orderListResponse);
     }
-    public function getAllOrderGroupByItem()
+    public function getAllOrderGroupByItem(Request $request)
     {
         $orderListResponse = [];
-        $orderList = DB::table('sub_orders')
-            ->select('id_item', DB::raw('SUM(number) as total_number'))
-            ->groupBy('id_item')
-            ->where('status_order', false)
-            ->get();
-        foreach ($orderList as $order) {
-            $item = item::where('id_item', $order->id_item)->get();
-            $order->item = $item;
-            array_push($orderListResponse, $order);
+        $idItemList = [];
+        $orders = order::where('delivery_date', $request->keyword)->get('id_sub_order');
+        foreach ($orders as $order) {
+            $idSubOrderList = explode(',', $order->id_sub_order);
+            foreach ($idSubOrderList as $idSubOrder) {
+                $subOrderList = DB::table('sub_orders')
+                    ->select('id_item', DB::raw('SUM(number) as total_number'))
+                    ->groupBy('id_item')
+                    ->where('status_order', false)
+                    ->where('id_sub_order', $idSubOrder)
+                    ->get();
+                foreach ($subOrderList as $subOrder) {
+                    $item = item::where('id_item', $subOrder->id_item)->get();
+                    if(!in_array($subOrder->id_item,$idItemList)){
+                        $subOrder->item = $item;
+                        array_push($idItemList,$subOrder->id_item);
+                        array_push($orderListResponse, $subOrder);
+                    }else{
+                        $index = array_search($subOrder->id_item,$idItemList);
+                        $orderListResponse[$index]->total_number += 1;
+                    }
+                }
+                    // foreach ($orderListResponse as $response){
+                    //     array_push($idItemList,$response->id_item);
+                    // }                   
+                    // if(!in_array($item->id_item,$idItemList)){
+                    //     $subOrder->item = $item;
+                    //     array_push($orderListResponse, $subOrder);
+                    // }else{
+                    //     $index = array_search($item,$orderListResponse);
+                    //     $orderListResponse[$index]->total_number += 1;
+                    // }
+                // }
+            }
         }
+
         return response()->json($orderListResponse);
     }
-    public function getAllOrderGroupByCustomer()
+    public function getAllOrderGroupByCustomer(Request $request)
     {
         $itemList = [];
         // $subOrderResponse = new response();
-        $orderList = order::where('status_order', false)->get(['id_order', 'name_customer', 'id_sub_order', 'status_payment', 'total_cost_order'])->sortByDesc('created_at');
+        $orderList = order::where('status_order', false)
+            ->whereDate('delivery_date', $request->keyword)
+            ->get(['id_order', 'name_customer', 'id_sub_order', 'status_payment', 'total_cost_order'])->sortByDesc('delivery_date');
         foreach ($orderList as $order) {
             foreach (explode(",", $order->id_sub_order) as $idSubOrder) {
                 $subOrder = subOrder::where('id_sub_order', $idSubOrder)->get(['id_item', 'number'])->first();
@@ -544,6 +575,7 @@ class OrderManagement extends Controller
             // $order->number = $subOrder->number;
         }
         $orderResponse->id_order = $order->id_order;
+        $orderResponse->delivery_date = $order->delivery_date;
         $orderResponse->status_payment = $order->status_payment;
         $orderResponse->customer = $customer;
         $orderResponse->address = $address;
@@ -597,8 +629,14 @@ class OrderManagement extends Controller
             return response()->json('not have order!');
         }
     }
-    public function exportExcel()
+    public function DHLExportExcel()
     {
-        return Excel::download(new CustomerContactExport, 'history.xlsx');
+        return Excel::download(new DHLExport, 'history.xlsx');
+    }
+    public function KerryExportExcel()
+    {
+        $set = new KerryExport;
+        $set->collection('asd');
+        return Excel::download($set, 'history.xlsx');
     }
 }

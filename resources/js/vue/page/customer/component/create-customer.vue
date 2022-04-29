@@ -123,19 +123,21 @@
         </div>
       </div>
     </form>
-    <div class="my-3 text-end">
-      <button
-        class="btn btn-primary mx-1 col-1"
-        v-on:click="submitCreateCustomer()"
-      >
-        ยืนยัน
-      </button>
-      <button
-        class="btn btn-danger mx-1 col-1"
-        v-on:click="this.$router.go(-1)"
-      >
-        ยกเลิก
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button
+          class="btn btn-primary mx-1"
+          v-on:click="submitCreateCustomer()"
+        >
+          ยืนยัน
+        </button>
+        <button
+          class="btn btn-danger mx-1"
+          v-on:click="this.$router.go(-1)"
+        >
+          ยกเลิก
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -185,7 +187,7 @@ export default {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก"
+        cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
           axios.post("/api/customer/new-customer", body).then((response) => {

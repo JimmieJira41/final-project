@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->boolean('status_order');
             $table->boolean('status_payment');
             $table->integer('total_cost_order')->default(0);
+            $table->date('delivery_date')->useCurrent();
             $table->string('create_by');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

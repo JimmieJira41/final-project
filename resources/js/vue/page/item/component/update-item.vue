@@ -3,37 +3,37 @@
     <form class="form-group">
       <h3>ข้อมูลรายการสินค้า</h3>
       <div class="row p-3">
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="title_item">ชื่อสินค้า</label>
           <input
             v-model="title_item"
             type="text"
             class="form-control text-center"
             id="title_item"
-            placeholder=""
+            placeholder="กรุณากรอกชื่อสินค้า"
           />
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="description_item">รายละเอียด</label>
           <input
             v-model="description_item"
             type="text"
             class="form-control text-center"
             id="description_item"
-            placeholder=""
+            placeholder="กรุณากรอกรายละเอียดสินค้า"
           />
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="cost_item">ราคา</label>
           <input
             v-model="cost_item"
             type="text"
             class="form-control text-center"
             id="cost_item"
-            placeholder="ราคาสินค้า"
+            placeholder="กรุณากรอกราคาสินค้า"
           />
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="id_stock">สต็อกสินค้าที่ใช้</label>
           <select
             class="form-select"
@@ -41,16 +41,20 @@
             id="id_stock"
             placeholder="กรุณาเลือกสต็อกที่ต้องการใช้"
           >
+           <option class="text-center" value="null">
+              กรุณาเลือกสต็อกที่ต้องการใช้
+            </option>
             <option
               v-for="(stock, index) in stock_list"
               v-bind:key="index"
               v-bind:value="stock.id_stock"
+              class="text-center"
             >
               {{ stock.title_stock }}
             </option>
           </select>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="id_stock">สต็อกสินค้าที่ใช้</label>
           <input
             v-model="id_stock"
@@ -60,7 +64,7 @@
             placeholder=""
           />
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
           <label for="total_use">จำนวน</label>
           <input
             v-model="total_use"
@@ -72,16 +76,15 @@
         </div>
       </div>
     </form>
-    <div class="my-3 text-end">
-      <button
-        class="btn btn-primary mx-1 col-1"
-        v-on:click="submitUpdateitem()"
-      >
-        ยืนยัน
-      </button>
-      <button class="btn btn-danger mx-1 col-1">
-        <router-link to="/item">ยกเลิก</router-link>
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button class="btn btn-primary mx-1" v-on:click="submitUpdateitem()">
+          ยืนยัน
+        </button>
+        <button class="btn btn-danger mx-1">
+          <router-link to="/item">ยกเลิก</router-link>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -92,9 +95,9 @@ export default {
       id_item: "",
       title_item: "",
       description_item: "",
-      cost_item: '',
+      cost_item: "",
       id_stock: null,
-      total_use: '',
+      total_use: "",
       stock_list: [],
     };
   },

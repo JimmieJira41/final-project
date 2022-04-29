@@ -97,19 +97,21 @@
         </div>
       </div>
     </form>
-    <div class="my-3 text-end">
-      <button
-        class="btn btn-primary mx-1 col-1"
-        v-on:click="submitUpdateCustomer()"
-      >
-        ยืนยัน
-      </button>
-      <button
-        class="btn btn-danger mx-1 col-1"
-        v-on:click="this.$router.go(-1)"
-      >
-        ยกเลิก
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button
+          class="btn btn-primary mx-2"
+          v-on:click="submitUpdateCustomer()"
+        >
+          ยืนยัน
+        </button>
+        <button
+          class="btn btn-danger"
+          v-on:click="this.$router.go(-1)"
+        >
+          ยกเลิก
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -261,19 +263,17 @@ export default {
         });
     },
     getTombons(amphure_id) {
-      axios
-        .get("/api/address/get-tombons/" + amphure_id)
-        .then((response) => {
-          if (response) {
-            this.tombon_list = response.data;
-            this.tombon_list.forEach((tombon) => {
-              if (tombon.name_th == this.tombon_address_customer) {
-                this.tombon_id_selected = tombon.id;
-              }
-            });
-            console.log(this.tombon_list);
-          }
-        });
+      axios.get("/api/address/get-tombons/" + amphure_id).then((response) => {
+        if (response) {
+          this.tombon_list = response.data;
+          this.tombon_list.forEach((tombon) => {
+            if (tombon.name_th == this.tombon_address_customer) {
+              this.tombon_id_selected = tombon.id;
+            }
+          });
+          console.log(this.tombon_list);
+        }
+      });
     },
     setTombon() {
       this.tombon_list.forEach((tombon) => {

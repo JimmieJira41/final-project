@@ -1,12 +1,9 @@
 <template>
     <div class="container card borderless shadow p-3">
-        <div class="col-12">
-            <h2>อัพเดรตรายการสต็อกสินค้า</h2>
-        </div>
         <form class="form-group">
-            <h3>ข้อมูลสต็อกสินค้า</h3>
+             <h3>อัพเดรตรายการสต็อกสินค้า</h3>
             <div class="row p-3">
-                <div class="col">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                     <label for="title_stock">ชื่อสต็อกสินค้า</label>
                     <input
                         v-model="title_stock"
@@ -16,7 +13,7 @@
                         placeholder=""
                     />
                 </div>
-                <div class="col">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                     <label for="description_stock">รายละเอียด</label>
                     <input
                         v-model="description_stock"
@@ -26,7 +23,7 @@
                         placeholder=""
                     />
                 </div>
-                <div class="col">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                     <label for="total_stock">จำนวนคงเหลือ</label>
                     <input
                         v-model="total_stock"
@@ -38,16 +35,18 @@
                 </div>
             </div>
         </form>
-        <div class="my-3 text-end">
+        <div class="row"> 
+        <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
             <button
-                class="btn btn-primary mx-1 col-1"
+                class="btn btn-primary mx-1"
                 v-on:click="submitUpdateStock()"
             >
                 ยืนยัน
             </button>
-            <button class="btn btn-danger mx-1 col-1">
+            <button class="btn btn-danger mx-1">
                 <router-link to="/stock">ยกเลิก</router-link>
             </button>
+        </div>
         </div>
     </div>
 </template>

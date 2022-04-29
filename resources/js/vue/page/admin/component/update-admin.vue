@@ -71,13 +71,21 @@
         </div>
       </div>
     </form>
-    <div class="text-end">
-      <button class="btn btn-primary col-2 mx-2" v-on:click="submitUpdateAdmin()">
-        ยืนยัน
-      </button>
-      <button class="btn btn-secondary col-2" v-on:click="this.$router.go(-1)">
-        ยกเลิก
-      </button>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
+        <button
+          class="btn btn-primary mx-2"
+          v-on:click="submitUpdateAdmin()"
+        >
+          ยืนยัน
+        </button>
+        <button
+          class="btn btn-secondary"
+          v-on:click="this.$router.go(-1)"
+        >
+          ยกเลิก
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -99,7 +107,7 @@ export default {
       console.log("pass get admin");
       axios.get("/api/admin/get-admin/" + adminId).then((response) => {
         if (response) {
-          let name = response.data.name_admin.split(" ");        
+          let name = response.data.name_admin.split(" ");
           this.username_admin = response.data.username_admin;
           this.password_admin = response.data.password_admin;
           this.firstname_admin = name[0];

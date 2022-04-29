@@ -49,11 +49,12 @@ Route::prefix('order')->group(function(){
     Route::delete('/delete-order', [OrderManagement::class, 'delete']);
     Route::get('/get-all-order', [OrderManagement::class, 'getAll']);
     Route::get('/get-order/{keyword}', [OrderManagement:: class, 'getOrderbyId']);
-    Route::get('/get-order-group-by-item',[OrderManagement::class, 'getAllOrderGroupByItem']);
-    Route::get('/get-order-group-by-customer',[OrderManagement::class, 'getAllOrderGroupByCustomer']);
+    Route::get('/get-order-group-by-item/{keyword}',[OrderManagement::class, 'getAllOrderGroupByItem']);
+    Route::get('/get-order-group-by-customer/{keyword}',[OrderManagement::class, 'getAllOrderGroupByCustomer']);
     Route::get('/get-order-by-customer/{keyword}', [OrderManagement:: class, 'getAllOrderGroupByCustomerId']);
     Route::post('/cut-off-order',[OrderManagement::class, 'cutOffOrder']);
-    Route::get('/get-label-excel-file',[OrderManagement::class, 'exportExcel']);
+    Route::get('/get-dhl-label-excel-file',[OrderManagement::class, 'DHLExportExcel']);
+    Route::get('/get-kerry-label-excel-file',[OrderManagement::class, 'KerryExportExcel']);
 
 });
 Route::prefix('stock')->group(function(){
@@ -83,7 +84,7 @@ Route::prefix('address')->group(function(){
 });
 Route::prefix('history')->group(function(){
     Route::get('/get-history-by-customer-id/{keyword}',[HistoryManagement::class, 'getHistoryByCustomerId']);
-    Route::get('/get-all-history-order',[HistoryManagement::class, 'getAllHistoryOrder']);
+    Route::get('/get-all-history-order/{keyword}',[HistoryManagement::class, 'getAllHistoryOrder']);
 });
 Route::prefix('promotion')->group(function(){
     Route::post('/new-promotion',[PromotionManagement::class, 'createPromotion']);

@@ -11,6 +11,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 library.add(far);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
+import VCalendar from 'v-calendar';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueNextSelect from 'vue-next-select'
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -164,6 +165,6 @@ const router = createRouter({
 const app = createApp(App);
 app.component("font-awesome-icon",FontAwesomeIcon);
 app.component('vue-select', VueNextSelect);
-// app.component('VueCharts',VueCharts);
+app.use(VCalendar, {})
 app.use(VueSweetalert2, options);
 app.use(router).mount('#app');

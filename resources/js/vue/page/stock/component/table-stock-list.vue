@@ -1,8 +1,8 @@
 <template>
   <div class="table-response card shadow border-0 p-3">
     <div class="row">
-      <div class="col-6 m-0"><h3>รายการสต็อกสินค้า</h3></div>
-      <div class="col-6 m-0 text-end">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0"><h3>รายการสต็อกสินค้า</h3></div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0 text-end">
         <!-- <div class="btn btn-primary mx-2">ออเดอร์ทั้งหมด</div> -->
         <div class="btn btn-success mx-2" v-if="btnStockList">รายการสต็อก</div>
         <div class="btn btn-warning mx-2" v-if="btnHistory" v-on:click="getAllHistoryStock()">บันทึกรายการสต็อก</div>
