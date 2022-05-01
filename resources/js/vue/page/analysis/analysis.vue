@@ -15,8 +15,6 @@
           <canvas
             ref="canvas"
             id="chart"
-            width="400"
-            height="100"
             :chart-data="datachart"
           ></canvas>
         </div>
@@ -34,13 +32,13 @@
             <h5>ประเภทการแบ่ง :</h5>
           </div>
 
-          <button class="btn btn-primary " @click="typeDay()">
+          <button class="btn btn-primary" @click="typeDay()">
             <b>D</b> แบ่งตามวัน
           </button>
-          <button class="btn btn-primary " @click="typeMonth()">
+          <button class="btn btn-primary" @click="typeMonth()">
             <b>M</b> แบ่งตามเดือน
           </button>
-          <button class="btn btn-primary " @click="typeYear()">
+          <button class="btn btn-primary" @click="typeYear()">
             <b>Y</b> แบ่งตามปี
           </button>
         </div>
@@ -92,7 +90,7 @@
             @selected="end_date_selected = true"
           ></datepicker> -->
         </div>
-        <div class="col-12 filter-analysis-bar text-end">
+        <div class="col-12 mt-3 filter-analysis-bar text-end">
           <div class="btn btn-primary" @click="submitDateToAnalysis()">
             <i class="fas fa-chart-bar fs-3"></i> ประมวลผล
           </div>
@@ -183,10 +181,7 @@ export default {
       var date = ("0" + this.start_date.getDate()).slice(-2);
       var month = ("0" + (this.start_date.getMonth() + 1)).slice(-2);
       var year = this.start_date.getFullYear();
-      var end_date = ("0" + this.end_date.getDate()).slice(-2);
-      var end_month = ("0" + (this.end_date.getMonth() + 1)).slice(-2);
-      var end_year = this.end_date.getFullYear();
-      if (!this.end_date_selected) {
+      if (!this.end_date) {
         if (this.type_date == "day") {
           start = String(year + "-" + month + "-" + date);
         }
@@ -197,6 +192,9 @@ export default {
           start = String(year);
         }
       } else {
+        var end_date = ("0" + this.end_date.getDate()).slice(-2);
+        var end_month = ("0" + (this.end_date.getMonth() + 1)).slice(-2);
+        var end_year = this.end_date.getFullYear();
         if (this.type_date == "day") {
           start = String(year + "-" + month + "-" + date);
           end = String(end_year + "-" + end_month + "-" + end_date);

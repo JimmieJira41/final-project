@@ -214,15 +214,12 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
         <button
           :disabled="validateNumberItem()"
-          class="btn btn-primary mx-2 "
+          class="btn btn-primary mx-2"
           v-on:click="submitCreateOrder()"
         >
           ยืนยัน
         </button>
-        <button
-          class="btn btn-danger"
-          v-on:click="this.$router.go(-1)"
-        >
+        <button class="btn btn-danger" v-on:click="this.$router.go(-1)">
           ยกเลิก
         </button>
       </div>
@@ -547,6 +544,7 @@ export default {
       console.log(this.customerList);
     },
     submitCreateOrder() {
+      let format_date = new Intl.DateTimeFormat("en");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -556,11 +554,9 @@ export default {
       orderObj.id_address = this.id_address;
       orderObj.items = this.itemListChecked;
       orderObj.create_by = "jimmie";
-      orderObj.delivery_date = this.delivery_date
-        .toLocaleString()
-        .split(",")[0]
-        .split("/")
-        .join("-");
+      orderObj.delivery_date = format_date.format(
+        this.delivery_date.toLocaleDateString().split("/").join("-")
+      );
       (orderObj.status_order = this.status_order),
         (orderObj.status_payment = this.status_payment),
         console.log(orderObj);

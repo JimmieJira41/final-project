@@ -108,17 +108,16 @@ export default {
       masks: {
         input: "D-MM-YYYY",
       },
-      timezone: "",
+      timezone: "Asia/Bangkok",
     };
   },
   methods: {
     searchAllList() {
-      // this.date = this.delivery_date_search.toISOString().split("T")[0];
-      this.date = this.delivery_date_search
-        .toLocaleString()
-        .split(",")[0]
+      let format_date = new Intl.DateTimeFormat("en")
+      this.date = format_date.format(this.delivery_date_search
+        .toLocaleDateString()
         .split("/")
-        .join("-");
+        .join("-"));
       this.getAllOrderGroupByCustomer(this.date);
       this.getAllHistoryOrder(this.date);
       this.getAllOrderGroupByItem(this.date);
