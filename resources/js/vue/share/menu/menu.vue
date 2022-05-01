@@ -1,8 +1,7 @@
 <template lang="pug">
-<div class="sidebar d-flex flex-column pt-4" style="height:100%">
+<div class="sidebar d-flex flex-column" style="height:100%">
     <nav class="navbar navbar-expand-md navbar-light d-flex flex-md-column">
         <a href="#">
-        
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expand="false" aria-label="Toggle Navigation">
             <span class="navbar-toggler-icon"></span>

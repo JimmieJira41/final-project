@@ -5,7 +5,7 @@
 -- Dumped from database version 14.1
 -- Dumped by pg_dump version 14.1
 
--- Started on 2022-04-30 01:30:40
+-- Started on 2022-05-02 00:28:09
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -58,7 +58,7 @@ CREATE SEQUENCE public.addresses_id_address_seq
 ALTER TABLE public.addresses_id_address_seq OWNER TO postgres;
 
 --
--- TOC entry 3478 (class 0 OID 0)
+-- TOC entry 3514 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: addresses_id_address_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -102,7 +102,7 @@ CREATE SEQUENCE public.admins_id_admin_seq
 ALTER TABLE public.admins_id_admin_seq OWNER TO postgres;
 
 --
--- TOC entry 3479 (class 0 OID 0)
+-- TOC entry 3515 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: admins_id_admin_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -162,7 +162,7 @@ CREATE SEQUENCE public.customers_id_customer_seq
 ALTER TABLE public.customers_id_customer_seq OWNER TO postgres;
 
 --
--- TOC entry 3480 (class 0 OID 0)
+-- TOC entry 3516 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: customers_id_customer_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -207,12 +207,94 @@ CREATE SEQUENCE public.histories_id_history_seq
 ALTER TABLE public.histories_id_history_seq OWNER TO postgres;
 
 --
--- TOC entry 3481 (class 0 OID 0)
+-- TOC entry 3517 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: histories_id_history_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.histories_id_history_seq OWNED BY public.histories.id_history;
+
+
+--
+-- TOC entry 243 (class 1259 OID 27638)
+-- Name: history_stock; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.history_stock (
+    id_history bigint NOT NULL,
+    id_stock character varying(255) NOT NULL,
+    number integer NOT NULL,
+    update_by character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.history_stock OWNER TO postgres;
+
+--
+-- TOC entry 242 (class 1259 OID 27637)
+-- Name: history_stock_id_history_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.history_stock_id_history_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.history_stock_id_history_seq OWNER TO postgres;
+
+--
+-- TOC entry 3518 (class 0 OID 0)
+-- Dependencies: 242
+-- Name: history_stock_id_history_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.history_stock_id_history_seq OWNED BY public.history_stock.id_history;
+
+
+--
+-- TOC entry 245 (class 1259 OID 27649)
+-- Name: history_stocks; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.history_stocks (
+    id_history_stock bigint NOT NULL,
+    id_stock character varying(255) NOT NULL,
+    number integer NOT NULL,
+    update_by character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.history_stocks OWNER TO postgres;
+
+--
+-- TOC entry 244 (class 1259 OID 27648)
+-- Name: history_stocks_id_history_stock_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.history_stocks_id_history_stock_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.history_stocks_id_history_stock_seq OWNER TO postgres;
+
+--
+-- TOC entry 3519 (class 0 OID 0)
+-- Dependencies: 244
+-- Name: history_stocks_id_history_stock_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.history_stocks_id_history_stock_seq OWNED BY public.history_stocks.id_history_stock;
 
 
 --
@@ -250,7 +332,7 @@ CREATE SEQUENCE public.items_id_item_seq
 ALTER TABLE public.items_id_item_seq OWNER TO postgres;
 
 --
--- TOC entry 3482 (class 0 OID 0)
+-- TOC entry 3520 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: items_id_item_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -289,12 +371,53 @@ CREATE SEQUENCE public.migrations_id_seq
 ALTER TABLE public.migrations_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3483 (class 0 OID 0)
+-- TOC entry 3521 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
+
+
+--
+-- TOC entry 241 (class 1259 OID 27627)
+-- Name: new_history_stock; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.new_history_stock (
+    id_history bigint NOT NULL,
+    id_stock character varying(255) NOT NULL,
+    number integer NOT NULL,
+    update_by character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.new_history_stock OWNER TO postgres;
+
+--
+-- TOC entry 240 (class 1259 OID 27626)
+-- Name: new_history_stock_id_history_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.new_history_stock_id_history_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.new_history_stock_id_history_seq OWNER TO postgres;
+
+--
+-- TOC entry 3522 (class 0 OID 0)
+-- Dependencies: 240
+-- Name: new_history_stock_id_history_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.new_history_stock_id_history_seq OWNED BY public.new_history_stock.id_history;
 
 
 --
@@ -350,7 +473,7 @@ CREATE SEQUENCE public.permissions_id_permission_seq
 ALTER TABLE public.permissions_id_permission_seq OWNER TO postgres;
 
 --
--- TOC entry 3484 (class 0 OID 0)
+-- TOC entry 3523 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: permissions_id_permission_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -394,7 +517,7 @@ CREATE SEQUENCE public.personal_access_tokens_id_seq
 ALTER TABLE public.personal_access_tokens_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3485 (class 0 OID 0)
+-- TOC entry 3524 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: personal_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -462,7 +585,7 @@ CREATE SEQUENCE public.settings_id_seq
 ALTER TABLE public.settings_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3486 (class 0 OID 0)
+-- TOC entry 3525 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -503,7 +626,7 @@ CREATE SEQUENCE public.stocks_id_stock_seq
 ALTER TABLE public.stocks_id_stock_seq OWNER TO postgres;
 
 --
--- TOC entry 3487 (class 0 OID 0)
+-- TOC entry 3526 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: stocks_id_stock_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -550,7 +673,7 @@ CREATE SEQUENCE public.sub_orders_id_sub_order_seq
 ALTER TABLE public.sub_orders_id_sub_order_seq OWNER TO postgres;
 
 --
--- TOC entry 3488 (class 0 OID 0)
+-- TOC entry 3527 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: sub_orders_id_sub_order_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -634,7 +757,7 @@ CREATE TABLE public.zipcodes (
 ALTER TABLE public.zipcodes OWNER TO postgres;
 
 --
--- TOC entry 3257 (class 2604 OID 27531)
+-- TOC entry 3272 (class 2604 OID 27531)
 -- Name: addresses id_address; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -642,7 +765,7 @@ ALTER TABLE ONLY public.addresses ALTER COLUMN id_address SET DEFAULT nextval('p
 
 
 --
--- TOC entry 3252 (class 2604 OID 27502)
+-- TOC entry 3267 (class 2604 OID 27502)
 -- Name: admins id_admin; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -650,7 +773,7 @@ ALTER TABLE ONLY public.admins ALTER COLUMN id_admin SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3256 (class 2604 OID 27522)
+-- TOC entry 3271 (class 2604 OID 27522)
 -- Name: customers id_customer; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -658,7 +781,7 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id_customer SET DEFAULT nextval('
 
 
 --
--- TOC entry 3270 (class 2604 OID 27579)
+-- TOC entry 3285 (class 2604 OID 27579)
 -- Name: histories id_history; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -666,7 +789,23 @@ ALTER TABLE ONLY public.histories ALTER COLUMN id_history SET DEFAULT nextval('p
 
 
 --
--- TOC entry 3267 (class 2604 OID 27568)
+-- TOC entry 3296 (class 2604 OID 27641)
+-- Name: history_stock id_history; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.history_stock ALTER COLUMN id_history SET DEFAULT nextval('public.history_stock_id_history_seq'::regclass);
+
+
+--
+-- TOC entry 3299 (class 2604 OID 27652)
+-- Name: history_stocks id_history_stock; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.history_stocks ALTER COLUMN id_history_stock SET DEFAULT nextval('public.history_stocks_id_history_stock_seq'::regclass);
+
+
+--
+-- TOC entry 3282 (class 2604 OID 27568)
 -- Name: items id_item; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -674,7 +813,7 @@ ALTER TABLE ONLY public.items ALTER COLUMN id_item SET DEFAULT nextval('public.i
 
 
 --
--- TOC entry 3250 (class 2604 OID 16399)
+-- TOC entry 3265 (class 2604 OID 16399)
 -- Name: migrations id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -682,7 +821,15 @@ ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.m
 
 
 --
--- TOC entry 3255 (class 2604 OID 27513)
+-- TOC entry 3293 (class 2604 OID 27630)
+-- Name: new_history_stock id_history; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.new_history_stock ALTER COLUMN id_history SET DEFAULT nextval('public.new_history_stock_id_history_seq'::regclass);
+
+
+--
+-- TOC entry 3270 (class 2604 OID 27513)
 -- Name: permissions id_permission; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -690,7 +837,7 @@ ALTER TABLE ONLY public.permissions ALTER COLUMN id_permission SET DEFAULT nextv
 
 
 --
--- TOC entry 3251 (class 2604 OID 27490)
+-- TOC entry 3266 (class 2604 OID 27490)
 -- Name: personal_access_tokens id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -698,7 +845,7 @@ ALTER TABLE ONLY public.personal_access_tokens ALTER COLUMN id SET DEFAULT nextv
 
 
 --
--- TOC entry 3266 (class 2604 OID 27561)
+-- TOC entry 3281 (class 2604 OID 27561)
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -706,7 +853,7 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
--- TOC entry 3263 (class 2604 OID 27550)
+-- TOC entry 3278 (class 2604 OID 27550)
 -- Name: stocks id_stock; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -714,7 +861,7 @@ ALTER TABLE ONLY public.stocks ALTER COLUMN id_stock SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3272 (class 2604 OID 27609)
+-- TOC entry 3287 (class 2604 OID 27609)
 -- Name: sub_orders id_sub_order; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -722,7 +869,7 @@ ALTER TABLE ONLY public.sub_orders ALTER COLUMN id_sub_order SET DEFAULT nextval
 
 
 --
--- TOC entry 3456 (class 0 OID 27528)
+-- TOC entry 3486 (class 0 OID 27528)
 -- Dependencies: 223
 -- Data for Name: addresses; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -733,7 +880,7 @@ COPY public.addresses (id_address, description_address, province_address, amphur
 
 
 --
--- TOC entry 3450 (class 0 OID 27499)
+-- TOC entry 3480 (class 0 OID 27499)
 -- Dependencies: 217
 -- Data for Name: admins; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -743,7 +890,7 @@ COPY public.admins (id_admin, username_admin, password_admin, name_admin, tel_ad
 
 
 --
--- TOC entry 3468 (class 0 OID 27595)
+-- TOC entry 3498 (class 0 OID 27595)
 -- Dependencies: 235
 -- Data for Name: amphures; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1754,7 +1901,7 @@ COPY public.amphures (id, code, name_th, province_id) FROM stdin;
 
 
 --
--- TOC entry 3454 (class 0 OID 27519)
+-- TOC entry 3484 (class 0 OID 27519)
 -- Dependencies: 221
 -- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1765,7 +1912,7 @@ COPY public.customers (id_customer, firstname_customer, lastname_customer, tel_c
 
 
 --
--- TOC entry 3465 (class 0 OID 27576)
+-- TOC entry 3495 (class 0 OID 27576)
 -- Dependencies: 232
 -- Data for Name: histories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1775,7 +1922,28 @@ COPY public.histories (id_history, id_order, id_customer, id_address, id_item, n
 
 
 --
--- TOC entry 3463 (class 0 OID 27565)
+-- TOC entry 3506 (class 0 OID 27638)
+-- Dependencies: 243
+-- Data for Name: history_stock; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.history_stock (id_history, id_stock, number, update_by, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3508 (class 0 OID 27649)
+-- Dependencies: 245
+-- Data for Name: history_stocks; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.history_stocks (id_history_stock, id_stock, number, update_by, created_at, updated_at) FROM stdin;
+2	2	150	jimmie	2022-04-30 11:37:39	2022-04-30 11:37:39
+\.
+
+
+--
+-- TOC entry 3493 (class 0 OID 27565)
 -- Dependencies: 230
 -- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1787,7 +1955,7 @@ COPY public.items (id_item, title_item, description_item, cost_item, id_stock, t
 
 
 --
--- TOC entry 3443 (class 0 OID 16396)
+-- TOC entry 3473 (class 0 OID 16396)
 -- Dependencies: 210
 -- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1813,11 +1981,24 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 348	2022_04_14_192213_create_promotions_table	7
 148	2022_03_22_164826_add_cost_order	6
 349	2022_04_23_161655_add_new_delivery_date_field	8
+350	2022_04_30_105944_create_new_history_stock_table	9
+351	2022_04_30_105944_create_new_history_stock	10
+352	2022_04_30_110854_create_history_stocks_table	11
 \.
 
 
 --
--- TOC entry 3457 (class 0 OID 27538)
+-- TOC entry 3504 (class 0 OID 27627)
+-- Dependencies: 241
+-- Data for Name: new_history_stock; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.new_history_stock (id_history, id_stock, number, update_by, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3487 (class 0 OID 27538)
 -- Dependencies: 224
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1844,11 +2025,12 @@ KW00019	21,22	ณัฐดนัย จิระกังวาน	1	1	f	f	898	j
 KW00021	25,26	ณัฐดนัย จิระกังวาน	1	1	f	f	898	jimmie	2022-04-24 17:56:26	2022-04-24 17:56:26	2022-04-25
 KW00020	23,24	ณัฐดนัย จิระกังวาน	1	1	t	t	898	jimmie	2022-04-24 17:51:31	2022-04-24 18:30:46	2022-04-25
 KW00022	27,28	ณัฐดนัย จิระกังวาน	1	1	f	f	898	jimmie	2022-04-26 13:49:53	2022-04-26 13:49:53	2022-04-26
+KW00023	29,30	ณัฐดนัย จิระกังวาน	1	1	f	f	898	jimmie	2022-05-01 06:47:08	2022-05-01 06:47:08	2022-05-01
 \.
 
 
 --
--- TOC entry 3452 (class 0 OID 27510)
+-- TOC entry 3482 (class 0 OID 27510)
 -- Dependencies: 219
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1858,7 +2040,7 @@ COPY public.permissions (id_permission, title_permission, description_permission
 
 
 --
--- TOC entry 3448 (class 0 OID 27487)
+-- TOC entry 3478 (class 0 OID 27487)
 -- Dependencies: 215
 -- Data for Name: personal_access_tokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1868,7 +2050,7 @@ COPY public.personal_access_tokens (id, tokenable_type, tokenable_id, name, toke
 
 
 --
--- TOC entry 3472 (class 0 OID 27617)
+-- TOC entry 3502 (class 0 OID 27617)
 -- Dependencies: 239
 -- Data for Name: promotions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1879,7 +2061,7 @@ NcyIVpWyk	3 แถม 1	1	2022-04-16 09:52:50	2022-04-16 09:52:50
 
 
 --
--- TOC entry 3467 (class 0 OID 27590)
+-- TOC entry 3497 (class 0 OID 27590)
 -- Dependencies: 234
 -- Data for Name: provinces; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1966,7 +2148,7 @@ COPY public.provinces (id, code, name_th) FROM stdin;
 
 
 --
--- TOC entry 3461 (class 0 OID 27558)
+-- TOC entry 3491 (class 0 OID 27558)
 -- Dependencies: 228
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1976,19 +2158,19 @@ COPY public.settings (id, created_at, updated_at) FROM stdin;
 
 
 --
--- TOC entry 3459 (class 0 OID 27547)
+-- TOC entry 3489 (class 0 OID 27547)
 -- Dependencies: 226
 -- Data for Name: stocks; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.stocks (id_stock, title_stock, description_stock, total_stock, created_at, updated_at) FROM stdin;
-1	ส้มเบอร์ 3 ผิวลาย	ส้มเบอร์ 3 ผิวลาย	49	2022-04-16 16:50:59	2022-04-26 13:49:53
-2	ส้มเบอร์ 4	ส้มเบอร์ 4 ผิวลาย	39	2022-04-24 17:36:32	2022-04-26 13:49:53
+1	ส้มเบอร์ 3 ผิวลาย	ส้มเบอร์ 3 ผิวลาย	140	2022-04-16 16:50:59	2022-05-01 06:47:08
+2	ส้มเบอร์ 4	ส้มเบอร์ 4 ผิวลาย	140	2022-04-24 17:36:32	2022-05-01 06:47:08
 \.
 
 
 --
--- TOC entry 3471 (class 0 OID 27606)
+-- TOC entry 3501 (class 0 OID 27606)
 -- Dependencies: 238
 -- Data for Name: sub_orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -2021,11 +2203,13 @@ COPY public.sub_orders (id_sub_order, id_order, id_item, number, id_promotion, e
 24	KW00020	2	1	NcyIVpWyk	\N	\N	t	499	jimmie	2022-04-24 17:51:31	2022-04-24 18:30:46
 27	KW00022	1	1	\N	\N	\N	f	399	jimmie	2022-04-26 13:49:53	2022-04-26 13:49:53
 28	KW00022	2	1	\N	\N	\N	f	499	jimmie	2022-04-26 13:49:53	2022-04-26 13:49:53
+29	KW00023	1	1	\N	\N	\N	f	399	jimmie	2022-05-01 06:47:07	2022-05-01 06:47:07
+30	KW00023	2	1	\N	\N	\N	f	499	jimmie	2022-05-01 06:47:07	2022-05-01 06:47:07
 \.
 
 
 --
--- TOC entry 3446 (class 0 OID 24791)
+-- TOC entry 3476 (class 0 OID 24791)
 -- Dependencies: 213
 -- Data for Name: thai-amphures; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -3001,7 +3185,7 @@ COPY public."thai-amphures" (id, name_th, name_en, province_id) FROM stdin;
 
 
 --
--- TOC entry 3444 (class 0 OID 16492)
+-- TOC entry 3474 (class 0 OID 16492)
 -- Dependencies: 211
 -- Data for Name: thai-provinces; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -3088,7 +3272,7 @@ COPY public."thai-provinces" (id, name_th, name_en) FROM stdin;
 
 
 --
--- TOC entry 3445 (class 0 OID 16498)
+-- TOC entry 3475 (class 0 OID 16498)
 -- Dependencies: 212
 -- Data for Name: thai-tombons; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -10549,7 +10733,7 @@ COPY public."thai-tombons" (id, zip_code, name_th, name_en, amphure_id) FROM std
 
 
 --
--- TOC entry 3466 (class 0 OID 27585)
+-- TOC entry 3496 (class 0 OID 27585)
 -- Dependencies: 233
 -- Data for Name: tombons; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -19454,7 +19638,7 @@ COPY public.tombons (id, code, name_th, amphure_id) FROM stdin;
 
 
 --
--- TOC entry 3469 (class 0 OID 27600)
+-- TOC entry 3499 (class 0 OID 27600)
 -- Dependencies: 236
 -- Data for Name: zipcodes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -26919,7 +27103,7 @@ COPY public.zipcodes (id, code, zipcode, tombon_id) FROM stdin;
 
 
 --
--- TOC entry 3489 (class 0 OID 0)
+-- TOC entry 3528 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: addresses_id_address_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26928,7 +27112,7 @@ SELECT pg_catalog.setval('public.addresses_id_address_seq', 1, true);
 
 
 --
--- TOC entry 3490 (class 0 OID 0)
+-- TOC entry 3529 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: admins_id_admin_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26937,7 +27121,7 @@ SELECT pg_catalog.setval('public.admins_id_admin_seq', 1, false);
 
 
 --
--- TOC entry 3491 (class 0 OID 0)
+-- TOC entry 3530 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: customers_id_customer_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26946,7 +27130,7 @@ SELECT pg_catalog.setval('public.customers_id_customer_seq', 1, true);
 
 
 --
--- TOC entry 3492 (class 0 OID 0)
+-- TOC entry 3531 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: histories_id_history_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26955,7 +27139,25 @@ SELECT pg_catalog.setval('public.histories_id_history_seq', 1, false);
 
 
 --
--- TOC entry 3493 (class 0 OID 0)
+-- TOC entry 3532 (class 0 OID 0)
+-- Dependencies: 242
+-- Name: history_stock_id_history_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.history_stock_id_history_seq', 1, false);
+
+
+--
+-- TOC entry 3533 (class 0 OID 0)
+-- Dependencies: 244
+-- Name: history_stocks_id_history_stock_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.history_stocks_id_history_stock_seq', 2, true);
+
+
+--
+-- TOC entry 3534 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: items_id_item_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26964,16 +27166,25 @@ SELECT pg_catalog.setval('public.items_id_item_seq', 2, true);
 
 
 --
--- TOC entry 3494 (class 0 OID 0)
+-- TOC entry 3535 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 349, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 352, true);
 
 
 --
--- TOC entry 3495 (class 0 OID 0)
+-- TOC entry 3536 (class 0 OID 0)
+-- Dependencies: 240
+-- Name: new_history_stock_id_history_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.new_history_stock_id_history_seq', 1, false);
+
+
+--
+-- TOC entry 3537 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: permissions_id_permission_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26982,7 +27193,7 @@ SELECT pg_catalog.setval('public.permissions_id_permission_seq', 1, false);
 
 
 --
--- TOC entry 3496 (class 0 OID 0)
+-- TOC entry 3538 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: personal_access_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -26991,7 +27202,7 @@ SELECT pg_catalog.setval('public.personal_access_tokens_id_seq', 1, false);
 
 
 --
--- TOC entry 3497 (class 0 OID 0)
+-- TOC entry 3539 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: settings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -27000,7 +27211,7 @@ SELECT pg_catalog.setval('public.settings_id_seq', 1, false);
 
 
 --
--- TOC entry 3498 (class 0 OID 0)
+-- TOC entry 3540 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: stocks_id_stock_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -27009,16 +27220,16 @@ SELECT pg_catalog.setval('public.stocks_id_stock_seq', 2, true);
 
 
 --
--- TOC entry 3499 (class 0 OID 0)
+-- TOC entry 3541 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: sub_orders_id_sub_order_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sub_orders_id_sub_order_seq', 28, true);
+SELECT pg_catalog.setval('public.sub_orders_id_sub_order_seq', 30, true);
 
 
 --
--- TOC entry 3292 (class 2606 OID 27537)
+-- TOC entry 3316 (class 2606 OID 27537)
 -- Name: addresses addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27027,7 +27238,7 @@ ALTER TABLE ONLY public.addresses
 
 
 --
--- TOC entry 3286 (class 2606 OID 27508)
+-- TOC entry 3310 (class 2606 OID 27508)
 -- Name: admins admins_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27036,7 +27247,7 @@ ALTER TABLE ONLY public.admins
 
 
 --
--- TOC entry 3290 (class 2606 OID 27526)
+-- TOC entry 3314 (class 2606 OID 27526)
 -- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27045,7 +27256,7 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- TOC entry 3300 (class 2606 OID 27584)
+-- TOC entry 3324 (class 2606 OID 27584)
 -- Name: histories histories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27054,7 +27265,25 @@ ALTER TABLE ONLY public.histories
 
 
 --
--- TOC entry 3298 (class 2606 OID 27574)
+-- TOC entry 3330 (class 2606 OID 27647)
+-- Name: history_stock history_stock_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.history_stock
+    ADD CONSTRAINT history_stock_pkey PRIMARY KEY (id_history);
+
+
+--
+-- TOC entry 3332 (class 2606 OID 27658)
+-- Name: history_stocks history_stocks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.history_stocks
+    ADD CONSTRAINT history_stocks_pkey PRIMARY KEY (id_history_stock);
+
+
+--
+-- TOC entry 3322 (class 2606 OID 27574)
 -- Name: items items_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27063,7 +27292,7 @@ ALTER TABLE ONLY public.items
 
 
 --
--- TOC entry 3279 (class 2606 OID 16401)
+-- TOC entry 3303 (class 2606 OID 16401)
 -- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27072,7 +27301,16 @@ ALTER TABLE ONLY public.migrations
 
 
 --
--- TOC entry 3288 (class 2606 OID 27517)
+-- TOC entry 3328 (class 2606 OID 27636)
+-- Name: new_history_stock new_history_stock_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.new_history_stock
+    ADD CONSTRAINT new_history_stock_pkey PRIMARY KEY (id_history);
+
+
+--
+-- TOC entry 3312 (class 2606 OID 27517)
 -- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27081,7 +27319,7 @@ ALTER TABLE ONLY public.permissions
 
 
 --
--- TOC entry 3281 (class 2606 OID 27494)
+-- TOC entry 3305 (class 2606 OID 27494)
 -- Name: personal_access_tokens personal_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27090,7 +27328,7 @@ ALTER TABLE ONLY public.personal_access_tokens
 
 
 --
--- TOC entry 3283 (class 2606 OID 27497)
+-- TOC entry 3307 (class 2606 OID 27497)
 -- Name: personal_access_tokens personal_access_tokens_token_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27099,7 +27337,7 @@ ALTER TABLE ONLY public.personal_access_tokens
 
 
 --
--- TOC entry 3296 (class 2606 OID 27563)
+-- TOC entry 3320 (class 2606 OID 27563)
 -- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27108,7 +27346,7 @@ ALTER TABLE ONLY public.settings
 
 
 --
--- TOC entry 3294 (class 2606 OID 27556)
+-- TOC entry 3318 (class 2606 OID 27556)
 -- Name: stocks stocks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27117,7 +27355,7 @@ ALTER TABLE ONLY public.stocks
 
 
 --
--- TOC entry 3302 (class 2606 OID 27616)
+-- TOC entry 3326 (class 2606 OID 27616)
 -- Name: sub_orders sub_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -27126,14 +27364,14 @@ ALTER TABLE ONLY public.sub_orders
 
 
 --
--- TOC entry 3284 (class 1259 OID 27495)
+-- TOC entry 3308 (class 1259 OID 27495)
 -- Name: personal_access_tokens_tokenable_type_tokenable_id_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX personal_access_tokens_tokenable_type_tokenable_id_index ON public.personal_access_tokens USING btree (tokenable_type, tokenable_id);
 
 
--- Completed on 2022-04-30 01:30:40
+-- Completed on 2022-05-02 00:28:09
 
 --
 -- PostgreSQL database dump complete

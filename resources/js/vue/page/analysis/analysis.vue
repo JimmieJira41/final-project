@@ -225,7 +225,7 @@ export default {
     },
     typeDay() {
       this.body.type = "day";
-      this.type_date = "day";
+      this.type_date = "YYYY-MM-DD";
       this.start_date = new Date();
       this.end_date = new Date();
     },
