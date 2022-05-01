@@ -234,10 +234,7 @@
         >
           ยืนยัน
         </button>
-        <button
-          class="btn btn-danger mx-1"
-          v-on:click="this.$router.go(-1)"
-        >
+        <button class="btn btn-danger mx-1" v-on:click="this.$router.go(-1)">
           ยกเลิก
         </button>
       </div>
@@ -593,6 +590,7 @@ export default {
         });
     },
     submitUpdateOrder() {
+      let format_date = new Intl.DateTimeFormat("en");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -604,7 +602,10 @@ export default {
       orderObj.subOrders = this.itemListChecked;
       orderObj.create_by = "jimmie";
       orderObj.status_payment = this.status_payment;
-      orderObj.delivery_date = this.delivery_date;
+      orderObj.delivery_date = format_date
+        .format(this.delivery_date)
+        .split("/")
+        .join("-");
       // let tempList = [];
       // this.tempItemListChecked.forEach((temp) => {
       //   tempList.push(temp.id_item);

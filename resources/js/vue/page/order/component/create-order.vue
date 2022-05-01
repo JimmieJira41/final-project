@@ -554,9 +554,10 @@ export default {
       orderObj.id_address = this.id_address;
       orderObj.items = this.itemListChecked;
       orderObj.create_by = "jimmie";
-      orderObj.delivery_date = format_date.format(
-        this.delivery_date.toLocaleDateString().split("/").join("-")
-      );
+      orderObj.delivery_date = format_date
+        .format(this.delivery_date)
+        .split("/")
+        .join("-");
       (orderObj.status_order = this.status_order),
         (orderObj.status_payment = this.status_payment),
         console.log(orderObj);

@@ -113,11 +113,11 @@ export default {
   },
   methods: {
     searchAllList() {
-      let format_date = new Intl.DateTimeFormat("en")
-      this.date = format_date.format(this.delivery_date_search
-        .toLocaleDateString()
+      let format_date = new Intl.DateTimeFormat("en");
+      this.date = format_date
+        .format(this.delivery_date_search)
         .split("/")
-        .join("-"));
+        .join("-");
       this.getAllOrderGroupByCustomer(this.date);
       this.getAllHistoryOrder(this.date);
       this.getAllOrderGroupByItem(this.date);
@@ -151,7 +151,7 @@ export default {
           this.isTableOrderListGroupByCustomerReady = false;
           this.isTableHistoryOrderListReady = false;
         });
-    }
+    },
   },
   mounted() {
     this.date = this.delivery_date_search
@@ -162,6 +162,6 @@ export default {
     this.getAllOrderGroupByCustomer(this.date);
     this.getAllHistoryOrder(this.date);
     this.getAllOrderGroupByItem(this.date);
-  }
+  },
 };
 </script>

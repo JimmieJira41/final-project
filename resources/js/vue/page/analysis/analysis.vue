@@ -12,11 +12,7 @@
               จำนวนยอดขาย
             </div>
           </div>
-          <canvas
-            ref="canvas"
-            id="chart"
-            :chart-data="datachart"
-          ></canvas>
+          <canvas ref="canvas" id="chart" :chart-data="datachart"></canvas>
         </div>
         <hr />
         <div
@@ -175,6 +171,7 @@ export default {
       }
     },
     submitDateToAnalysis() {
+      let format_date = new Intl.DateTimeFormat("en");
       this.first_chart = false;
       var start = "",
         end = "";
@@ -183,7 +180,7 @@ export default {
       var year = this.start_date.getFullYear();
       if (!this.end_date) {
         if (this.type_date == "day") {
-          start = String(year + "-" + month + "-" + date);
+          start = format_date.format(this.start_date).split("/").join("-");
         }
         if (this.type_date == "month") {
           start = String(month);
@@ -196,16 +193,16 @@ export default {
         var end_month = ("0" + (this.end_date.getMonth() + 1)).slice(-2);
         var end_year = this.end_date.getFullYear();
         if (this.type_date == "day") {
-          start = String(year + "-" + month + "-" + date);
-          end = String(end_year + "-" + end_month + "-" + end_date);
+          start = format_date.format(this.start_date).split("/").join("-");
+          end = format_date.format(this.end_date).split("/").join("-");
         }
         if (this.type_date == "month") {
-          start = String(month);
-          end = String(end_month);
+          start = "0" + format_date.format(this.start_date).split("/")[0];
+          end = "0" + format_date.format(this.end_date).split("/")[0];
         }
         if (this.type_date == "year") {
-          start = String(year);
-          end = String(end_year);
+          start = format_date.format(this.start_date).split("/")[2];
+          end = format_date.format(this.end_date).split("/")[2];
         }
       }
       this.body.start_date = start;
