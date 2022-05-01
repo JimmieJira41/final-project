@@ -243,7 +243,7 @@ class AnalysisManagement extends Controller
             }
             if ($request['filter'] == 'cost') {
                 if ($request['type'] == 'day') {
-                    $orderList = order::whereYear("created_at", $request['start_date'])->get();
+                    $orderList = order::whereBetween(DB::raw('DATE(created_at)'), [$request['start_date'], $request['end_date']])->get();
                     // print_r($orderList);
                     foreach ($orderList as $order) {
                         $idSubOrderList = explode(",", $order->id_sub_order);
@@ -261,25 +261,61 @@ class AnalysisManagement extends Controller
                         }
                     }
 
-                    $historyList = DB::table('histories')
-                        ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
-                        ->whereBetween(DB::raw('DATE(created_at)'), [$request['start_date'], $request['end_date']])
-                        ->groupBy('id_item')
-                        ->get();
+                    // $historyList = DB::table('histories')
+                    //     ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
+                    //     ->whereBetween(DB::raw('DATE(created_at)'), [$request['start_date'], $request['end_date']])
+                    //     ->groupBy('id_item')
+                    //     ->get();
                 }
                 if ($request['type'] == 'month') {
-                    $historyList = DB::table('histories')
-                        ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
-                        ->whereBetween(DB::raw('to_char(created_at, \'MM\')'), [$request['start_date'], $request['end_date']])
-                        ->groupBy('id_item')
-                        ->get();
+                    $orderList = order::whereBetween(DB::raw('to_char(created_at, \'MM\')'), [$request['start_date'], $request['end_date']])->get();
+                    // print_r($orderList);
+                    foreach ($orderList as $order) {
+                        $idSubOrderList = explode(",", $order->id_sub_order);
+                        foreach ($idSubOrderList as $idSubOrder) {
+                            $subOrder = subOrder::where("id_sub_order", $idSubOrder)->get(["id_item", "cost_order"])->first();
+                            $item = item::where("id_item", $subOrder->id_item)->get()->first();
+                            if (!in_array($subOrder->id_item, $idItemList)) {
+                                $subOrder->item = $item;
+                                array_push($idItemList, $subOrder->id_item);
+                                array_push($historyList, $subOrder);
+                            } else {
+                                $index = array_search($subOrder->id_item, $idItemList);
+                                $historyList[$index]->cost_order += $subOrder->cost_order;
+                            }
+                        }
+                    }
+
+                    // $historyList = DB::table('histories')
+                    //     ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
+                    //     ->whereBetween(DB::raw('to_char(created_at, \'MM\')'), [$request['start_date'], $request['end_date']])
+                    //     ->groupBy('id_item')
+                    //     ->get();
                 }
                 if ($request['type'] == 'year') {
-                    $historyList = DB::table('histories')
-                        ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
-                        ->whereBetween(DB::raw('to_char(created_at, \'YYYY\')'), [$request['start_date'], $request['end_date']])
-                        ->groupBy('id_item')
-                        ->get();
+                    $orderList = order::whereBetween(DB::raw('to_char(created_at, \'YYYY\')'), [$request['start_date'], $request['end_date']])->get();
+                    // print_r($orderList);
+                    foreach ($orderList as $order) {
+                        $idSubOrderList = explode(",", $order->id_sub_order);
+                        foreach ($idSubOrderList as $idSubOrder) {
+                            $subOrder = subOrder::where("id_sub_order", $idSubOrder)->get(["id_item", "cost_order"])->first();
+                            $item = item::where("id_item", $subOrder->id_item)->get()->first();
+                            if (!in_array($subOrder->id_item, $idItemList)) {
+                                $subOrder->item = $item;
+                                array_push($idItemList, $subOrder->id_item);
+                                array_push($historyList, $subOrder);
+                            } else {
+                                $index = array_search($subOrder->id_item, $idItemList);
+                                $historyList[$index]->cost_order += $subOrder->cost_order;
+                            }
+                        }
+                    }
+
+                    // $historyList = DB::table('histories')
+                    //     ->select('id_item', DB::raw('SUM(cost_order) as total_cost'))
+                    //     ->whereBetween(DB::raw('to_char(created_at, \'YYYY\')'), [$request['start_date'], $request['end_date']])
+                    //     ->groupBy('id_item')
+                    //     ->get();
                 }
             }
         }
