@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Models\stock;
+use App\Models\history_stock;
+
 
 class StockManagement extends Controller
 {
@@ -59,7 +61,16 @@ class StockManagement extends Controller
             }
     
             $stock->updated_at = $time;
+
+            $history_stock = new history_stock();
+            $history_stock->number = $stock->total_stock;
+            $history_stock->update_by = "jimmie";
+            $history_stock->created_at = $time;
+            $history_stock->updated_at = $time;     
+            
             if($stock->update()){
+                $history_stock->id_stock = $stock->id_stock;
+                $history_stock->save();
                 return response("update stock successful!", 200);
             }else{
                 return response("update stock fail!", 417);
@@ -93,4 +104,12 @@ class StockManagement extends Controller
             return response()->json($stock);
         }
     } 
+    public function getHistoryStock(){
+        $history_stock = history_stock::all()->sortByDesc("updated_at");
+        foreach($history_stock as $history){
+            $stock = stock::where('id_stock', $history->id_stock)->get()->first();
+            $history->title_stock = $stock->title_stock;
+        }
+        return response()->json($history_stock);
+    }
 }

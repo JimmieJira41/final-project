@@ -1,28 +1,33 @@
 <template>
   <div class="table-response card shadow border-0 p-3">
     <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0"><h3>รายการสต็อกสินค้า</h3></div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0">
+        <h3>รายการสต็อกสินค้า</h3>
+      </div>
       <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0 text-end">
         <!-- <div class="btn btn-primary mx-2">ออเดอร์ทั้งหมด</div> -->
         <div class="btn btn-success mx-2" v-if="btnStockList">รายการสต็อก</div>
-        <div class="btn btn-warning mx-2" v-if="btnHistory" v-on:click="getAllHistoryStock()">บันทึกรายการสต็อก</div>
+        <div class="btn btn-warning mx-2" v-on:click="getAllStock()">แสดงรายการสต็อก</div>
+        <div class="btn btn-warning" v-on:click="getAllHistoryStock()">แสดงบันทึกรายการสต็อก</div>
       </div>
     </div>
     <hr />
-    <table class="table table-borderless">
+    <table v-if="isTableStockListReady" class="table table-borderless">
       <thead>
         <tr>
           <th scope="row">รายการ</th>
           <th scope="row">รายละเอียด</th>
           <th scope="row">จำนวนคงเหลือ</th>
+          <th scope="row">เวลาอัพเดรต</th>
           <th class="text-center" scope="row" colspan="3">จัดการ</th>
         </tr>
       </thead>
-      <tbody v-if="isTableStockListReady">
+      <tbody>
         <tr v-for="(stock, index) in stockList" v-bind:key="index">
           <td>{{ stock.title_stock }}</td>
           <td>{{ stock.description_stock }}</td>
           <td>{{ stock.total_stock }}</td>
+          <td>{{ stock.updated_at }}</td>
           <!-- <td>{{ admin.created_at }}</td> -->
           <td class="text-center" v-on:click="viewDetailStock(stock.id_stock)">
             <i class="fas fa-eye"></i>
@@ -35,6 +40,39 @@
           <td class="text-center" v-on:click="deleteStock(stock.id_stock)">
             <i class="fas fa-trash-alt"></i>
           </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table v-if="isTableStockHistoryListReady" class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="row">รายการ</th>
+          <th scope="row">จำนวนที่อัพเดรต</th>
+          <th scope="row">อัพเดรตโดยพนักงาน</th>
+          <th scope="row">เวลาอัพเดรต</th>
+          <!-- <th class="text-center" scope="row" colspan="3">จัดการ</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(historyStock, index) in historyStockList" v-bind:key="index">
+          <td>{{ historyStock.title_stock }}</td>
+          <td>{{ historyStock.number }}</td>
+          <td>{{ historyStock.update_by }}</td>
+          <td>{{ historyStock.updated_at }}</td>
+
+          <!-- <td>{{ admin.created_at }}</td> -->
+          <!-- <td class="text-center" v-on:click="viewDetailStock(stock.id_stock)">
+            <i class="fas fa-eye"></i>
+          </td>
+          <td class="text-center">
+            <router-link :to="'/stock/update-stock/' + stock.id_stock"
+              ><i class="fas fa-cog"></i
+            ></router-link>
+          </td>
+          <td class="text-center" v-on:click="deleteStock(stock.id_stock)">
+            <i class="fas fa-trash-alt"></i>
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -54,15 +92,20 @@ export default {
     };
   },
   methods: {
-    getAllHistoryStock(){
-        this.btnHistory = false;
-        this.btnStockList = true;
-        axios.get("/api/history/get-all-h")
+    getAllHistoryStock() {
+      axios.get("/api/stock/get-all-history-stock").then((response) => {
+        if (response) {
+          this.historyStockList = response.data;
+          this.isTableStockListReady = false;
+          this.isTableStockHistoryListReady = true;
+        }
+      });
     },
     getAllStock() {
       axios.get("/api/stock/get-all-stock").then((response) => {
         this.stockList = response.data;
         this.isTableStockListReady = true;
+        this.isTableStockHistoryListReady = false;
       });
     },
     // editDetailStock(stockId){

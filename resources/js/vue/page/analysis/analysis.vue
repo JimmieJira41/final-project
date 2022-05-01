@@ -5,8 +5,12 @@
       <div class="row card-body">
         <div class="col-12 graph">
           <div class="filter text-end">
-            <div class="btn btn-primary mx-2" @click="filterOrder()">จำนวนรายการสั่งซื้อ</div>
-            <div class="btn btn-primary mx-2" @click="filterCost()">จำนวนยอดขาย</div>
+            <div class="btn btn-primary mx-2" @click="filterOrder()">
+              จำนวนรายการสั่งซื้อ
+            </div>
+            <div class="btn btn-primary mx-2" @click="filterCost()">
+              จำนวนยอดขาย
+            </div>
           </div>
           <canvas
             ref="canvas"
@@ -19,52 +23,76 @@
         <hr />
         <div
           class="
-            col-6
+            col-lg-6 col-md-6 col-sm-12 col-12
+            m-0
+            mb-2
             filter-analysis-bar
-            justify-content-center
-            text-center
             my-0
           "
         >
-          ประเภทการแบ่ง :
-          <div
-            class="btn btn-primary mx-2 justify-content-center"
-            @click="typeDay()"
-          >
+          <div class="row">
+            <h5>ประเภทการแบ่ง :</h5>
+          </div>
+
+          <button class="btn btn-primary " @click="typeDay()">
             <b>D</b> แบ่งตามวัน
-          </div>
-          <div
-            class="btn btn-primary mx-2 justify-content-center"
-            @click="typeMonth()"
-          >
+          </button>
+          <button class="btn btn-primary " @click="typeMonth()">
             <b>M</b> แบ่งตามเดือน
-          </div>
-          <div
-            class="btn btn-primary mx-2 justify-content-center"
-            @click="typeYear()"
-          >
+          </button>
+          <button class="btn btn-primary " @click="typeYear()">
             <b>Y</b> แบ่งตามปี
-          </div>
+          </button>
         </div>
-        <div class="col-2 filter-analysis-bar text-center">
-          <datepicker
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6 filter-analysis-bar">
+          <v-date-picker
+            mode="date"
+            :masks="masks"
+            v-model="start_date"
+            :timezone="timezone"
+          >
+            <template #default="{ inputValue, inputEvents }">
+              <label><h5 class="mr-2">เริ่มต้น</h5></label>
+              <input
+                class="col-12 px-2 py-1 border rounded"
+                :value="inputValue"
+                v-on="inputEvents"
+              />
+            </template>
+          </v-date-picker>
+          <!-- <datepicker
             placeholder="เริ่มต้น"
             v-model="start_date"
             :minimum-view="type_date"
             :maximum-view="type_date"
             @selected="start_date_selected = true"
-          ></datepicker>
+          ></datepicker> -->
         </div>
-        <div class="col-2 filter-analysis-bar text-center">
-          <datepicker
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6 filter-analysis-bar">
+          <v-date-picker
+            mode="date"
+            :masks="masks"
+            v-model="end_date"
+            :timezone="timezone"
+          >
+            <template #default="{ inputValue, inputEvents }">
+              <label><h5 class="mr-2">สิ้นสุด</h5></label>
+              <input
+                class="col-12 px-2 py-1 border rounded"
+                :value="inputValue"
+                v-on="inputEvents"
+              />
+            </template>
+          </v-date-picker>
+          <!-- <datepicker
             placeholder="สิ้นสุด"
             v-model="end_date"
             :minimum-view="type_date"
             :maximum-view="type_date"
             @selected="end_date_selected = true"
-          ></datepicker>
+          ></datepicker> -->
         </div>
-        <div class="col-2 filter-analysis-bar text-center text-agile-center">
+        <div class="col-12 filter-analysis-bar text-end">
           <div class="btn btn-primary" @click="submitDateToAnalysis()">
             <i class="fas fa-chart-bar fs-3"></i> ประมวลผล
           </div>
@@ -87,9 +115,9 @@ export default {
       dataAnalysis: {},
       type_date: "day",
       start_date_selected: false,
-      start_date: new Date(""),
+      start_date: new Date(),
       end_date_selected: false,
-      end_date: new Date(""),
+      end_date: new Date(),
       first_chart: true,
       body: {
         filter: "order",
@@ -120,6 +148,10 @@ export default {
           },
         },
       },
+      masks: {
+        input: "D-MM-YYYY",
+      },
+      timezone: "",
     };
   },
   methods: {
@@ -183,12 +215,12 @@ export default {
       console.log(this.body);
       this.getDataAnalysis(this.body);
     },
-    filterOrder(){
+    filterOrder() {
       this.body.filter = "order";
       this.start_date = new Date();
       this.end_date = new Date();
     },
-    filterCost(){
+    filterCost() {
       this.body.filter = "cost";
       this.start_date = new Date();
       this.end_date = new Date();

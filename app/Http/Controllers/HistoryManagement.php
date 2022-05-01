@@ -37,12 +37,10 @@ class HistoryManagement extends Controller
                 $item = item::where('id_item', $subOrder->id_item)->get(['title_item'])->first();
                 $item->number = $subOrder->number;
                 array_push($itemList, $item);
-             
             }
             $order->item = $itemList;
             $itemList = [];
         }
         return response()->json($orderList);
     }
-
 }

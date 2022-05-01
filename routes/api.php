@@ -64,6 +64,8 @@ Route::prefix('stock')->group(function(){
     Route::get('/get-all-stock', [StockManagement::class, 'getAll']);
     Route::get('/get-stock/{keyword}', [StockManagement::class, 'getStockById']);
     Route::get('/search-stock/{keyword}', [StockManagement:: class, 'searchStock']);
+    Route::get('/get-all-history-stock', [StockManagement:: class, 'getHistoryStock']);
+    
 });
 Route::prefix('item')->group(function(){
     Route::post('/new-item',[ItemManagement::class, 'create']);
