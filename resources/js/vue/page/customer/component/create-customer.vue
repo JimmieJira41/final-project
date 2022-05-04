@@ -172,6 +172,8 @@ export default {
       const body = {};
       body.firstname_customer = this.firstname_customer;
       body.lastname_customer = this.lastname_customer;
+      body.facebook_contact_customer = this.facebook_customer;
+      body.line_contact_customer = this.line_customer;
       body.tel_customer = this.tel_customer;
       body.default_id_address = "";
       body.id_addresses = "";

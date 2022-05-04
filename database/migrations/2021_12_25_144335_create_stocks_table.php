@@ -17,7 +17,7 @@ class CreateStocksTable extends Migration
             $table->id('id_stock');
             $table->string('title_stock');
             $table->string('description_stock');
-            $table->integer('total_stock');
+            $table->double('total_stock');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

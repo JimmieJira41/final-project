@@ -19,8 +19,8 @@ class CreateHistoriesTable extends Migration
             $table->string('id_customer');
             $table->string('id_address');
             $table->string('id_item');
-            $table->integer('number');
-            $table->integer('cost_order')->default(0);
+            $table->double('number');
+            $table->double('cost_order')->default(0);
             $table->string('create_by');
             $table->date('created_at')->useCurrent();
             $table->date('updated_at')->useCurrent();

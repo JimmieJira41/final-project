@@ -22,6 +22,12 @@ class CustomerManagement extends Controller
         if (!$request['lastname_customer']) {
             return response("please enter lastname!");
         }
+        if(!$request['facebook_contact_customer']){
+            $request['facebook_contact_customer'] = "";
+        }
+        if(!$request['line_contact_customer']){
+            $request['line_contact_customer'] = "";
+        }
         // if(!$request['default_id_address']){
         //     return response("please enter currently address!");
         // }
@@ -35,9 +41,9 @@ class CustomerManagement extends Controller
             $customer = new customer();
             $customer->firstname_customer = $request['firstname_customer'];
             $customer->lastname_customer = $request['lastname_customer'];
-            // $customer->default_id_address = $request['default_id_address'];
+            $customer->facebook_contact_customer = $request['facebook_contact_customer'];
+            $customer->line_contact_customer = $request['line_contact_customer'];
             $customer->tel_customer = $request['tel_customer'];
-            // $customer->id_addresses = $request['id_addresses'];
             $customer->created_at = $time;
             $customer->updated_at = $time;
             $customer->save();

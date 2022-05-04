@@ -147,7 +147,7 @@ export default {
         },
       },
       masks: {
-        input: "D-MM-YYYY",
+        input: "DD-MM-YYYY",
       },
       timezone: "",
     };

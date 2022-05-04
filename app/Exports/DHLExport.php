@@ -15,9 +15,18 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
 {
-     /**
+
+    protected $delivery_date;
+    protected $id_order = [];
+    /**
      * @return \Illuminate\Support\Collection
      */
+    function __construct($delivery_date, $id_order)
+    {
+        $this->delivery_date = $delivery_date;
+        // $this->id_order = $id_order;
+    }
+
     public function headings(): array
     {
         return [
@@ -91,11 +100,12 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
     public function collection()
     {
         $time = Carbon::now("Asia/Bangkok");
+        $day = substr("0" . $time->day, -2);
         $month = substr("0" . $time->month, -2);
         $year = substr(strval($time->year + 543), -2);
         // array_slice($year,2,1);
-        $date = strval($time->day . "" . $month . "" . $year . "kw");
-        $orderList = order::where('status_order', false)->get();
+        $date = strval($day . "" . $month . "" . $year . "kw");
+        $orderList = order::where('status_order', false)->whereDate('delivery_date', $this->delivery_date)->get();
         $collection = collect();
         foreach ($orderList as $order) {
             $customer = customer::where('id_customer', $order->id_customer)->get()->first();
@@ -110,7 +120,7 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
                     [
                         'เลขบัญชีที่รับสินค้า' => '5285619212',
                         'ช่องทางการขาย' => '',
-                        'รหัสการจัดส่ง' => $date.sizeof($collection)+1,
+                        'รหัสการจัดส่ง' => $date.substr("0" . sizeof($collection)+1, -2),
                         'รหัสบริการจัดส่ง' => 'PDO',
                         'บริษัท' => '',
                         'ชื่อผู้รับ' => $name,
@@ -174,27 +184,6 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
                         'การอ้างอิงการเรียกเก็บเงินรายชิ้น 1' => '',
                         'การอ้างอิงการเรียกเก็บเงินรายชิ้น 2'
                     ];
-                    // [
-                    //     'เลขบัญชีที่รับสินค้า' => '5285619212',
-                    //     'รหัสการจัดส่ง' => $date.sizeof($collection)+1,
-                    //     'รหัสบริการจัดส่ง' => 'PDO',
-                    //     'ชื่อผู้รับ' => $name,
-                    //     'ที่อยู่บรรทัดที่ 1' => $line1,
-                    //     'ที่อยู่บรรทัดที่ 2' => strval($item->title_item),
-                    //     'ที่อยู่บรรทัดที่ 3' => '',
-                    //     'เขต (อำเภอ)' => strval($address->amphure_address),
-                    //     'จังหวัด' => strval($address->province_address),
-                    //     'รหัสไปรษณีย์' => strval($address->zipcode_address),
-                    //     'รหัสประเทศปลายทาง' => 'TH',
-                    //     'หมายเลขโทรศัพท์' => strval($customer->tel_customer),
-                    //     'น้ำหนักสินค้า (กรัม)' => '100',
-                    //     'สกุลเงิน' => 'THB',
-                    //     'เก็บเงินปลายทาง' => '',
-                    //     'มูลค่าการเก็บเงินปลายทาง' => '',
-                    //     'IsMult' => '',
-                    //     'ตัวเลือกการจัดส่ง' => '',
-                    //     'รหัสชิ้น' => ''
-                    // ];
                     $collection->push($detail);
                 }
             }

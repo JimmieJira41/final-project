@@ -62,24 +62,24 @@ class OrderManagement extends Controller
         $order = new order();
         $time = Carbon::now();
         if (!$request['id_order']) {
-            return response("please enter id_order!");
+            return response("please enter id_order!", 417);
         }
         if (!$request['id_customer']) {
-            return response("please enter id_customer!");
+            return response("please enter id_customer!", 417);
         }
         if (!$request['id_address']) {
-            return response("please enter id_address!");
+            return response("please enter id_address!", 417);
         }
         if (!$request['items']) {
-            return response("please enter item!");
+            return response("please enter item!", 417);
         }
         if (!$request['create_by']) {
-            return response("please enter create_by!");
+            return response("please enter create_by!", 417);
         }
         foreach ($request['items'] as $item_save) {
             $item = item::where("id_item", $item_save['id_item'])->get(['total_use', 'id_stock']);
             if (!count($item)) {
-                return response("This item is not found!");
+                return response("This item is not found!", 417);
             } else {
                 // echo typeof($item);
                 $stock = stock::where('id_stock', $item[0]['id_stock'])->first();
@@ -92,7 +92,7 @@ class OrderManagement extends Controller
                     $cal_total_use = $cal_total_use + $promotion->number_promotion;
                 }
                 if (!$stock) {
-                    return response("This stock is not found!");
+                    return response(["ไม่พบสต็อกสินค้า !"], 417);
                 } else {
                     $subOrder = new subOrder();
                     $subOrder->id_order = $request['id_order'];
@@ -115,7 +115,8 @@ class OrderManagement extends Controller
                     //     $subOrder->note = $item_save['note'];
                     // }
                     if ($cal_total_use > $stock->total_stock) {
-                        return response("This stock is not enough to use!");
+                        return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
+                        // return response("This stock is not enough to use!", 417);
                     } else {
                         if ($subOrder->save()) {
                             $stock->total_stock = $stock->total_stock - $cal_total_use;
@@ -123,7 +124,7 @@ class OrderManagement extends Controller
                             array_push($subOrders, $subOrder->id_sub_order);
                             $order->total_cost_order = $order->total_cost_order + $subOrder->cost_order;
                         } else {
-                            return response('create new order fail');
+                            return response()->json(['ไม่สามารถสร้างรายการสั่งซื้อได้ โปรดติดต่อเจ้าหน้าที่ !'], 417);
                         }
                     }
                 }
@@ -164,11 +165,11 @@ class OrderManagement extends Controller
                     if ($item_input && $item_input['id_item'] == $subOrder['id_item']) {
                         $item = item::where('id_item', $item_input['id_item'])->get(['total_use', 'id_stock']);
                         if (!count($item)) {
-                            return response("This item is not found!");
+                            return  response()->json(['ไม่พบรายการสินค้า !'], 417);
                         } else {
                             $stock = stock::where('id_stock', $item[0]['id_stock'])->first();
                             if (!$stock) {
-                                return response("This stock is not found!");
+                                return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
                             } else {
                                 $item_relate_order = item::where('id_item', $subOrder['id_item'])->get(['total_use', 'id_stock']);
                                 $stock_relate_order = stock::where('id_stock', $item_relate_order[0]['id_stock'])->first();
@@ -182,7 +183,7 @@ class OrderManagement extends Controller
                                     $revert_total_stock = $revert_total_stock + $promotion->number_promotion;
                                 }
                                 $stock_relate_order->total_stock = $stock_relate_order->total_stock + $revert_total_stock;
-                                $stock_relate_order->update();
+                                // $stock_relate_order->update();
                                 // print_r("stock update : " . response($stock_relate_order));
                                 // printf("request :" . $item_input['id_item'] . " " . "order :" . $subOrder->id_item . " " . "stock :" . $stock->id_stock);
                                 $stock_update = $item_input['id_item'] == $subOrder->id_item ? $stock_relate_order : $stock;
@@ -216,8 +217,9 @@ class OrderManagement extends Controller
                                     $cal_total_use = $cal_total_use + $promotion->number_promotion;
                                 }
                                 if ($cal_total_use > $stock_update->total_stock) {
-                                    return response("This stock is not enough to use!");
+                                    return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
                                 } else {
+                                    $stock_relate_order->update();
                                     if ($subOrder->update()) {
                                         array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
                                         $stock_update->total_stock = $stock_update->total_stock - $cal_total_use;
@@ -226,7 +228,7 @@ class OrderManagement extends Controller
                                             // return response()->json($order);
                                         }
                                     } else {
-                                        return response('update order fail', 417);
+                                        return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
                                     }
                                 }
                             }
@@ -236,7 +238,7 @@ class OrderManagement extends Controller
                         print_r($iditemOrderExistList);
                         $item = item::where("id_item", $item_input['id_item'])->get(['total_use', 'id_stock']);
                         if (!count($item)) {
-                            return response("This item is not found!");
+                            return response()->json(['ไม่พบรายการสินค้า !'], 417);
                         } else {
                             // echo typeof($item);
                             $stock = stock::where('id_stock', $item[0]['id_stock'])->first();
@@ -249,7 +251,7 @@ class OrderManagement extends Controller
                                 $cal_total_use = $cal_total_use + $promotion->number_promotion;
                             }
                             if (!$stock) {
-                                return response("This stock is not found!");
+                                return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
                             } else {
                                 $subOrder = new subOrder();
                                 $subOrder->id_order = $request['id_order'];
@@ -267,14 +269,14 @@ class OrderManagement extends Controller
                                 }
                                 // if($item_sav
                                 if ($cal_total_use > $stock->total_stock) {
-                                    return response("This stock is not enough to use!");
+                                    return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
                                 } else {
                                     if ($subOrder->save()) {
                                         $stock->total_stock = $stock->total_stock - $cal_total_use;
                                         $stock->update();
                                         array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
                                     } else {
-                                        return response('create new order fail');
+                                        return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
                                     }
                                 }
                             }
@@ -552,7 +554,6 @@ class OrderManagement extends Controller
     }
     public function getOrderById(Request $request)
     {
-        // echo ($request->keyword);
         $subOrderList = [];
         $orderResponse = new response();
         $order = order::where('id_order', $request->keyword)->get()->first();
@@ -629,14 +630,12 @@ class OrderManagement extends Controller
             return response()->json('not have order!');
         }
     }
-    public function DHLExportExcel()
+    public function DHLExportExcel(Request $request)
     {
-        return Excel::download(new DHLExport, 'history.xlsx');
+        return Excel::download(new DHLExport($request, 0), 'history.xlsx');
     }
-    public function KerryExportExcel()
+    public function KerryExportExcel(Request $request)
     {
-        $set = new KerryExport;
-        $set->collection('asd');
-        return Excel::download($set, 'history.xlsx');
+        return Excel::download(new KerryExport($request), 'history.xlsx');
     }
 }

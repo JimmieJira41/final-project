@@ -253,13 +253,16 @@
             </thead>
             <tbody v-if="isReadyItemTable">
               <tr v-for="(item, index) in itemList" v-bind:key="index">
-                <input
-                  type="checkbox"
-                  id="{{item.title_item}}"
-                  v-on:change="!item.isSelected"
-                  v-model="itemChecked"
-                  v-bind:value="item.id_item"
-                />
+                <td>
+                  <input
+                    type="checkbox"
+                    id="{{item.title_item}}"
+                    v-on:change="!item.isSelected"
+                    v-model="itemChecked"
+                    v-bind:value="item.id_item"
+                    style="width: 20px; height: 20px"
+                  />
+                </td>
                 <td>{{ item.title_item }}</td>
                 <td>{{ item.description_item }}</td>
               </tr>
@@ -321,22 +324,38 @@
               <tr>
                 <th scope="row"></th>
                 <th scope="row">ชื่อ - นามสกุล</th>
+                <th scope="row">facebook</th>
+                <th scope="row">line</th>
+                <th scope="row">เบอร์โทรศัพท์</th>
               </tr>
             </thead>
             <tbody v-if="isReadyItemTable">
               <tr v-for="(customer, index) in customerList" v-bind:key="index">
-                <input
-                  type="radio"
-                  id="{{customer.id_customer}}"
-                  v-model="customerSelected"
-                  v-bind:value="customer.id_customer"
-                />
+                <td>
+                  <input
+                    type="radio"
+                    name="customer"
+                    :value="customer.id_customer"
+                    v-model="customerSelected"
+                    style="width: 20px; height: 20px"
+                  />
+                </td>
+
                 <td>
                   {{
                     customer.firstname_customer +
                     " " +
                     customer.lastname_customer
                   }}
+                </td>
+                <td>
+                  {{ customer.facebook_contact_customer }}
+                </td>
+                <td>
+                  {{ customer.line_contact_customer }}
+                </td>
+                <td>
+                  {{ customer.tel_customer }}
                 </td>
               </tr>
             </tbody>
@@ -406,7 +425,7 @@ export default {
       isDisable: false,
       // date
       masks: {
-        input: "D-MM-YYYY",
+        input: "DD-MM-YYYY",
       },
     };
   },
@@ -460,6 +479,19 @@ export default {
       console.log(this.itemChecked.length);
       return this.itemChecked == 0;
     },
+    selectRadioCustomer(id_customer) {
+      this.tempCustomerList.forEach((customer) => {
+        if (customer.id_customer == id_customer) {
+          customer.select = true;
+        }
+      });
+      this.customerList.forEach((customer) => {
+        if (customer.id_customer == id_customer) {
+          customer.select = true;
+        }
+      });
+      this.customerSelected = id_customer;
+    },
     selectCustomer() {
       let customerSelected = this.customerList.find(
         (customer) => customer.id_customer == this.customerSelected
@@ -498,6 +530,7 @@ export default {
           customer.select = false;
         });
         this.tempCustomerList = this.customerList;
+        console.log(this.tempCustomerList);
       });
     },
     getAllItem() {
@@ -538,13 +571,20 @@ export default {
             customer.firstname_customer.includes(
               this.keyword_search_customer
             ) ||
-            customer.lastname_customer.includes(this.keyword_search_customer)
+            customer.lastname_customer.includes(this.keyword_search_customer) ||
+            customer.facebook_contact_customer.includes(
+              this.keyword_search_customer
+            ) ||
+            customer.line_contact_customer.includes(
+              this.keyword_search_customer
+            ) ||
+            customer.tel_customer.includes(this.keyword_search_customer)
         );
       }
       console.log(this.customerList);
     },
     submitCreateOrder() {
-      let format_date = new Intl.DateTimeFormat("en");
+      let format_date = new Intl.DateTimeFormat("en-GB");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -564,6 +604,26 @@ export default {
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0 || item.number == null
       );
+
+      // axios.post("/api/order/new-order", orderObj).then((response) => {
+      //         if (response.status == 200) {
+      //           this.$swal({
+      //             title: "สร้างรายการสินค้าสำเร็จ",
+      //             icon: "success",
+      //             confirmButtonText: "ยืนยัน",
+      //           }).then((result) => {
+      //             this.$router.go(-1);
+      //           });
+      //         }
+      // }).catch(error => {
+      //   if(error.response){
+      //           this.$swal({
+      //             title: response.message,
+      //             icon: "error",
+      //             confirmButtonText: "ยืนยัน",
+      //           })
+      //   }
+      // });
       if (orderNotReady) {
         this.$swal({
           title: "แจ้งเตือน",
@@ -576,24 +636,35 @@ export default {
       } else {
         this.$swal({
           title: "แจ้งเตือน",
-          text: "คุณต้องการสร้างสต็อกสินค้าใหม่ ใช่หรือไม่ ?",
+          text: "คุณต้องการสร้างรายการสินค้า ใช่หรือไม่ ?",
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "ยืนยัน",
           cancelButtonText: "ยกเลิก",
         }).then((result) => {
           if (result.isConfirmed) {
-            axios.post("/api/order/new-order", orderObj).then((response) => {
-              if (response) {
+            axios
+              .post("/api/order/new-order", orderObj)
+              .then((response) => {
+                if (response.status == 200) {
+                  this.$swal({
+                    title: "สร้างรายการสินค้าสำเร็จ",
+                    icon: "success",
+                    confirmButtonText: "ยืนยัน",
+                  }).then((result) => {
+                    this.$router.go(-1);
+                  });
+                }
+              })
+              .catch((error) => {
+                // console.log(error.response.data[0])
                 this.$swal({
-                  title: "อัพเดรตสำเร็จ",
-                  icon: "success",
+                  title: "สร้างรายการสินค้าไม่สำเร็จ",
+                  text: error.response.data[0],
+                  icon: "error",
                   confirmButtonText: "ยืนยัน",
-                }).then((result) => {
-                  this.$router.go(-1);
                 });
-              }
-            });
+              });
           }
         });
       }

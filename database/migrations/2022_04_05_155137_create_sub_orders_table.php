@@ -17,12 +17,12 @@ class CreateSubOrdersTable extends Migration
             $table->id('id_sub_order');
             $table->string('id_order');
             $table->string('id_item');
-            $table->integer('number');
+            $table->double('number');
             $table->string('id_promotion')->nullable();
-            $table->integer('extra_number')->nullable();
+            $table->double('extra_number')->nullable();
             $table->string('note')->nullable();
             $table->boolean('status_order');
-            $table->integer('cost_order')->default(0);
+            $table->double('cost_order')->default(0);
             $table->string('create_by');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

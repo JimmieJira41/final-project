@@ -17,9 +17,9 @@ class CreateItemsTable extends Migration
             $table->id('id_item');
             $table->string('title_item');
             $table->string('description_item');
-            $table->integer('cost_item');
+            $table->double('cost_item');
             $table->string('id_stock');
-            $table->integer('total_use');
+            $table->double('total_use');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

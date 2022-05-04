@@ -142,7 +142,7 @@
             :disabled="
               customerSelected == undefined || customerSelected == null
             "
-            class="btn btn-warning mx-auto"
+            class="btn btn-warning px-1 mx-auto"
             type="button"
             v-on:click="status_payment = true"
           >
@@ -409,6 +409,10 @@ export default {
       isItemSelectedTableReady: false,
       isReadyItemTable: false,
       isDisable: false,
+      // date
+      masks: {
+        input: "DD-MM-YYYY",
+      },
     };
   },
   methods: {
@@ -590,7 +594,7 @@ export default {
         });
     },
     submitUpdateOrder() {
-      let format_date = new Intl.DateTimeFormat("en");
+      let format_date = new Intl.DateTimeFormat("en-GB");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -652,7 +656,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios.put("/api/order/update-order", orderObj).then((response) => {
-              if (response) {
+              if (response.status) {
                 this.$swal({
                   title: "อัพเดรตสำเร็จ",
                   icon: "success",
@@ -661,6 +665,14 @@ export default {
                   this.$router.go(-1);
                 });
               }
+            }).catch((error) =>{
+               console.log(error.response.data[0])
+                this.$swal({
+                  title: "อัพเดรตสำเร็จ",
+                  text: error.response.data[0],
+                  icon: "error",
+                  confirmButtonText: "ยืนยัน",
+                })
             });
           }
         });

@@ -4,6 +4,15 @@
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0">
           <h3>รายการสั่งซื้อ</h3>
+          <div>
+            <button
+              v-if="isTableOrderListGroupByCustomerReady"
+              class="btn rounded-pill btn-outline-primary py-1 px-2"
+              v-on:click="selectMode = !selectMode"
+            >
+              เลือก
+            </button>
+          </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0 text-end">
           <!-- <div class="btn btn-primary mx-2">ออเดอร์ทั้งหมด</div> -->
@@ -55,39 +64,35 @@
               <!-- <th class="text-center" scope="row" colspan="3">จัดการ</th> -->
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="orderList.length">
             <tr v-for="(order, index) in orderList" v-bind:key="index">
               <td>{{ index + 1 }}</td>
               <td>{{ order.item[0].title_item }}</td>
               <td>{{ order.total_number }}</td>
-              <!-- <td>{{ order.created_at }}</td> -->
-              <!-- <td>{{ admin.created_at }}</td> -->
-              <!-- <td class="text-center" v-on:click="viewDetailOrder(order.id_order)"><i class="fas fa-eye"></i></td> -->
-              <!-- <td class="text-center">
-              <router-link
-                :to="
-                  '/order/update-order/' +
-                  order.id_customer +
-                  '/' +
-                  order.id_order +
-                  '/' +
-                  order.id_item
-                "
-                ><i class="fas fa-cog"></i
-              ></router-link>
-            </td>
-            <td class="text-center" v-on:click="deleteOrder(order.id_order)">
-              <i class="fas fa-trash-alt"></i>
-            </td> -->
+            </tr>
+          </tbody>
+
+          <tbody v-else>
+            <tr class="text-center">
+              <td colspan="3">ไม่พบข้อมูลรายการสั่งซื้อ !</td>
             </tr>
           </tbody>
         </table>
+
         <table
           class="table table-borderless"
           v-if="isTableOrderListGroupByCustomerReady"
         >
           <thead>
             <tr>
+              <th v-if="selectMode">
+                <div>เลือกทั้งหมด</div>
+                <input
+                  type="checkbox"
+                  v-model="selectAllMode"
+                  v-on:click="checkSelectAllMode()"
+                />
+              </th>
               <th scope="row">ลำดับ</th>
               <th scope="row">รายชื่อลูกค้า</th>
               <th scope="row">สถานะการชำระเงิน</th>
@@ -98,11 +103,18 @@
               <th class="text-center" scope="row" colspan="3">จัดการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="orderListGroupByCustomer.length">
             <tr
               v-for="(order, index) in orderListGroupByCustomer"
               v-bind:key="index"
             >
+              <td v-if="selectMode">
+                <input
+                  type="checkbox"
+                  :value="order.id_order"
+                  v-model="orderSelectedList"
+                />
+              </td>
               <td>{{ order.id_order }}</td>
               <td>{{ order.name_customer }}</td>
               <td>
@@ -121,9 +133,6 @@
                 </ul>
               </td>
               <td class="">{{ order.total_cost_order }} ฿</td>
-              <!-- <td>{{ order.created_at }}</td> -->
-              <!-- <td>{{ admin.created_at }}</td> -->
-              <!-- <td class="text-center" v-on:click="viewDetailOrder(order.id_order)"><i class="fas fa-eye"></i></td> -->
               <td class="text-center">
                 <router-link :to="'/order/update-order/' + order.id_order"
                   ><i class="fas fa-cog"></i
@@ -132,6 +141,11 @@
               <td class="text-center" v-on:click="deleteOrder(order.id_order)">
                 <i class="fas fa-trash-alt"></i>
               </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr class="text-center">
+              <td colspan="6">ไม่พบข้อมูลรายการสั่งซื้อ !</td>
             </tr>
           </tbody>
         </table>
@@ -150,7 +164,7 @@
               <th class="text-center" scope="row" colspan="3">จัดการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="historyList.length">
             <tr v-for="(order, index) in historyList" v-bind:key="index">
               <td>{{ order.id_order }}</td>
               <td>{{ order.name_customer }}</td>
@@ -170,9 +184,6 @@
                   </li>
                 </ul>
               </td>
-              <!-- <td>{{ order.created_at }}</td> -->
-              <!-- <td>{{ admin.created_at }}</td> -->
-              <!-- <td class="text-center" v-on:click="viewDetailOrder(order.id_order)"><i class="fas fa-eye"></i></td> -->
               <td class="text-center">
                 <router-link :to="'/order/update-order/' + order.id_order"
                   ><i class="fas fa-cog"></i
@@ -182,30 +193,11 @@
                 <i class="fas fa-trash-alt"></i>
               </td>
             </tr>
-            <!-- <tr v-for="(order, index) in historyList" v-bind:key="index">
-            <td>{{ order.id_order }}</td>
-            <td>{{ order.item[0].description_item }}</td>
-            <td>{{ order.number }}</td>
-            <td>{{ order.created_at }}</td> -->
-            <!-- <td>{{ admin.created_at }}</td> -->
-            <!-- <td class="text-center" v-on:click="viewDetailOrder(order.id_order)"><i class="fas fa-eye"></i></td> -->
-            <!-- <td class="text-center">
-              <router-link
-                :to="
-                  '/order/update-order/' +
-                  order.id_customer +
-                  '/' +
-                  order.id_order +
-                  '/' +
-                  order.id_item
-                "
-                ><i class="fas fa-cog"></i
-              ></router-link>
-            </td>
-            <td class="text-center" v-on:click="deleteOrder(order.id_order)">
-              <i class="fas fa-trash-alt"></i>
-            </td> -->
-            <!-- </tr> -->
+          </tbody>
+          <tbody v-else>
+            <tr class="text-center">
+              <td colspan="7">ไม่พบข้อมูลรายการสั่งซื้อ !</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -251,10 +243,16 @@
           ></button>
         </div>
         <div class="modal-body">
-          <button class="btn btn-primary col-12 my-1" v-on:click="exportLabel('kerry')">
+          <button
+            class="btn btn-primary col-12 my-1"
+            v-on:click="exportLabel('kerry')"
+          >
             Kerry Express
           </button>
-          <button class="btn btn-primary col-12 my-1" v-on:click="exportLabel('dhl')">
+          <button
+            class="btn btn-primary col-12 my-1"
+            v-on:click="exportLabel('dhl')"
+          >
             DHL Express
           </button>
         </div>
@@ -264,15 +262,20 @@
 </template>
 <script>
 export default {
-  props: ["orderList", "orderListGroupByCustomer", "historyList"],
+  props: [
+    "orderList",
+    "orderListGroupByCustomer",
+    "historyList",
+    "delivery_date",
+  ],
   data: function () {
     return {
       isTableOrderListReady: true,
       isTableHistoryOrderListReady: false,
       isTableOrderListGroupByCustomerReady: false,
-      // orderList: [],
-      // orderListGroupByCustomer: [],
-      // historyList: [],
+      orderSelectedList: [],
+      selectAllMode: false,
+      selectMode: false,
       order: Object,
     };
   },
@@ -349,7 +352,16 @@ export default {
       });
     },
     exportLabel(key) {
-      let url = '';
+      let format_date = new Intl.DateTimeFormat("en-GB");
+      let url = "";
+      let title_file = "";
+      const body = {
+        delivery_date: format_date
+          .format(this.delivery_date)
+          .split("/")
+          .join("-"),
+        id_order_list: this.orderSelectedList,
+      };
       this.$swal({
         title: "แจ้งเตือน",
         text: "คุณดาวโหลดไฟล์ใบปะหน้า ใช่หรือไม่ ?",
@@ -359,16 +371,23 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          if(key == 'dhl'){
-            url = "/api/order/get-dhl-label-excel-file";
+          if (key == "dhl") {
+            url = "/api/order/get-dhl-label-excel-file/";
+            title_file =
+              "DHL-Label " +
+              format_date.format(this.delivery_date).split("/").join("-");
           }
-          if(key == 'kerry'){
-            url = "/api/order/get-kerry-label-excel-file"
+          if (key == "kerry") {
+            url = "/api/order/get-kerry-label-excel-file/";
+            title_file =
+              "Kerry-Label " +
+              format_date.format(this.delivery_date).split("/").join("-");
           }
           axios({
             url: url,
-            method: "get",
+            method: "post",
             responseType: "blob",
+            data: body,
           }).then((response) => {
             if (response) {
               var blob = new Blob([response.data], {
@@ -379,14 +398,22 @@ export default {
               // elink.download = fileName;
               elink.style.display = "none";
               elink.href = URL.createObjectURL(blob);
-              elink.setAttribute("download", "template.xlsx");
+              elink.setAttribute(
+                "download",
+                title_file +
+                  " " +
+                  format_date.format(this.delivery_date).split("/").join("-") +
+                  ".xlsx"
+              );
               document.body.appendChild(elink);
               elink.click();
               URL.revokeObjectURL(elink.href);
               document.body.removeChild(elink);
 
               this.$swal({
-                title: "คุณดาวโหลดไฟล์สำเร็จ",
+                title: "ดาวโหลดไฟล์สำเร็จ",
+                text:
+                  "คุณได้รับไฟล์ " + title_file + " กรุณาตรวจสอบความถูกต้อง !",
                 icon: "success",
                 confirmButtonText: "ยืนยัน",
               });
@@ -394,6 +421,24 @@ export default {
           });
         }
       });
+    },
+    checkSelectAllMode() {
+      this.selectAllMode = !this.selectAllMode;
+      this.selectAllMode && this.selectMode
+        ? this.selectAllOrderToExport()
+        : this.unSelectAllOrderToExport();
+    },
+    selectAllOrderToExport() {
+      this.orderSelectedList = [];
+      this.orderListGroupByCustomer.forEach((order) => {
+        this.orderSelectedList.push(order.id_order);
+      });
+    },
+    unSelectAllOrderToExport() {
+      this.orderSelectedList = [];
+    },
+    showLog() {
+      console.log(this.orderSelectedList);
     },
   },
   mounted() {},

@@ -53,8 +53,8 @@ Route::prefix('order')->group(function(){
     Route::get('/get-order-group-by-customer/{keyword}',[OrderManagement::class, 'getAllOrderGroupByCustomer']);
     Route::get('/get-order-by-customer/{keyword}', [OrderManagement:: class, 'getAllOrderGroupByCustomerId']);
     Route::post('/cut-off-order',[OrderManagement::class, 'cutOffOrder']);
-    Route::get('/get-dhl-label-excel-file',[OrderManagement::class, 'DHLExportExcel']);
-    Route::get('/get-kerry-label-excel-file',[OrderManagement::class, 'KerryExportExcel']);
+    Route::post('/get-dhl-label-excel-file',[OrderManagement::class, 'DHLExportExcel']);
+    Route::post('/get-kerry-label-excel-file',[OrderManagement::class, 'KerryExportExcel']);
 
 });
 Route::prefix('stock')->group(function(){

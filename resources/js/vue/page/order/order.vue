@@ -82,6 +82,7 @@
       :orderList="orderList"
       :orderListGroupByCustomer="orderListGroupByCustomer"
       :historyList="historyList"
+      :delivery_date="delivery_date_search"
     ></TableOrderList>
   </div>
 </template>
@@ -106,14 +107,14 @@ export default {
       orderList: [],
       date: "",
       masks: {
-        input: "D-MM-YYYY",
+        input: "DD-MM-YYYY",
       },
       timezone: "Asia/Bangkok",
     };
   },
   methods: {
     searchAllList() {
-      let format_date = new Intl.DateTimeFormat("en");
+      let format_date = new Intl.DateTimeFormat("en-GB");
       this.date = format_date
         .format(this.delivery_date_search)
         .split("/")
@@ -154,9 +155,9 @@ export default {
     },
   },
   mounted() {
-    this.date = this.delivery_date_search
-      .toLocaleString()
-      .split(",")[0]
+    let format_date = new Intl.DateTimeFormat("en-GB");
+    this.date = format_date
+      .format(this.delivery_date_search)
       .split("/")
       .join("-");
     this.getAllOrderGroupByCustomer(this.date);
