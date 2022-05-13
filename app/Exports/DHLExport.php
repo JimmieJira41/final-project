@@ -17,14 +17,14 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
 {
 
     protected $delivery_date;
-    protected $id_order = [];
+    protected $id_order_list = [];
     /**
      * @return \Illuminate\Support\Collection
      */
-    function __construct($delivery_date, $id_order)
+    function __construct($request)
     {
-        $this->delivery_date = $delivery_date;
-        // $this->id_order = $id_order;
+        $this->delivery_date = $request->delivery_date;
+        $this->id_order_list = $request->id_order_list;
     }
 
     public function headings(): array
@@ -105,7 +105,15 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
         $year = substr(strval($time->year + 543), -2);
         // array_slice($year,2,1);
         $date = strval($day . "" . $month . "" . $year . "kw");
-        $orderList = order::where('status_order', false)->whereDate('delivery_date', $this->delivery_date)->get();
+        $orderList = [];
+        if (sizeof($this->id_order_list) == 0) {
+            $orderList = order::where('status_order', false)->whereDate('delivery_date', $this->delivery_date)->get();
+        } else {
+            foreach ($this->id_order_list as $id_order) {
+                $order = order::where('status_order', false)->where('id_order', $id_order)->get()->first();
+                array_push($orderList, $order);
+            }
+        }
         $collection = collect();
         foreach ($orderList as $order) {
             $customer = customer::where('id_customer', $order->id_customer)->get()->first();
@@ -120,7 +128,7 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
                     [
                         'เลขบัญชีที่รับสินค้า' => '5285619212',
                         'ช่องทางการขาย' => '',
-                        'รหัสการจัดส่ง' => $date.substr("0" . sizeof($collection)+1, -2),
+                        'รหัสการจัดส่ง' => $date . substr("0" . sizeof($collection) + 1, -2),
                         'รหัสบริการจัดส่ง' => 'PDO',
                         'บริษัท' => '',
                         'ชื่อผู้รับ' => $name,
@@ -257,8 +265,7 @@ class DHLExport implements FromCollection, WithHeadings, WithColumnWidths
             'BJ' => 0,
             'BK' => 0,
             'BL' => 0,
-            'BM' => 0,  
+            'BM' => 0,
         ];
     }
-
 }

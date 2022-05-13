@@ -7,8 +7,12 @@
       <div class="col-lg-6 col-md-6 col-sm-12 col-12 m-0 text-end">
         <!-- <div class="btn btn-primary mx-2">ออเดอร์ทั้งหมด</div> -->
         <div class="btn btn-success mx-2" v-if="btnStockList">รายการสต็อก</div>
-        <div class="btn btn-warning mx-2" v-on:click="getAllStock()">แสดงรายการสต็อก</div>
-        <div class="btn btn-warning" v-on:click="getAllHistoryStock()">แสดงบันทึกรายการสต็อก</div>
+        <div class="btn btn-warning mx-2" v-on:click="getAllStock()">
+          แสดงรายการสต็อก
+        </div>
+        <div class="btn btn-warning" v-on:click="getAllHistoryStock()">
+          แสดงบันทึกรายการสต็อก
+        </div>
       </div>
     </div>
     <hr />
@@ -55,7 +59,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(historyStock, index) in historyStockList" v-bind:key="index">
+        <tr
+          v-for="(historyStock, index) in historyStockList"
+          v-bind:key="index"
+        >
           <td>{{ historyStock.title_stock }}</td>
           <td>{{ historyStock.number }}</td>
           <td>{{ historyStock.update_by }}</td>
@@ -78,6 +85,13 @@
     </table>
   </div>
 </template>
+<style>
+.table-fixed {
+  height: 300px;
+  overflow-y: auto;
+  width: 100%;
+}
+</style>
 <script>
 export default {
   data: function () {

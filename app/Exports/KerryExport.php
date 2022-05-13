@@ -56,7 +56,6 @@ class KerryExport implements FromCollection, WithHeadings, WithColumnWidths
                 $order = order::where('status_order', false)->where('id_order', $id_order)->get()->first();
                 array_push($orderList, $order);
             }
-           
         }
         $collection = collect();
         foreach ($orderList as $order) {

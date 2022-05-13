@@ -1,0 +1,210 @@
+// stock
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 3-4-5', 'ส้มสายน้ำผึ้งผิวลายคละเบอร์ 3-4-5', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 5-6-7', 'ส้มสายน้ำผึ้งผิวลายคละเบอร์ 5-6-7', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มเกรดคั้นน้ำคละเบอร์', 'ส้มเกรดคั้นน้ำคละเบอร์', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มน้ำ', 'ส้มน้ำ', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มโอเชี่ยน', 'ส้มโอเชี่ยน', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 2', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 2', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 3', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 3', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 4', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 4', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 5', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 5', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 6', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 6', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวลายเบอร์ 7', 'ส้มสายน้ำผึ้งผิวลายเบอร์ 7', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวสวยเบอร์ 4', 'ส้มสายน้ำผึ้งผิวสวยเบอร์ 4', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวสวยเบอร์ 5', 'ส้มสายน้ำผึ้งผิวสวยเบอร์ 5', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวสวยเบอร์ 6', 'ส้มสายน้ำผึ้งผิวสวยเบอร์ 6', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.stocks(
+title_stock, description_stock, total_stock, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งผิวสวยเบอร์ 7', 'ส้มสายน้ำผึ้งผิวสวยเบอร์ 7', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+// item
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 3-4-5 x 5 กก.', 'ส้มคละเบอร์ 3-4-5 / 5 กิโลกรัม', 299, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 3-4-5 x 10 กก.', 'ส้มคละเบอร์ 3-4-5 / 10 กิโลกรัม', 555, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 5-6-7 x 5 กก.', 'ส้มคละเบอร์ 5-6-7 / 5 กิโลกรัม', 399, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มคละเบอร์ 5-6-7 x 10 กก.', 'ส้มคละเบอร์ 5-6-7 / 10 กิโลกรัม', 699, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มเกรดคั้นน้ำคละเบอร์ x 10 กก.', 'ส้มเกรดคั้นน้ำคละเบอร์ / 10 กิโลกรัม', 339, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มน้ำ x 10 กก.', 'ส้มน้ำ / 10 กิโลกรัม', 230, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มโอเชี่ยน x 2.5 กก.', 'ส้มโอเชี่ยน / 2.5 กิโลกรัม', 179, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มโอเชี่ยน x 5 กก.', 'ส้มโอเชี่ยน / 5 กิโลกรัม', 329, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มโอเชี่ยน x 10 กก.', 'ส้มโอเชี่ยน / 10 กิโลกรัม', 539, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 2 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 2 / 2.5 กิโลกรัม', 129, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 2 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 2 / 5 กิโลกรัม', 199, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 2 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 2 / 10 กิโลกรัม', 339, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 3 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 3 / 2.5 กิโลกรัม', 149, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 3 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 3 / 5 กิโลกรัม', 279, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 3 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 3 / 10 กิโลกรัม', 439, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 4 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 4 / 2.5 กิโลกรัม', 179, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 4 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 4 / 5 กิโลกรัม', 329, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 4 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 4 / 10 กิโลกรัม', 539, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 5 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 5 / 2.5 กิโลกรัม', 199, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 5 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 5 / 5 กิโลกรัม', 379, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 5 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 5 / 10 กิโลกรัม', 639, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 6 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 6 / 2.5 กิโลกรัม', 229, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 6 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 6 / 5 กิโลกรัม', 429, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 6 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 6 / 10 กิโลกรัม', 739, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 7 x 2.5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 7 / 2.5 กิโลกรัม', 249, 1, 2.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 7 x 5 กก.', 'ส้มสายน้ำผึ้งเบอร์ 7 / 5 กิโลกรัม', 489, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งเบอร์ 7 x 10 กก.', 'ส้มสายน้ำผึ้งเบอร์ 7 / 10 กิโลกรัม', 339, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 4 x 105 ลูก', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 4 / 105 ลูก', 689, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 5 x 40 ลูก', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 5 / 40 ลูก', 429, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 5 x 84 ลูก.', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 5 / 84 ลูก', 789, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 6 x 30 ลูก', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 6 / 30 ลูก', 459, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 6 x 72 ลูก', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 6 / 72 ลูก', 889, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 7 x 30 ลูก.', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 7 / 30 ลูก', 529, 1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.items(
+title_item, description_item, cost_item, id_stock, total_use, created_at, updated_at)
+VALUES ('ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 7 x 60 ลูก.', 'ส้มสายน้ำผึ้งคัดพิเศษเบอร์ 7 / 60 ลูก', 989, 1, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+// promotion
+
+INSERT INTO public.promotions(
+title_promotion, number_promotion, created_at, updated_at)
+VALUES ('ฟรีครึ่งกิโลกรัม', 0.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.promotions(
+title_promotion, number_promotion, created_at, updated_at)
+VALUES ('ฟรี 1 กิโลกรัม', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+

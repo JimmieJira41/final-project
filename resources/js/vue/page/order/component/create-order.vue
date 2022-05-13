@@ -10,6 +10,13 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-end">
           <button
+            class="btn btn-primary"
+            type="button"
+            v-on:click="prepareNewCustomer()"
+          >
+            ลูกค้าใหม่
+          </button>
+          <button
             class="btn btn-primary mx-2"
             type="button"
             data-bs-toggle="modal"
@@ -27,98 +34,154 @@
         </div>
         <!-- </div> -->
         <!-- <div class="row"> -->
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-          <label for="firstname_customer">ชื่อ</label>
-          <input
-            :disabled="isDisable"
-            v-model="firstname_customer"
-            type="text"
-            class="form-control"
-            id="firstname_customer"
-            placeholder=""
-          />
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-          <label for="lastname_customer">นามสกุล</label>
-          <input
-            :disabled="isDisable"
-            v-model="lastname_customer"
-            type="text"
-            class="form-control"
-            id="lastname_customer"
-            placeholder=""
-          />
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-          <label for="tel_customer">เบอร์โทรศัพท์</label>
-          <input
-            :disabled="isDisable"
-            v-model="tel_customer"
-            type="tel"
-            class="form-control"
-            id="tel_customer"
-            placeholder=""
-          />
-        </div>
-        <h4 class="my-3">ข้อมูลที่อยู่</h4>
-        <div class="col-12">
-          <label for="description_address_customer">รายละเอียด</label>
-          <textarea
-            :disabled="isDisable"
-            v-model="description_address_customer"
-            type="textarea"
-            class="form-control"
-            id="description_address_customer"
-            placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
-          />
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <label for="province_address_customer">จังหวัด</label>
-          <input
-            :disabled="isDisable"
+        <div v-if="newCustomer" class="row">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="firstname_customer">ชื่อ</label>
+            <!-- :disabled="isDisable" -->
+            <input
+              v-model="firstname_customer"
+              type="text"
+              class="form-control"
+              id="firstname_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="lastname_customer">นามสกุล</label>
+            <!-- :disabled="isDisable" -->
+            <input
+              v-model="lastname_customer"
+              type="text"
+              class="form-control"
+              id="lastname_customer"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <label for="tel_customer">เบอร์โทรศัพท์</label>
+            <!-- :disabled="isDisable" -->
+            <input
+              v-model="tel_customer"
+              type="tel"
+              class="form-control"
+              id="tel_customer"
+              placeholder=""
+            />
+          </div>
+          <h4 class="my-3">ข้อมูลที่อยู่</h4>
+          <div class="col-12">
+            <label for="description_address_customer">รายละเอียด</label>
+            <!-- :disabled="isDisable" -->
+            <textarea
+              v-model="description_address_customer"
+              type="textarea"
+              class="form-control"
+              id="description_address_customer"
+              placeholder="บ้านเลขที่ ชื่อตึก จุดสังเกต"
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="province_address_customer">จังหวัด</label>
+            <!-- :disabled="isDisable" -->
+            <Multiselect
+              @select="getAmphures()"
+              v-model="province_id_selected"
+              :searchable="true"
+              valueProp="id"
+              label="name_th"
+              trackBy="name_th"
+              :options="province_list"
+              placeholder="กรุณาเลือกจังหวัด"
+            />
+            <!-- <input
             v-model="province_address_customer"
             type="text"
             class="form-control"
             id="province_address_customer"
             placeholder=""
-          />
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <label for="amphure_address_customer">อำเภอ</label>
-          <input
-            :disabled="isDisable"
+          /> -->
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="amphure_address_customer">อำเภอ</label>
+            <!-- :disabled="isDisable" -->
+            <Multiselect
+              @select="getTombons()"
+              v-model="amphure_id_selected"
+              :searchable="true"
+              valueProp="id"
+              label="name_th"
+              trackBy="name_th"
+              :options="amphure_list"
+              placeholder="กรุณาเลือกอำเภอ"
+              noOptionsText="กรุณาเลือกจังหวัดก่อนเลือกอำเภอ"
+            />
+            <!-- <input
             v-model="amphure_address_customer"
             type="text"
             class="form-control"
             id="amphure_address_customer"
             placeholder=""
-          />
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <label for="tombon_address_customer">ตำบล</label>
-          <input
-            :disabled="isDisable"
+          /> -->
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="tombon_address_customer">ตำบล</label>
+            <!-- :disabled="isDisable" -->
+            <Multiselect
+              @select="setTombon()"
+              v-model="tombon_id_selected"
+              :searchable="true"
+              valueProp="id"
+              label="name_th"
+              trackBy="name_th"
+              :options="tombon_list"
+              placeholder="กรุณาเลือกตำบล"
+              noOptionsText="กรุณาเลือกอำเภอก่อนเลือกตำบล"
+            />
+            <!-- <input
             v-model="tombon_address_customer"
             type="text"
             class="form-control"
             id="tombon_address_customer"
             placeholder=""
-          />
+          /> -->
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <label for="zipcode_address_customer">รหัสไปรษณี</label>
+            <!-- :disabled="isDisable" -->
+            <input
+              v-model="zipcode_address_customer"
+              type="text"
+              class="form-control"
+              id="zipcode_address_customer"
+              placeholder=""
+            />
+            <!-- </div> -->
+          </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <label for="zipcode_address_customer">รหัสไปรษณี</label>
-          <input
-            :disabled="isDisable"
-            v-model="zipcode_address_customer"
-            type="text"
-            class="form-control"
-            id="zipcode_address_customer"
-            placeholder=""
-          />
-          <!-- </div> -->
+        <div v-if="customerSelectedFlag" class="mt-3">
+          <p>
+            <b>ชื่อ - นามสกุล : </b>{{ firstname_customer }}
+            {{ lastname_customer }}
+          </p>
+          <p><b>เบอร์โทรศัพท์ : </b>{{ tel_customer }}</p>
+          <p><b>ที่อยู่ : </b>{{ description_customer }}</p>
+          <p>
+            ต.{{ amphure_address_customer }} อ.{{
+              tombon_address_customer
+            }}
+            จ.{{ province_address_customer }} {{ zipcode_address_customer }}
+          </p>
+        </div>
+
+        <div
+          v-if="!customerSelectedFlag && !newCustomer"
+          class="text-center text-secondary mt-3"
+        >
+          <h1><i class="far fa-heart"></i></h1>
+          <h3>โปรดเพิ่มข้อมูลลูกค้า</h3>
         </div>
         <hr class="my-4" />
-        <h4 class="text-center">ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
+        <h4>ข้อมูลสินค้าที่ทำการสั่งซื้อ</h4>
         <!-- <div class="row"> -->
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-start pb-2">
           <v-date-picker mode="date" :masks="masks" v-model="delivery_date">
@@ -133,10 +196,10 @@
           </v-date-picker>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-end">
-          <button
-            :disabled="
+          <!-- :disabled="
               customerSelected == undefined || customerSelected == null
-            "
+            " -->
+          <button
             class="btn btn-primary"
             type="button"
             data-bs-toggle="modal"
@@ -146,6 +209,7 @@
           </button>
           <!-- </div> -->
         </div>
+
         <div class="table-responsive">
           <table class="table">
             <thead>
@@ -162,6 +226,19 @@
                 <th class="text-center" scope="row" colspan="3">จัดการ</th>
               </tr>
             </thead>
+            <tbody v-if="itemChecked.length == 0">
+              <tr>
+                <td colspan="8">
+                  <div     
+                    class="text-center text-secondary mt-3"
+                  >
+                    <h1><i class="fas fa-shopping-basket"></i></h1>
+                    <h3>โปรดเลือกสินค้า</h3>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+
             <tbody v-if="isItemSelectedTableReady">
               <tr v-for="(item, index) in itemListChecked" v-bind:key="index">
                 <td>{{ item.title_item }}</td>
@@ -384,14 +461,17 @@
 </template>
 <script>
 import Datepicker from "vuejs3-datepicker";
+import Multiselect from "@vueform/multiselect";
 export default {
   components: {
+    Multiselect,
     Datepicker,
   },
   data: function () {
     return {
       keyword_search_customer: "",
       itemList: [],
+      newCustomer: false,
       customerList: [],
       customerSelected: undefined,
       tempCustomerList: [],
@@ -417,12 +497,18 @@ export default {
       amphure_address_customer: "",
       tombon_address_customer: "",
       zipcode_address_customer: "",
+      province_id_selected: null,
+      province_list: [],
+      amphure_id_selected: null,
+      amphure_list: [],
+      tombon_id_selected: null,
+      tombon_list: [],
       // promotion
       promotionList: [],
       // data
       isItemSelectedTableReady: false,
       isReadyItemTable: false,
-      isDisable: false,
+      customerSelectedFlag: false,
       // date
       masks: {
         input: "DD-MM-YYYY",
@@ -509,11 +595,24 @@ export default {
       this.amphure_address_customer = customerSelected.address.amphure_address;
       this.tombon_address_customer = customerSelected.address.tombon_address;
       this.zipcode_address_customer = customerSelected.address.zipcode_address;
-      this.isDisable = true;
+      this.customerSelectedFlag = true;
+      this.newCustomer = false;
+    },
+    prepareNewCustomer() {
+      this.newCustomer = !this.newCustomer;
+      this.firstname_customer = "";
+      this.lastname_customer = "";
+      this.tel_customer = "";
+      this.description_address_customer = "";
+      this.province_address_customer = "";
+      this.id_address = "";
+      this.amphure_address_customer = "";
+      this.tombon_address_customer = "";
+      this.zipcode_address_customer = "";
     },
     clearCustomerSelected() {
       this.customerSelected = null;
-      this.isDisable = false;
+      this.customerSelectedFlag = false;
       this.firstname_customer = "";
       this.lastname_customer = "";
       this.tel_customer = "";
@@ -584,11 +683,23 @@ export default {
       console.log(this.customerList);
     },
     submitCreateOrder() {
-      let format_date = new Intl.DateTimeFormat("en-GB");
+      let format_date = new Intl.DateTimeFormat("en-US");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
-      orderObj.id_customer = this.id_customer;
+      if (this.id_customer == null || this.id_customer == "") {
+        orderObj.firstname_customer = this.firstname_customer;
+        orderObj.lastname_customer = this.lastname_customer;
+        orderObj.tel_customer = this.tel_customer;
+        orderObj.description_address_customer =
+          this.description_address_customer;
+        orderObj.province_address_customer = this.province_address_customer;
+        orderObj.amphure_address_customer = this.amphure_address_customer;
+        orderObj.tombon_address_customer = this.tombon_address_customer;
+        orderObj.zipcode_address_customer = this.zipcode_address_customer;
+      } else {
+        orderObj.id_customer = this.id_customer;
+      }
       orderObj.name_customer =
         this.firstname_customer + " " + this.lastname_customer;
       orderObj.id_address = this.id_address;
@@ -604,26 +715,6 @@ export default {
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0 || item.number == null
       );
-
-      // axios.post("/api/order/new-order", orderObj).then((response) => {
-      //         if (response.status == 200) {
-      //           this.$swal({
-      //             title: "สร้างรายการสินค้าสำเร็จ",
-      //             icon: "success",
-      //             confirmButtonText: "ยืนยัน",
-      //           }).then((result) => {
-      //             this.$router.go(-1);
-      //           });
-      //         }
-      // }).catch(error => {
-      //   if(error.response){
-      //           this.$swal({
-      //             title: response.message,
-      //             icon: "error",
-      //             confirmButtonText: "ยืนยัน",
-      //           })
-      //   }
-      // });
       if (orderNotReady) {
         this.$swal({
           title: "แจ้งเตือน",
@@ -660,7 +751,7 @@ export default {
                 // console.log(error.response.data[0])
                 this.$swal({
                   title: "สร้างรายการสินค้าไม่สำเร็จ",
-                  text: error.response.data[0],
+                  text: error.response.data,
                   icon: "error",
                   confirmButtonText: "ยืนยัน",
                 });
@@ -669,12 +760,70 @@ export default {
         });
       }
     },
+    getProvinces() {
+      axios.get("/api/address/get-all-province").then((response) => {
+        if (response) {
+          this.province_list = response.data;
+          console.log(this.province_list);
+        }
+      });
+    },
+    getAmphures() {
+      axios
+        .get("/api/address/get-amphures/" + this.province_id_selected)
+        .then((response) => {
+          // this.logSeleted();
+          if (response) {
+            this.amphure_id_selected = null;
+            this.amphure_list = response.data;
+            this.province_list.forEach((province) => {
+              if (province.id == this.province_id_selected) {
+                this.province_address_customer = province.name_th;
+              }
+            });
+            console.log("จังหวัด : " + this.province_address_customer);
+          }
+        });
+    },
+    getTombons() {
+      axios
+        .get("/api/address/get-tombons/" + this.amphure_id_selected)
+        .then((response) => {
+          if (response) {
+            this.tombon_id_selected = null;
+            this.tombon_list = response.data;
+            this.amphure_list.forEach((amphure) => {
+              if (amphure.id == this.amphure_id_selected) {
+                this.amphure_address_customer = amphure.name_th;
+              }
+            });
+            console.log(this.tombon_list);
+          }
+        });
+    },
+    setTombon() {
+      this.tombon_list.forEach((tombon) => {
+        if (tombon.id == this.tombon_id_selected) {
+          this.tombon_address_customer = tombon.name_th;
+          this.zipcode_address_customer = tombon.zip_code;
+        }
+      });
+      this.getZipcode(this.tombon_id_selected);
+    },
+    getZipcode(tombon_id) {
+      axios.get("/api/address/get-zipcode/" + tombon_id).then((response) => {
+        if (response) {
+          this.zipcode_address_customer = response.data[0].zipcode;
+        }
+      });
+    },
   },
   mounted() {
     this.prepareOrder();
     this.getAllCustomer();
     this.getAllItem();
     this.getAllPromotion();
+    this.getProvinces();
   },
 };
 </script>

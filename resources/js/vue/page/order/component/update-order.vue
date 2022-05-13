@@ -594,7 +594,7 @@ export default {
         });
     },
     submitUpdateOrder() {
-      let format_date = new Intl.DateTimeFormat("en-GB");
+      let format_date = new Intl.DateTimeFormat("en-US");
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -610,29 +610,6 @@ export default {
         .format(this.delivery_date)
         .split("/")
         .join("-");
-      // let tempList = [];
-      // this.tempItemListChecked.forEach((temp) => {
-      //   tempList.push(temp.id_item);
-      // });
-      // this.itemListChecked.forEach((item) => {
-      //   let index = tempList.indexOf(item.id_item);
-      //   if (index != -1) {
-      //     item.id_order = this.tempItemListChecked[index].id_order;
-      //   } else {
-      //     item.id_order = "";
-      //   }
-      // });
-      // orderObj.items = this.itemListChecked;
-      // this.tempItemListChecked.forEach((tempItem) =>{
-      //   if(this.itemChecked.indexOf(tempItem.id_item) == -1){
-      //     orderObj.items.push({
-      //       id_order : tempItem.id_order,
-      //       id_item : ""
-      //     })
-      //   }
-      // })
-      // orderObj.create_by = "jimmie";
-      // console.log(orderObj);
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0
       );

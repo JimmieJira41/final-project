@@ -19,6 +19,7 @@ use Carbon\Carbon;
 
 use App\Exports\DHLExport;
 use App\Exports\KerryExport;
+use App\Exports\CheckReportExport;
 use App\Models\response;
 use App\Models\subOrder;
 use App\Models\promotion;
@@ -61,14 +62,33 @@ class OrderManagement extends Controller
         $subOrders = [];
         $order = new order();
         $time = Carbon::now();
+        $newCustomer = false;
         if (!$request['id_order']) {
             return response("please enter id_order!", 417);
         }
         if (!$request['id_customer']) {
-            return response("please enter id_customer!", 417);
-        }
-        if (!$request['id_address']) {
-            return response("please enter id_address!", 417);
+            $newCustomer = true;
+            if (!$request['firstname_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
+            if (!$request['lastname_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
+            // if (!$request['description_address_customer']) {
+            //     return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            // }
+            if (!$request['province_address_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
+            if (!$request['amphure_address_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
+            if (!$request['tombon_address_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
+            if (!$request['zipcode_address_customer']) {
+                return response("กรุณากรอกข้อมูลลูกค้าให้ครบถ้วน !", 417);
+            }
         }
         if (!$request['items']) {
             return response("please enter item!", 417);
@@ -130,15 +150,44 @@ class OrderManagement extends Controller
                 }
             }
         }
-        $order->id_order = $request->id_order;
-        $order->name_customer = $request->name_customer;
-        $order->id_sub_order = implode(",", $subOrders);
-        $order->id_customer = $request->id_customer;
-        $order->id_address = $request->id_address;
-        $order->status_order = $request['status_order'];
-        $order->status_payment = $request['status_payment'];
-        $order->create_by = $request->create_by;
-        $order->delivery_date = $request->delivery_date;
+        if ($newCustomer) {
+            $customer = new customer();
+            $address = new address();
+            $customer->firstname_customer = $request['firstname_customer'];
+            $customer->lastname_customer = $request['lastname_customer'];
+            $customer->tel_customer = $request['tel_customer'];
+            $address->description_address = $request['description_address_customer'];
+            $address->province_address = $request['province_address_customer'];
+            $address->amphure_address = $request['amphure_address_customer'];
+            $address->tombon_address = $request['tombon_address_customer'];
+            $address->zipcode_address = $request['zipcode_address_customer'];
+            if ($customer->save()) {
+                $address->id_customer = $customer->id_customer;
+                if($address->save()){
+                    $customer->default_id_address = $address->id_address;
+                    $customer->update();
+                }
+            }
+            $order->id_order = $request->id_order;
+            $order->name_customer = $request->name_customer;
+            $order->id_sub_order = implode(",", $subOrders);
+            $order->id_customer = $customer->id_customer;
+            $order->id_address =  $address->id_address;
+            $order->status_order = $request['status_order'];
+            $order->status_payment = $request['status_payment'];
+            $order->create_by = $request->create_by;
+            $order->delivery_date = $request->delivery_date;
+        } else {
+            $order->id_order = $request->id_order;
+            $order->name_customer = $request->name_customer;
+            $order->id_sub_order = implode(",", $subOrders);
+            $order->id_customer = $request->id_customer;
+            $order->id_address = $request->id_address;
+            $order->status_order = $request['status_order'];
+            $order->status_payment = $request['status_payment'];
+            $order->create_by = $request->create_by;
+            $order->delivery_date = $request->delivery_date;
+        }
         if ($order->save()) {
             return response()->json($order);
         }
@@ -478,25 +527,25 @@ class OrderManagement extends Controller
                     ->get();
                 foreach ($subOrderList as $subOrder) {
                     $item = item::where('id_item', $subOrder->id_item)->get();
-                    if(!in_array($subOrder->id_item,$idItemList)){
+                    if (!in_array($subOrder->id_item, $idItemList)) {
                         $subOrder->item = $item;
-                        array_push($idItemList,$subOrder->id_item);
+                        array_push($idItemList, $subOrder->id_item);
                         array_push($orderListResponse, $subOrder);
-                    }else{
-                        $index = array_search($subOrder->id_item,$idItemList);
+                    } else {
+                        $index = array_search($subOrder->id_item, $idItemList);
                         $orderListResponse[$index]->total_number += 1;
                     }
                 }
-                    // foreach ($orderListResponse as $response){
-                    //     array_push($idItemList,$response->id_item);
-                    // }                   
-                    // if(!in_array($item->id_item,$idItemList)){
-                    //     $subOrder->item = $item;
-                    //     array_push($orderListResponse, $subOrder);
-                    // }else{
-                    //     $index = array_search($item,$orderListResponse);
-                    //     $orderListResponse[$index]->total_number += 1;
-                    // }
+                // foreach ($orderListResponse as $response){
+                //     array_push($idItemList,$response->id_item);
+                // }                   
+                // if(!in_array($item->id_item,$idItemList)){
+                //     $subOrder->item = $item;
+                //     array_push($orderListResponse, $subOrder);
+                // }else{
+                //     $index = array_search($item,$orderListResponse);
+                //     $orderListResponse[$index]->total_number += 1;
+                // }
                 // }
             }
         }
@@ -632,10 +681,14 @@ class OrderManagement extends Controller
     }
     public function DHLExportExcel(Request $request)
     {
-        return Excel::download(new DHLExport($request, 0), 'history.xlsx');
+        return Excel::download(new DHLExport($request), 'history.xlsx');
     }
     public function KerryExportExcel(Request $request)
     {
         return Excel::download(new KerryExport($request), 'history.xlsx');
+    }
+    public function CheckReportExportExcel(Request $request)
+    {
+        return Excel::download(new CheckReportExport($request), 'history.xlsx');
     }
 }

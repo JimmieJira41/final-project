@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     searchAllList() {
-      let format_date = new Intl.DateTimeFormat("en-GB");
+      let format_date = new Intl.DateTimeFormat("en-US");
       this.date = format_date
         .format(this.delivery_date_search)
         .split("/")
@@ -155,7 +155,7 @@ export default {
     },
   },
   mounted() {
-    let format_date = new Intl.DateTimeFormat("en-GB");
+    let format_date = new Intl.DateTimeFormat("en-US");
     this.date = format_date
       .format(this.delivery_date_search)
       .split("/")

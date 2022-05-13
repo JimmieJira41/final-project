@@ -16,7 +16,7 @@ class CreatePromotionsTable extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->string('id_promotion');
             $table->string('title_promotion');
-            $table->integer('number_promotion');
+            $table->double('number_promotion');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

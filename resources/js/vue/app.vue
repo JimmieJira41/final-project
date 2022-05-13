@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 bg-white shadow mx-0">
-        <Menu></Menu>
-      </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 content pt-5">
+  <div class="container-fluid" style="height: 100vh">
+    <div class="row min-vh-100 flex-column flex-md-row">
+      <Menu/>
+      <div class="col px-0 flex-grow-1 py-4">
+        <div class="contianer-fluid">
         <router-view />
+      </div>
       </div>
     </div>
   </div>
@@ -31,6 +31,8 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+
 </style>
 <script>
 import Menu from "./share/menu/menu.vue";

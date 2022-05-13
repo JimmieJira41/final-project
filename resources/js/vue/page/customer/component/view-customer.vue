@@ -4,29 +4,28 @@
       <div class="row">
         <h3 class="text-center">ข้อมูลลูกค้า</h3>
         <hr />
-        <div class="col-4">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
           <div class="card p-0">
             <div class="card-header">ข้อมูลทั่วไป</div>
             <div class="card-body">
               <div class="row">
-                <p class="col-6">ชื่อ : {{ firstname_customer }}</p>
-                <p class="col-6">{{ lastname_customer }}</p>
+                <p class="col-6">ชื่อ : {{ firstname_customer }} {{ lastname_customer }}</p>
                 <p class="col-12">เบอร์โทรศัพท์ : {{ tel_customer }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 pt-2">
           <div class="card p-0">
             <div class="card-header">ข้อมูลที่อยู่</div>
             <div class="card-body">
               <div class="row">
                 <p>รายละเอียด : {{ description_address_customer }}</p>
-                <p class="col-3">จังหวัด : {{ province_address_customer }}</p>
-                <p class="col-3">อำเภอ : {{ amphure_address_customer }}</p>
-                <p class="col-3">ตำบล : {{ tombon_address_customer }}</p>
-                <p class="col-3">รหัสไปรษณี : {{ zipcode_address_customer }}</p>
+                <p>จังหวัด : {{ province_address_customer }}</p>
+                <p>อำเภอ : {{ amphure_address_customer }}</p>
+                <p>ตำบล : {{ tombon_address_customer }}</p>
+                <p>รหัสไปรษณี : {{ zipcode_address_customer }}</p>
               </div>
             </div>
           </div>
@@ -34,33 +33,46 @@
       </div>
     </div>
 
-    <div class="detail-history-customer">
+    <div class="detail-history-customer py-4">
       <h3>ประวัติรายการสั่งซื้อ</h3>
-      <div class="row">
-        <div class="col-3 shadow rounded text-center">
-          <p><b>จำนวนรายการสั่งซื้อทั้งหมด</b></p>
-          <p>{{ history_count }}</p>
+      <div class="row p-2">
+        <div class="col-5">
+          <div class="shadow rounded bg-warning text-center p-2">
+            <p><b>จำนวนรายการสั่งซื้อทั้งหมด</b></p>
+            <p>{{ historyCount }}</p>
+          </div>
         </div>
-        <div class="col-3 shadow rounded text-center">
-          <p><b>รายการที่ทำการสั่งซื้อบ่อย</b></p>
-          <p>รายการ</p>
+        <div class="col-7">
+          <div class="shadow rounded bg-warning text-center p-2">
+            <p><b>รายการที่ทำการสั่งซื้อบ่อย</b></p>
+            <p>รายการ</p>
+          </div>
         </div>
       </div>
-      <table class="table table-borderless">
+      <table class="table" v-if="isTableReady">
         <thead>
           <tr>
             <th scope="row">รหัส</th>
-            <th scope="row">รายละเอียด</th>
-            <th scope="row">จำนวน (กล่อง)</th>
-            <th scope="row">เวลาสร้างออเดอร์</th>
+            <th scope="row">รายชื่อลูกค้า</th>
+            <th scope="row">รายการสั่งซื้อ</th>
           </tr>
         </thead>
-        <tbody v-if="isTableReady">
-          <tr v-for="(history, index) in history_list" v-bind:key="index">
-            <td>{{ history.id_order }}</td>
-            <td>{{ history.item.description_item }}</td>
-            <td>{{ history.number }}</td>
-            <td>{{ history.created_at }}</td>
+        <tbody v-if="historyList.length">
+          <tr v-for="(order, index) in historyList" v-bind:key="index">
+            <td>{{ order.id_order }}</td>
+            <td>{{ order.name_customer }}</td>
+            <td>
+              <ul>
+                <li v-for="(item, index) in order.item" v-bind:key="index">
+                  {{ item.title_item }} => {{ item.number }} กล่อง
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr class="text-center">
+            <td colspan="7">ไม่พบข้อมูลรายการสั่งซื้อ !</td>
           </tr>
         </tbody>
       </table>
@@ -82,8 +94,8 @@ export default {
       amphure_address_customer: "",
       tombon_address_customer: "",
       zipcode_address_customer: "",
-      history_list: [],
-      history_count: 0,
+      historyList: [],
+      historyCount: 0,
       isTableReady: false,
     };
   },
@@ -107,8 +119,8 @@ export default {
         .get("/api/history/get-history-by-customer-id/" + customerId)
         .then((response) => {
           if (response) {
-            this.history_count = response.data.count;
-            this.history_list = response.data.historyList;
+            this.historyCount = response.data.count;
+            this.historyList = response.data.historyList;
             this.isTableReady = true;
             console.log(this.history_list);
           }

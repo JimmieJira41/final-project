@@ -160,7 +160,6 @@
               <th scope="row">สถานะรายการสั่งซื้อ</th>
               <th scope="row">สถานะการชำระเงิน</th>
               <th scope="row">รายการสั่งซื้อ</th>
-              <!-- <th scope="row">Create At</th> -->
               <th class="text-center" scope="row" colspan="3">จัดการ</th>
             </tr>
           </thead>
@@ -189,9 +188,6 @@
                   ><i class="fas fa-cog"></i
                 ></router-link>
               </td>
-              <td class="text-center" v-on:click="deleteOrder(order.id_order)">
-                <i class="fas fa-trash-alt"></i>
-              </td>
             </tr>
           </tbody>
           <tbody v-else>
@@ -217,7 +213,7 @@
         </div>
       </div>
       <div v-if="isTableOrderListReady" class="btn-option-feature text-end">
-        <div class="btn btn-warning mx-2" v-on:click="exportLabel()">
+        <div class="btn btn-warning mx-2" v-on:click="exportLabel('check-report')">
           พิมพ์ใบเช็คสินค้า
         </div>
       </div>
@@ -352,7 +348,7 @@ export default {
       });
     },
     exportLabel(key) {
-      let format_date = new Intl.DateTimeFormat("en-GB");
+      let format_date = new Intl.DateTimeFormat("en-US");
       let url = "";
       let title_file = "";
       const body = {
@@ -364,7 +360,7 @@ export default {
       };
       this.$swal({
         title: "แจ้งเตือน",
-        text: "คุณดาวโหลดไฟล์ใบปะหน้า ใช่หรือไม่ ?",
+        text: "คุณดาวโหลดไฟล์ "+key.toLocaleUpperCase()+" ใช่หรือไม่ ?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "ยืนยัน",
@@ -372,16 +368,22 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           if (key == "dhl") {
-            url = "/api/order/get-dhl-label-excel-file/";
+            url = "/api/order/get-dhl-label-excel-file";
             title_file =
               "DHL-Label " +
-              format_date.format(this.delivery_date).split("/").join("-");
+              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
           }
           if (key == "kerry") {
-            url = "/api/order/get-kerry-label-excel-file/";
+            url = "/api/order/get-kerry-label-excel-file";
             title_file =
               "Kerry-Label " +
-              format_date.format(this.delivery_date).split("/").join("-");
+              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
+          }
+          if (key == "check-report") {
+            url = "/api/order/get-check-report-excel-file";
+            title_file =
+              "ใบเช็ครายการสั่งซื้อ " +
+              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
           }
           axios({
             url: url,
