@@ -3,11 +3,48 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class admin extends Model
+class admin extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
+    // use UserTrait;
+    // use RemindableTrait;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    // public function getAuthPassword()
+    // {
+    //     return $this->password_admin;
+    // }
+    protected $table = 'admins';
+    protected $primaryKey = "id_admin";
+    protected $fillable = [
+        'name_admin',
+        'email_admin',
+        'password_admin',
+    ];
 
-    protected $primaryKey = 'id_admin';
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password_admin',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

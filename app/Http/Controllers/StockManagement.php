@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Models\stock;
+use App\Models\preStock;
 use App\Models\history_stock;
 
 
@@ -90,6 +91,15 @@ class StockManagement extends Controller
     public function getAll(){
         return response()->json(stock::all());
     }
+    public function getPreStock(){
+        $preStockList = preStock::all();
+        foreach($preStockList as $preStock){
+            $stock = stock::where('id_stock', $preStock->id_stock)->get('title_stock')->first();
+            $preStock->title_stock = $stock->title_stock;
+        }
+        return response()->json($preStockList);
+    }
+    
     public function getStockById(Request $request){
         $stock = stock::where('id_stock', $request->keyword)->get();
         if($stock){

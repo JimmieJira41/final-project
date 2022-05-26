@@ -23,9 +23,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 Route::prefix('customer')->group(function () {
     Route::post('/new-customer', [CustomerManagement::class, 'create']);
     Route::put('/update-customer', [CustomerManagement::class, 'update']);
@@ -35,6 +35,7 @@ Route::prefix('customer')->group(function () {
     Route::get('/search-customer/{keyword}', [CustomerManagement::class, 'searchCustomer']);
 });
 Route::prefix('admin')->group(function () {
+    Route::post('/login', [AdminManagement::class, 'login']);
     Route::post('/new-admin', [AdminManagement::class, 'create']);
     Route::put('/update-admin', [AdminManagement::class, 'update']);
     Route::delete('/delete-admin', [AdminManagement::class, 'delete']);
@@ -62,6 +63,7 @@ Route::prefix('stock')->group(function () {
     Route::put('/update-stock', [StockManagement::class, 'update']);
     Route::delete('/delete-stock', [StockManagement::class, 'delete']);
     Route::get('/get-all-stock', [StockManagement::class, 'getAll']);
+    Route::get('/get-pre-stock', [StockManagement::class, 'getPreStock']);
     Route::get('/get-stock/{keyword}', [StockManagement::class, 'getStockById']);
     Route::get('/search-stock/{keyword}', [StockManagement::class, 'searchStock']);
     Route::get('/get-all-history-stock', [StockManagement::class, 'getHistoryStock']);
@@ -85,7 +87,11 @@ Route::prefix('address')->group(function () {
 });
 Route::prefix('history')->group(function () {
     Route::get('/get-history-by-customer-id/{keyword}', [HistoryManagement::class, 'getHistoryByCustomerId']);
-    Route::get('/get-all-history-order/{keyword}', [HistoryManagement::class, 'getAllHistoryOrder']);
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::group(['middleware' => 'ability:admin,super-admin'], function () {
+            Route::get('/get-all-history-order', [HistoryManagement::class, 'getAllHistoryOrder']);
+        });
+    });
 });
 Route::prefix('promotion')->group(function () {
     Route::post('/new-promotion', [PromotionManagement::class, 'createPromotion']);

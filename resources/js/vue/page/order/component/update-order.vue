@@ -192,7 +192,7 @@
                 </td>
                 <td class="text-center">
                   <select class="form-select" v-model="item.id_promotion">
-                    <option value="null">เลือกโปรโมชั่น</option>
+                    <option value="">เลือกโปรโมชั่น</option>
                     <option
                       v-for="(promotion, index) in promotionList"
                       v-bind:key="index"
@@ -388,6 +388,7 @@ export default {
       title_stock: "",
       id_customer: "",
       id_order: "",
+      status_order: false,
       status_payment: false,
       firstname_customer: "",
       lastname_customer: "",
@@ -527,6 +528,9 @@ export default {
         if (response) {
           response.data.map((item) => {
             item.isSeleted = false;
+            item.id_promotion = "";
+            item.number_promotion = "";
+            item.extra_number = "";
           });
           this.itemList = response.data;
           this.isReadyItemTable = true;
@@ -605,6 +609,7 @@ export default {
       orderObj.id_address = 1;
       orderObj.subOrders = this.itemListChecked;
       orderObj.create_by = "jimmie";
+      orderObj.status_order = this.status_order;
       orderObj.status_payment = this.status_payment;
       orderObj.delivery_date = format_date
         .format(this.delivery_date)
@@ -632,25 +637,28 @@ export default {
           cancelButtonText: "ยกเลิก",
         }).then((result) => {
           if (result.isConfirmed) {
-            axios.put("/api/order/update-order", orderObj).then((response) => {
-              if (response.status) {
-                this.$swal({
-                  title: "อัพเดรตสำเร็จ",
-                  icon: "success",
-                  confirmButtonText: "ยืนยัน",
-                }).then((result) => {
-                  this.$router.go(-1);
-                });
-              }
-            }).catch((error) =>{
-               console.log(error.response.data[0])
+            axios
+              .put("/api/order/update-order", orderObj)
+              .then((response) => {
+                if (response.status) {
+                  this.$swal({
+                    title: "อัพเดรตสำเร็จ",
+                    icon: "success",
+                    confirmButtonText: "ยืนยัน",
+                  }).then((result) => {
+                    this.$router.go(-1);
+                  });
+                }
+              })
+              .catch((error) => {
+                console.log(error.response.data[0]);
                 this.$swal({
                   title: "อัพเดรตสำเร็จ",
                   text: error.response.data[0],
                   icon: "error",
                   confirmButtonText: "ยืนยัน",
-                })
-            });
+                });
+              });
           }
         });
       }

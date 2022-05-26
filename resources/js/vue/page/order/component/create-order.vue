@@ -709,9 +709,9 @@ export default {
         .format(this.delivery_date)
         .split("/")
         .join("-");
-      (orderObj.status_order = this.status_order),
-        (orderObj.status_payment = this.status_payment),
-        console.log(orderObj);
+      orderObj.status_order = this.status_order;
+      orderObj.status_payment = this.status_payment;
+      console.log(orderObj);
       orderNotReady = this.itemListChecked.some(
         (item) => item.number == "" || item.number == 0 || item.number == null
       );

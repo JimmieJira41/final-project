@@ -3,109 +3,171 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Models\admin;
+use Illuminate\Validation\Rules\Password;
+use App\Models\User as user;
+use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
 
+
 class AdminManagement extends Controller
 {
-    public function create(Request $request){
-        $time = Carbon::now();
-        if(!$request['username_admin']){
-            return response("please enter username!");
+    
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => '',
+            'password' => '',
+        ]);
+        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return response()->json(["message" => "login fail!"], 417);
         }
-        if(!$request['password_admin']){
-            return response("please enter password!");
+        $user = $request->user();
+
+        $user->tokens()->delete();
+
+        if ($user->id_permission == '1') {
+            $token = $user->createToken('token-name', ['super-admin']);
+        } else {
+            $token = $user->createToken('token-name', ['admin']);
         }
-        if(!$request['name_admin']){
-            return response("please enter name!");
-        }
-        if(!$request['tel_admin']){
-            return response("please enter telephone number!");
-        }
-        if(!$request['id_permission']){
-            return response("please enter permission!");
-        }
-        $admin_exist = admin::where('username_admin', $request['username_admin'])->first();
-        
-        if($admin_exist !== null){
-            return response("this username is already exist!", 400);
-        }else{
-            $admin = new admin();
-            $admin->username_admin = $request['username_admin'];
-            $admin->password_admin = $request['password_admin'];
-            $admin->name_admin = $request['name_admin'];
-            $admin->tel_admin = $request['tel_admin'];
-            $admin->image_profile_admin = $request['image_profile_admin'];
-            $admin->id_permission = $request['id_permission'];
-            $admin->created_at = $time;
-            $admin->updated_at = $time;
-            if($admin->save()){
-                return response("create new admin success!", 201);
-            }else{
-                return response("create new admin fail!", 417);
-            }
-        }
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $token->plainTextToken,
+            'token_type' => 'Bearer',
+            'abilities' => $token->accessToken->abilities
+        ], 200);
     }
-    public function update(Request $request){
+
+    public function create(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:150',
+            'email' => 'required|string|max:191|email|unique:users',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()
+            ],
+        ]);
+        echo "pass new user";
+        $admin = new user();
+        $admin->email = $request['email'];
+        $admin->password = bcrypt($request['password']);
+        $admin->name = $request['name'];
+        $admin->tel = $request['tel'];
+        $admin->image_profile = $request['image_profile'];
+        $admin->id_permission = $request['id_permission'];
+        if ($admin->save()) {
+            return response()->json(["message" => "create new user success!"], 201);
+        } else {
+            return response()->json(["message" => "create new user fail!"], 500);
+        }
+        //     $time = Carbon::now();
+        //     if (!$request['username']) {
+        //         return response("please enter username!");
+        //     }
+        //     if (!$request['password']) {
+        //         return response("please enter password!");
+        //     }
+        //     if (!$request['name']) {
+        //         return response("please enter name!");
+        //     }
+        //     if (!$request['tel']) {
+        //         return response("please enter telephone number!");
+        //     }
+        //     if (!$request['id_permission']) {
+        //         return response("please enter permission!");
+        //     }
+        //     $admin_exist = user::where('username', $request['username'])->first();
+
+        //     if ($admin_exist !== null) {
+        //         return response("this username is already exist!", 400);
+        //     } else {
+        //         $admin = new user();
+        //         $admin->username = $request['username'];
+        //         $admin->password = $request['password'];
+        //         $admin->name = $request['name'];
+        //         $admin->tel = $request['tel'];
+        //         $admin->image_profile = $request['image_profile'];
+        //         $admin->id_permission = $request['id_permission'];
+        //         $admin->created_at = $time;
+        //         $admin->updated_at = $time;
+        //         if ($admin->save()) {
+        //             return response("create new user success!", 201);
+        //         } else {
+        //             return response("create new user fail!", 417);
+        //         }
+        //     }
+    }
+    public function update(Request $request)
+    {
         $time = Carbon::now();
-        if(!$request['id_admin']){
+        if (!$request['id']) {
             return response("please enter ID admin!");
         }
-    
-        $admin = admin::find($request['id_admin']);
-        if($admin){
-            if($request['username_admin']){
-                $admin->username_admin = $request['username_admin'];
+
+        $admin = user::find($request['id']);
+        if ($admin) {
+            if ($request['username']) {
+                $admin->username = $request['username'];
             }
-            if($request['password_admin']){
-                $admin->password_admin = $request['password_admin'];
+            if ($request['password']) {
+                $admin->password = $request['password'];
             }
-            if($request['name_admin']){
-                $admin->name_admin = $request['name_admin'];
+            if ($request['name']) {
+                $admin->name = $request['name'];
             }
-            if($request['tel_admin']){
-                $admin->tel_admin = $request['tel_admin'];
+            if ($request['tel']) {
+                $admin->tel = $request['tel'];
             }
-            if($request['id_permission']){
+            if ($request['id_permission']) {
                 $admin->id_permission = $request['id_permission'];
             }
-            if($request['image_profile_admin']){
-                $admin->image_profile_admin = $request['image_profile_admin'];
+            if ($request['image_profile']) {
+                $admin->image_profile = $request['image_profile'];
             }
             $admin->updated_at = $time;
-            
-            if($admin->update()){
+
+            if ($admin->update()) {
                 return response("update admin success!", 200);
-            }else{
+            } else {
                 return response("update admin fail!", 417);
             }
-        }else{
+        } else {
             return response("this username not found!", 400);
         }
-       
     }
-    public function delete(Request $request){
-        if(admin::where('id_admin',$request['id_admin'])->delete()){
+    public function delete(Request $request)
+    {
+        if (user::where('id', $request['id'])->delete()) {
             return response("delete admin success!", 200);
-        }else{
+        } else {
             return response("delete admin fail!", 400);
         }
     }
-    public function getAll(){
-        return response()->json(admin::all());
+    public function getAll()
+    {
+        return response()->json(user::all());
     }
-    public function getAdminById(Request $request){
-        $admin = admin::where('id_admin', $request->keyword)->get()->first();
+    public function getAdminById(Request $request)
+    {
+        $admin = user::where('id', $request->keyword)->get()->first();
         return response()->json($admin);
     }
-    public function searchAdmin(Request $request){
-        $admin = admin::where("id_admin", "LIKE", "%" .$request['id_admin']. "%")
-        ->orWhere("username_admin", "LIKE", "%" .$request['username_admin']. "%")
-        ->orWhere("name_admin", "LIKE", "%" .$request['name_admin']. "%")
-        ->orWhere("tel_admin", "LIKE", "%" .$request['tel_admin']. "%")
-        ->get();
+    public function searchAdmin(Request $request)
+    {
+        $admin = user::where("id", "LIKE", "%" . $request['id'] . "%")
+            ->orWhere("username", "LIKE", "%" . $request['username'] . "%")
+            ->orWhere("name", "LIKE", "%" . $request['name'] . "%")
+            ->orWhere("tel", "LIKE", "%" . $request['tel'] . "%")
+            ->get();
         return response()->json($admin);
-    } 
+    }
 }

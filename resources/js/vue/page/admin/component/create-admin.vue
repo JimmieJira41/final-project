@@ -5,27 +5,37 @@
       <hr />
       <div class="row p-3">
         <div class="col">
-          <label for="username_admin">ชื่อบัญชี</label>
+          <label for="email">ชื่อบัญชี</label>
           <input
-            v-model="username_admin"
+            v-model="email"
             type="text"
             class="form-control"
-            id="username_admin"
+            id="email"
             placeholder="กรอกชื่อบัญชี"
           />
         </div>
         <div class="col">
-          <label for="password_admin">รหัสผ่าน</label>
+          <label for="password">รหัสผ่าน</label>
           <input
-            v-model="password_admin"
+            v-model="password"
             type="password"
             class="form-control"
-            id="password_admin"
+            id="password"
             placeholder="กรอกรหัสผ่าน"
           />
         </div>
         <div class="col">
-          <label for="permission_admin">สิทธิ์การเข้าถึง</label>
+          <label for="password_confirmation">ยืนยันรหัสผ่าน</label>
+          <input
+            v-model="password_confirmation"
+            type="password"
+            class="form-control"
+            id="password_confirmation"
+            placeholder="กรอกรหัสผ่านเพื่อยืนยัน"
+          />
+        </div>
+        <div class="col">
+          <label for="permission">สิทธิ์การเข้าถึง</label>
           <select
             v-model="id_permission"
             class="form-select"
@@ -40,32 +50,32 @@
       </div>
       <div class="row p-3">
         <div class="col-4">
-          <label for="firstname_admin">ชื่อ</label>
+          <label for="firstname">ชื่อ</label>
           <input
-            v-model="firstname_admin"
+            v-model="firstname"
             type="text"
             class="form-control"
-            id="firstname_admin"
+            id="firstname"
             placeholder="กรอกชื่อ"
           />
         </div>
         <div class="col-4">
-          <label for="lastname_admin">นามสกุล </label>
+          <label for="lastname">นามสกุล </label>
           <input
-            v-model="lastname_admin"
+            v-model="lastname"
             type="text"
             class="form-control"
-            id="lastname_admin"
+            id="lastname"
             placeholder="กรอกนามสกุล"
           />
         </div>
         <div class="col-4">
-          <label for="tel_admin">เบอร์โทรศัพท์ </label>
+          <label for="tel">เบอร์โทรศัพท์ </label>
           <input
-            v-model="tel_admin"
+            v-model="tel"
             type="tel"
             class="form-control"
-            id="tel_admin"
+            id="tel"
             placeholder="กรอกเบอร์โทรศัพท์"
           />
         </div>
@@ -93,21 +103,23 @@
 export default {
   data: function () {
     return {
-      username_admin: "",
-      password_admin: "",
-      firstname_admin: "",
-      lastname_admin: "",
-      tel_admin: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      firstname: "",
+      lastname: "",
+      tel: "",
       id_permission: "",
     };
   },
   methods: {
     submitNewAdmin() {
       const body = {
-        username_admin: this.username_admin,
-        password_admin: this.password_admin,
-        name_admin: this.firstname_admin + " " + this.lastname_admin,
-        tel_admin: this.tel_admin,
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password_confirmation,
+        name: this.firstname + " " + this.lastname,
+        tel: this.tel,
         id_permission: this.id_permission,
       };
       this.$swal({

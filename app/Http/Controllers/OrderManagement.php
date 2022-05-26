@@ -20,12 +20,14 @@ use Carbon\Carbon;
 use App\Exports\DHLExport;
 use App\Exports\KerryExport;
 use App\Exports\CheckReportExport;
+use App\Models\preStock;
 use App\Models\response;
 use App\Models\subOrder;
 use App\Models\promotion;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use SebastianBergmann\Diff\Diff;
 
 use function PHPSTORM_META\type;
@@ -62,6 +64,7 @@ class OrderManagement extends Controller
         $subOrders = [];
         $order = new order();
         $time = Carbon::now();
+        $msg = "";
         $newCustomer = false;
         if (!$request['id_order']) {
             return response("please enter id_order!", 417);
@@ -135,7 +138,43 @@ class OrderManagement extends Controller
                     //     $subOrder->note = $item_save['note'];
                     // }
                     if ($cal_total_use > $stock->total_stock) {
-                        return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
+                        $preStock = preStock::where('id_stock', $stock->id_stock)
+                            ->whereDate('delivery_date', $request->delivery_date)
+                            ->get()->first();
+                        if ($preStock) {
+                            if ($stock->total_stock == 0) {
+                                $preStock->number += $cal_total_use;
+                            } else {
+                                $diffNumber = $cal_total_use - $stock->total_stock;
+                                $preStock->number += $diffNumber;
+                            }
+                            $preStock->update();
+                        } else {
+                            $newPreStock = new preStock();
+                            $newPreStock->id_pre_stock = Str::random(12);
+                            $newPreStock->id_stock = $stock->id_stock;
+                            $newPreStock->delivery_date = $request->delivery_date;
+                            $newPreStock->status_pre_stock = true;
+                            $newPreStock->created_at = $time;
+                            $newPreStock->updated_at = $time;
+                            if ($stock->total_stock == 0) {
+                                $newPreStock->number = $cal_total_use;
+                            } else {
+                                $diffNumber = $cal_total_use - $stock->total_stock;
+                                $newPreStock->number = $diffNumber;
+                            }
+                            $newPreStock->save();
+                        }
+                        if ($subOrder->save()) {
+                            $stock->total_stock = 0;
+                            $stock->update();
+                            array_push($subOrders, $subOrder->id_sub_order);
+                            $order->total_cost_order = $order->total_cost_order + $subOrder->cost_order;
+                        } else {
+                            return response()->json(['ไม่สามารถสร้างรายการสั่งซื้อได้ โปรดติดต่อเจ้าหน้าที่ !'], 417);
+                        }
+                        $msg = 'สร้างรายการสั่งซื้อและรายการสต็อกล่วงสำเร็จ';
+                        // return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
                         // return response("This stock is not enough to use!", 417);
                     } else {
                         if ($subOrder->save()) {
@@ -146,6 +185,7 @@ class OrderManagement extends Controller
                         } else {
                             return response()->json(['ไม่สามารถสร้างรายการสั่งซื้อได้ โปรดติดต่อเจ้าหน้าที่ !'], 417);
                         }
+                        $msg = 'สร้างรายการสั่งซื้อสำเร็จ';
                     }
                 }
             }
@@ -163,7 +203,7 @@ class OrderManagement extends Controller
             $address->zipcode_address = $request['zipcode_address_customer'];
             if ($customer->save()) {
                 $address->id_customer = $customer->id_customer;
-                if($address->save()){
+                if ($address->save()) {
                     $customer->default_id_address = $address->id_address;
                     $customer->update();
                 }
@@ -189,7 +229,7 @@ class OrderManagement extends Controller
             $order->delivery_date = $request->delivery_date;
         }
         if ($order->save()) {
-            return response()->json($order);
+            return response()->json([$msg], 200);
         }
     }
     public function update(Request $request)
@@ -220,6 +260,7 @@ class OrderManagement extends Controller
                             if (!$stock) {
                                 return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
                             } else {
+                                // item_relate_order & stock_relate_order is item and stock pre-update
                                 $item_relate_order = item::where('id_item', $subOrder['id_item'])->get(['total_use', 'id_stock']);
                                 $stock_relate_order = stock::where('id_stock', $item_relate_order[0]['id_stock'])->first();
                                 // print_r("stock : " . response($stock_relate_order));
@@ -231,11 +272,11 @@ class OrderManagement extends Controller
                                     $promotion = promotion::where('id_promotion', $subOrder['id_promotion'])->get()->first();
                                     $revert_total_stock = $revert_total_stock + $promotion->number_promotion;
                                 }
-                                $stock_relate_order->total_stock = $stock_relate_order->total_stock + $revert_total_stock;
+                                // $stock_relate_order->total_stock = $stock_relate_order->total_stock + $revert_total_stock;
                                 // $stock_relate_order->update();
                                 // print_r("stock update : " . response($stock_relate_order));
                                 // printf("request :" . $item_input['id_item'] . " " . "order :" . $subOrder->id_item . " " . "stock :" . $stock->id_stock);
-                                $stock_update = $item_input['id_item'] == $subOrder->id_item ? $stock_relate_order : $stock;
+                                // $stock_update = $item_input['id_item'] == $subOrder->id_item ? $stock_relate_order : $stock;
                                 // update order
                                 // if ($request['id_address']) {
                                 //     $subOrder->id_address = $request['id_address'];
@@ -265,26 +306,144 @@ class OrderManagement extends Controller
                                     $promotion = promotion::where('id_promotion', $item_input['id_promotion'])->get()->first();
                                     $cal_total_use = $cal_total_use + $promotion->number_promotion;
                                 }
-                                if ($cal_total_use > $stock_update->total_stock) {
-                                    return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
-                                } else {
-                                    $stock_relate_order->update();
-                                    if ($subOrder->update()) {
-                                        array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
-                                        $stock_update->total_stock = $stock_update->total_stock - $cal_total_use;
-                                        if ($stock_update->update()) {
-                                            // print_r("stock current : " . response($stock_update));
-                                            // return response()->json($order);
+                                // update old stock
+                                if ($item_input['id_item'] == $subOrder->id_item) {
+                                    $stock_update = $stock_relate_order;
+                                    $pre_stock_order = preStock::where('id_stock', $stock_update->id_stock)
+                                        ->whereDate('delivery_date', $request->delivery_date)
+                                        ->get()->first();
+                                    if ($pre_stock_order) {
+                                        if ($cal_total_use > $revert_total_stock) {
+                                            $pre_stock_order->number += $cal_total_use - $revert_total_stock;
+                                        } else {
+                                            $pre_stock_order->number -= $revert_total_stock - $cal_total_use;
                                         }
+                                        // $pre_stock_order->number += $cal_total_use - $revert_total_stock;
+                                        $pre_stock_order->update();
                                     } else {
-                                        return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
+                                        if ($cal_total_use > $stock_update->total_stock) {
+                                            $stock_update->total_stock = 0;
+                                            $newPreStock = new preStock();
+                                            $newPreStock->id_pre_stock = Str::random(12);
+                                            $newPreStock->id_stock = $stock_update->id_stock;
+                                            $newPreStock->delivery_date = $request->delivery_date;
+                                            $newPreStock->status_pre_stock = true;
+                                            $newPreStock->created_at = $time;
+                                            $newPreStock->updated_at = $time;
+                                            $newPreStock->save();
+                                        } else {
+                                            $stock_update->total_stock -= $cal_total_use;
+                                        }
+                                        $stock_update->update();
                                     }
+                                }
+                                // update new stock and revert old stock
+                                // } else {
+                                //     $stock_update = $stock;
+                                //     $pre_stock_relate_order = preStock::where('id_stock', $stock_relate_order->id_stock)
+                                //         ->whereDate('delivery_date', $request->delivery_date)
+                                //         ->get()->first();
+                                //     // revert pre-and-old-stock
+                                //     if ($pre_stock_relate_order) {
+                                //         if ($revert_total_stock > $pre_stock_relate_order->number) {
+                                //             // diff total_stock from revert pre_stock
+                                //             $revert_total_stock -= $pre_stock_relate_order->number;
+                                //             preStock::where('id_pre_stock', $pre_stock_relate_order->id_pre_stock)->delete();
+                                //             $stock_relate_order->total_stock = $stock_relate_order->total_stock + $revert_total_stock;
+                                //             $stock_relate_order->update();
+                                //         } else {
+                                //             $pre_stock_relate_order->number -= $revert_total_stock;
+                                //             $pre_stock_relate_order->update();
+                                //         }
+                                //     } else {
+                                //         $stock_relate_order->total_stock = $stock_relate_order->total_stock + $revert_total_stock;
+                                //         $stock_relate_order->update();
+                                //     }
+                                //     // calculate new stock
+                                //     $pre_stock_order = preStock::where('id_stock', $stock_update->id_stock)
+                                //         ->whereDate('delivery_date', $request->delivery_date)
+                                //         ->get()->first();
+                                //     if ($pre_stock_order) {
+                                //         // $pre_stock_order->number += $cal_total_use;
+                                //         if ($cal_total_use > $revert_total_stock) {
+                                //             $pre_stock_order->number += $cal_total_use - $revert_total_stock;
+                                //         } else {
+                                //             $pre_stock_order->number -= $revert_total_stock - $cal_total_use;
+                                //         }
+                                //         $pre_stock_order->update();
+                                //     } else {
+                                //         if ($cal_total_use > $stock_update->total_number) {
+                                //             $stock_update->total_number = 0;
+                                //             $newPreStock = new preStock();
+                                //             $newPreStock->id_pre_stock = Str::random(12);
+                                //             $newPreStock->id_stock = $stock_update->id_stock;
+                                //             $newPreStock->delivery_date = $request->delivery_date;
+                                //             $newPreStock->status_pre_stock = true;
+                                //             $newPreStock->created_at = $time;
+                                //             $newPreStock->updated_at = $time;
+                                //             $newPreStock->save();
+                                //         } else {
+                                //             $stock_update->total_number -= $cal_total_use;
+                                //         }
+                                //         $stock_update->update();
+                                //     }
+                                // }
+                                // if ($cal_total_use > $stock_update->total_stock) {
+                                //     $preStock = preStock::where('id_pre_stock', $stock_update->id_stock)
+                                //         ->whereDate('delivery_date', $request->delivery_date)
+                                //         ->get()->first();
+                                //     if ($preStock) {
+                                //         if ($stock_update->total_stock == 0) {
+                                //             $preStock->number += $cal_total_use;
+                                //         } else {
+                                //             $diffNumber = $cal_total_use - $stock->total_stock;
+                                //             $preStock->number += $diffNumber;
+                                //         }
+                                //         $preStock->update();
+                                //     } else {
+                                //         $newPreStock = new preStock();
+                                //         $newPreStock->id_pre_stock = Str::random(12);
+                                //         $newPreStock->id_stock = $stock->id_stock;
+                                //         $newPreStock->delivery_date = $request->delivery_date;
+                                //         $newPreStock->status_pre_stock = true;
+                                //         $newPreStock->created_at = $time;
+                                //         $newPreStock->created_at = $time;
+                                //         if ($stock->total_stock == 0) {
+                                //             $newPreStock->number = $cal_total_use;
+                                //         } else {
+                                //             $diffNumber = $cal_total_use - $stock->total_stock;
+                                //             $newPreStock->number = $diffNumber;
+                                //         }
+                                //         $newPreStock->save();
+                                //     }
+                                //     if ($subOrder->save()) {
+                                //         $stock->total_stock = 0;
+                                //         $stock->update();
+                                //         array_push($subOrders, $subOrder->id_sub_order);
+                                //         $order->total_cost_order = $order->total_cost_order + $subOrder->cost_order;
+                                //     } else {
+                                //         return response()->json(['ไม่สามารถสร้างรายการสั่งซื้อได้ โปรดติดต่อเจ้าหน้าที่ !'], 417);
+                                //     }
+                                //     $msg = 'สร้างรายการสั่งซื้อและรายการสต็อกล่วงสำเร็จ';
+                                // return response()->json(['จำนวนสินค้าในสต็อกไม่เพียงพอ !'], 417);
+                                // } else {
+                                // $stock_relate_order->update();
+                                if ($subOrder->update()) {
+                                    array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
+                                    // $stock_update->total_stock = $stock_update->total_stock - $cal_total_use;
+                                    // if ($stock_update->update()) {
+                                    // print_r("stock current : " . response($stock_update));
+                                    // return response()->json($order);
+                                    // }
+                                } else {
+                                    return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
                                 }
                             }
                         }
+                        // new sub order
                     } else if (!array_search($item_input['id_item'], $iditemOrderExistList) && !$checkItemExistFlag) {
                         // echo "pass new order";
-                        print_r($iditemOrderExistList);
+                        // print_r($iditemOrderExistList);
                         $item = item::where("id_item", $item_input['id_item'])->get(['total_use', 'id_stock']);
                         if (!count($item)) {
                             return response()->json(['ไม่พบรายการสินค้า !'], 417);
@@ -309,6 +468,7 @@ class OrderManagement extends Controller
                                 $subOrder->updated_at = $time;
                                 $subOrder->id_item = $item_input['id_item'];
                                 $subOrder->number = $item_input['number'];
+                                $subOrder->status_order = $request['status_order'];
                                 $subOrder->cost_order =  $item_input['cost_item'];
                                 if ($item_input['id_promotion']) {
                                     $subOrder->id_promotion = $item_input['id_promotion'];
@@ -316,28 +476,94 @@ class OrderManagement extends Controller
                                 if ($item_input['extra_number']) {
                                     $subOrder->extra_number = $item_input['extra_number'];
                                 }
-                                // if($item_sav
                                 if ($cal_total_use > $stock->total_stock) {
-                                    return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
-                                } else {
-                                    if ($subOrder->save()) {
-                                        $stock->total_stock = $stock->total_stock - $cal_total_use;
-                                        $stock->update();
-                                        array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
+                                    $pre_stock_order = preStock::where('id_stock', $stock->id_stock)
+                                        ->whereDate('delivery_date', $request->delivery_date)
+                                        ->get()->first();
+                                    if ($pre_stock_order) {
+                                        $pre_stock_order->number += $cal_total_use;
+                                        $pre_stock_order->update();
                                     } else {
-                                        return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
+                                        $stock->total_stock = 0;
+                                        $newPreStock = new preStock();
+                                        $newPreStock->id_pre_stock = Str::random(12);
+                                        $newPreStock->id_stock = $stock->id_stock;
+                                        $newPreStock->delivery_date = $request->delivery_date;
+                                        $newPreStock->status_pre_stock = true;
+                                        $newPreStock->created_at = $time;
+                                        $newPreStock->updated_at = $time;
+                                        $newPreStock->save();
+                                        $stock->update();
                                     }
+                                } else {
+                                    $stock->total_stock -= $cal_total_use;
+                                    $stock->update();
                                 }
+
+                                // return response()->json(['ไม่พบสต็อกสินค้า !'], 417);
+                                // } else {
+                                if ($subOrder->save()) {
+                                    // $stock->total_stock = $stock->total_stock - $cal_total_use;
+                                    // $stock->update();
+                                    array_push($idSubOrderUpdateList, $subOrder->id_sub_order);
+                                } else {
+                                    return response()->json(['อัพเดรตรายการสั่งซื้อไม่สำเร็จ !'], 417);
+                                }
+                                // }
                             }
                         }
                     }
                 }
                 $checkItemExistFlag = true;
             }
+            print_r($idSubOrderExistList);
+            print_r($idSubOrderUpdateList);
             $diffList = array_diff($idSubOrderExistList, $idSubOrderUpdateList);
+            print_r($diffList); 
             foreach ($diffList as $diff) {
-                if (array_search($diff, $idSubOrderExistList)) {
-                    // echo("delete".$diff);
+                echo array_search($diff, $idSubOrderExistList);
+                if (array_search($diff, $idSubOrderExistList) >= 0) {
+                    echo ("delete" . $diff);
+                    $subOrder = subOrder::where('id_sub_order', $diff)->get()->first();
+                    $item = item::where('id_item', $subOrder->id_item)->get()->first();
+                    $cal_total_use = $subOrder->number * $item->total_use;
+                    if ($subOrder->id_promotion != null && $subOrder->id_promotion != "") {
+                        $promotion = promotion::where('id_promotion', $subOrder->id_promotion)->get()->first();
+                        $cal_total_use += $promotion->number_promotion;
+                    }
+                    if ($subOrder->extra_number != null || $subOrder->extra_number != "") {
+                        $cal_total_use += $subOrder->extra->number;
+                    }
+                    echo "cal total number" . $cal_total_use;
+
+                    $pre_stock_order = preStock::where('id_stock', $item->id_stock)
+                        ->whereDate('delivery_date', $request->delivery_date)
+                        ->get()->first();
+                    echo "pre stock number" . $pre_stock_order->number;
+                    if ($pre_stock_order) {
+                        echo "revert pre stock";
+                        echo "cal total number" . $cal_total_use;
+                        echo "pre stock number" . $pre_stock_order->number;
+                        if ($cal_total_use >= $pre_stock_order->number) {
+                            echo "input number more than number stock";
+                            $stock = stock::where('id_stock', $item->id_stock)->get()->first();
+                            echo "stock number" . $stock->total_stock;
+                            echo "cal total number" . $cal_total_use;
+                            echo "pre stock number" . $pre_stock_order->number;
+                            $stock->total_stock += $cal_total_use - $pre_stock_order->number;
+                            preStock::where('id_pre_stock', $pre_stock_order->id_pre_stock)->delete();
+                            $stock->update();
+                        } else {
+                            $pre_stock_order->number -= $cal_total_use;
+                            $pre_stock_order->update();
+                        }
+                    } else {
+                        echo "revert old stock";
+                        // revert old stock
+                        $stock = stock::where('id_stock', $item->id_stock)->get()->first();
+                        $stock->total_stock += $cal_total_use;
+                        $stock->update();
+                    }
                     subOrder::find($diff)->delete();
                 }
             }
@@ -345,6 +571,7 @@ class OrderManagement extends Controller
             $order->name_customer = $request['name_customer'];
             $order->id_customer = $request['id_customer'];
             $order->id_address = $request['id_address'];
+            $order->status_order = $request['status_order'];
             $order->status_payment = $request['status_payment'];
             $order->delivery_date = $request['delivery_date'];
             $order->update();

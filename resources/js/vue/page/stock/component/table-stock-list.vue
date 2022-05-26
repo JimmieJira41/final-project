@@ -10,6 +10,9 @@
         <div class="btn btn-warning mx-2" v-on:click="getAllStock()">
           แสดงรายการสต็อก
         </div>
+        <div class="btn btn-warning mx-2" v-on:click="getPreStock()">
+          แสดงรายการสต็อกล่วงหน้า
+        </div>
         <div class="btn btn-warning" v-on:click="getAllHistoryStock()">
           แสดงบันทึกรายการสต็อก
         </div>
@@ -30,8 +33,42 @@
         <tr v-for="(stock, index) in stockList" v-bind:key="index">
           <td>{{ stock.title_stock }}</td>
           <td>{{ stock.description_stock }}</td>
-          <td>{{ stock.total_stock }}</td>
-          <td>{{ stock.updated_at }}</td>
+          <td>{{ stock.total_stock }} <b>kg.</b></td>
+          <td>{{ stock.updated_at.split('T')[0] }}</td>
+          <!-- <td>{{ admin.created_at }}</td> -->
+          <td class="text-center" v-on:click="viewDetailStock(stock.id_stock)">
+            <i class="fas fa-eye"></i>
+          </td>
+          <td class="text-center">
+            <router-link :to="'/stock/update-stock/' + stock.id_stock"
+              ><i class="fas fa-cog"></i
+            ></router-link>
+          </td>
+          <td class="text-center" v-on:click="deleteStock(stock.id_stock)">
+            <i class="fas fa-trash-alt"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table v-if="isTablePreStockListReady" class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="row">ลำดับ</th>
+          <th scope="row">รายการ</th>
+          <th scope="row">สถานะสต็อกล่วงหน้า</th>
+          <th scope="row">จำนวนสต็อกล่วงหน้า</th>
+          <th scope="row">รอบจัดส่ง</th>
+          <th class="text-center" scope="row" colspan="3">จัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(preStock, index) in preStockList" v-bind:key="index">
+          <td>{{ index+1 }}</td>
+          <td>{{ preStock.title_stock }}</td>
+          <td>{{ preStock.status_pre_stock }}</td>
+          <td>{{ preStock.number }} <b>kg.</b></td>
+          <td>{{ preStock.delivery_date }}</td>
           <!-- <td>{{ admin.created_at }}</td> -->
           <td class="text-center" v-on:click="viewDetailStock(stock.id_stock)">
             <i class="fas fa-eye"></i>
@@ -66,7 +103,7 @@
           <td>{{ historyStock.title_stock }}</td>
           <td>{{ historyStock.number }}</td>
           <td>{{ historyStock.update_by }}</td>
-          <td>{{ historyStock.updated_at }}</td>
+          <td>{{ historyStock.updated_at.split('T')[0] }}</td>
 
           <!-- <td>{{ admin.created_at }}</td> -->
           <!-- <td class="text-center" v-on:click="viewDetailStock(stock.id_stock)">
@@ -100,7 +137,9 @@ export default {
       btnStockList: false,
       isTableStockListReady: false,
       isTableStockHistoryListReady: false,
+      isTablePreStockListReady: false,
       stockList: [],
+      preStockList: [],
       historyStockList: [],
       stock: Object,
     };
@@ -111,6 +150,7 @@ export default {
         if (response) {
           this.historyStockList = response.data;
           this.isTableStockListReady = false;
+          this.isTablePreStockListReady = false;
           this.isTableStockHistoryListReady = true;
         }
       });
@@ -119,6 +159,15 @@ export default {
       axios.get("/api/stock/get-all-stock").then((response) => {
         this.stockList = response.data;
         this.isTableStockListReady = true;
+        this.isTablePreStockListReady = false;
+        this.isTableStockHistoryListReady = false;
+      });
+    },
+    getPreStock() {
+      axios.get("/api/stock/get-pre-stock").then((response) => {
+        this.preStockList = response.data;
+        this.isTableStockListReady = false;
+        this.isTablePreStockListReady = true;
         this.isTableStockHistoryListReady = false;
       });
     },
