@@ -97,11 +97,17 @@ export default {
       historyList: [],
       historyCount: 0,
       isTableReady: false,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     viewDetailCustomer(customerId) {
-      axios.get("/api/customer/get-customer/" + customerId).then((response) => {
+      axios.get("/api/customer/get-customer/" + customerId, this.headers).then((response) => {
         this.firstname_customer = response.data.firstname_customer;
         this.lastname_customer = response.data.lastname_customer;
         this.tel_customer = response.data.tel_customer;
@@ -116,7 +122,7 @@ export default {
     },
     getHistoryOrderByCustomerId(customerId) {
       axios
-        .get("/api/history/get-history-by-customer-id/" + customerId)
+        .get("/api/history/get-history-by-customer-id/" + customerId, this.headers)
         .then((response) => {
           if (response) {
             this.historyCount = response.data.count;

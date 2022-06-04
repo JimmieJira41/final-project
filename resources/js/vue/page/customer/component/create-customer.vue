@@ -165,6 +165,12 @@ export default {
       amphure_list: [],
       tombon_id_selected: null,
       tombon_list: [],
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -192,7 +198,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/customer/new-customer", body).then((response) => {
+          axios.post("/api/customer/new-customer", body, this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "อัพเดรตสำเร็จ",
@@ -207,7 +213,7 @@ export default {
       });
     },
     getProvinces() {
-      axios.get("/api/address/get-all-province").then((response) => {
+      axios.get("/api/address/get-all-province", this.headers).then((response) => {
         if (response) {
           this.province_list = response.data;
           console.log(this.province_list);
@@ -216,7 +222,7 @@ export default {
     },
     getAmphures() {
       axios
-        .get("/api/address/get-amphures/" + this.province_id_selected)
+        .get("/api/address/get-amphures/" + this.province_id_selected, this.headers)
         .then((response) => {
           this.logSeleted();
           if (response) {
@@ -233,7 +239,7 @@ export default {
     },
     getTombons() {
       axios
-        .get("/api/address/get-tombons/" + this.amphure_id_selected)
+        .get("/api/address/get-tombons/" + this.amphure_id_selected, this.headers)
         .then((response) => {
           if (response) {
             this.tombon_id_selected = null;
@@ -257,7 +263,7 @@ export default {
       this.getZipcode(this.tombon_id_selected);
     },
     getZipcode(tombon_id) {
-      axios.get("/api/address/get-zipcode/" + tombon_id).then((response) => {
+      axios.get("/api/address/get-zipcode/" + tombon_id, this.headers).then((response) => {
         if (response) {
           this.zipcode_address_customer = response.data[0].zipcode;
         }

@@ -110,6 +110,12 @@ export default {
         input: "DD-MM-YYYY",
       },
       timezone: "Asia/Bangkok",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -125,7 +131,10 @@ export default {
     },
     getAllOrderGroupByCustomer(delivery_date_search) {
       axios
-        .get("/api/order/get-order-group-by-customer/" + delivery_date_search)
+        .get(
+          "/api/order/get-order-group-by-customer/" + delivery_date_search,
+          this.headers
+        )
         .then((response) => {
           this.orderListGroupByCustomer = response.data;
           this.isTableOrderListGroupByCustomerReady = true;
@@ -135,7 +144,10 @@ export default {
     },
     getAllHistoryOrder(delivery_date_search) {
       axios
-        .get("/api/history/get-all-history-order/" + delivery_date_search)
+        .get(
+          "/api/history/get-all-history-order/" + delivery_date_search,
+          this.headers
+        )
         .then((response) => {
           this.historyList = response.data;
           this.isTableHistoryOrderListReady = true;
@@ -145,7 +157,10 @@ export default {
     },
     getAllOrderGroupByItem(delivery_date_search) {
       axios
-        .get("/api/order/get-order-group-by-item/" + delivery_date_search)
+        .get(
+          "/api/order/get-order-group-by-item/" + delivery_date_search,
+          this.headers
+        )
         .then((response) => {
           this.orderList = response.data;
           this.isTableOrderListReady = true;

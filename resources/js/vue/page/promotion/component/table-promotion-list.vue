@@ -50,11 +50,17 @@ export default {
       // orderListGroupByCustomer: [],
       // historyList: [],
       order: Object,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getAllPromotion() {
-      axios.get("/api/promotion/get-all-promotion").then((response) => {
+      axios.get("/api/promotion/get-all-promotion", this.headers).then((response) => {
         if (response) {
           this.promotionList = response.data;
           this.isTablePromotionListReady = true;

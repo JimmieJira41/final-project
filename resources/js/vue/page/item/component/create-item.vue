@@ -91,11 +91,17 @@ export default {
       id_stock: null,
       total_use: "",
       stock_list: [],
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getAllStock() {
-      axios.get("/api/stock/get-all-stock").then((response) => {
+      axios.get("/api/stock/get-all-stock", this.headers).then((response) => {
         if (response) {
           this.stock_list = response.data;
         }
@@ -118,7 +124,7 @@ export default {
         cancelButtonText: "ยกกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/item/new-item", itemObj).then((response) => {
+          axios.post("/api/item/new-item", itemObj, this.headers).then((response) => {
             if (response) {
               this.$router.go(-1);
             }

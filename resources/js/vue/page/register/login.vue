@@ -61,7 +61,12 @@ export default {
         "Content-Type": "application/json"
       };
       axios.post("/api/admin/login", data, headers).then(response =>{
-        console.log(response.data);
+        if(response){
+          this.$cookies.set("token",response.data.access_token);
+          this.$cookies.set("username", response.data.user.email);
+          this.$router.go("/home");
+        }
+        // console.log(this.$cookies.get("token"));
       });
     },
   },

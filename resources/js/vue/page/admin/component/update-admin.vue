@@ -100,12 +100,18 @@ export default {
       lastname_admin: "",
       tel_admin: "",
       id_permission: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getAdminById(adminId) {
       console.log("pass get admin");
-      axios.get("/api/admin/get-admin/" + adminId).then((response) => {
+      axios.get("/api/admin/get-admin/" + adminId, this.headers).then((response) => {
         if (response) {
           let name = response.data.name_admin.split(" ");
           this.username_admin = response.data.username_admin;
@@ -134,7 +140,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.put("/api/admin/update-admin", body).then((response) => {
+          axios.put("/api/admin/update-admin", body, this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "อัพเดรตข้อมูลพนักงานสำเร็จ",

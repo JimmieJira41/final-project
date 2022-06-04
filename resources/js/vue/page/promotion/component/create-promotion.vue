@@ -50,6 +50,12 @@ export default {
     return {
       title_promotion: "",
       number_promotion: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -67,7 +73,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/promotion/new-promotion", body).then((response) => {
+          axios.post("/api/promotion/new-promotion", body, this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "สร้างโปรโมชั่นสำเร็จ",

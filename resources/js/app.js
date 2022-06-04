@@ -15,6 +15,7 @@ import VCalendar from 'v-calendar';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueNextSelect from 'vue-next-select'
 import 'sweetalert2/dist/sweetalert2.min.css';
+import VueCookies from 'vue-cookies'
 import App from './vue/app.vue'
 import Login from './vue/page/register/login.vue'
 import Home from './vue/home.vue'
@@ -162,9 +163,11 @@ const router = createRouter({
     routes : routes
 });
 
+
 const app = createApp(App);
 app.component("font-awesome-icon",FontAwesomeIcon);
 app.component('vue-select', VueNextSelect);
 app.use(VCalendar, {})
 app.use(VueSweetalert2, options);
+app.use(VueCookies);
 app.use(router).mount('#app');

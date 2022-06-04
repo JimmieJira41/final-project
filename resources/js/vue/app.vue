@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid" style="height: 100vh">
     <div class="row min-vh-100 flex-column flex-md-row">
-      <Menu/>
+      <Menu v-if="this.$cookies.get('token')" />
       <div class="col px-0 flex-grow-1 py-4">
         <div class="contianer-fluid">
-        <router-view />
-      </div>
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
@@ -31,8 +31,6 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
-
 </style>
 <script>
 import Menu from "./share/menu/menu.vue";

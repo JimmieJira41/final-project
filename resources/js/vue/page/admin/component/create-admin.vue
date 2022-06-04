@@ -83,16 +83,10 @@
     </form>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-3 text-end">
-        <button
-          class="btn btn-primary mx-2"
-          v-on:click="submitNewAdmin()"
-        >
+        <button class="btn btn-primary mx-2" v-on:click="submitNewAdmin()">
           ยืนยัน
         </button>
-        <button
-          class="btn btn-secondary"
-          v-on:click="this.$router.go(-1)"
-        >
+        <button class="btn btn-secondary" v-on:click="this.$router.go(-1)">
           ยกเลิก
         </button>
       </div>
@@ -110,6 +104,12 @@ export default {
       lastname: "",
       tel: "",
       id_permission: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -131,17 +131,19 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/admin/new-admin", body).then((response) => {
-            if (response) {
-              this.$swal({
-                title: "สร้างรายการพนักงานสำเร็จ",
-                icon: "success",
-                confirmButtonText: "ยืนยัน",
-              }).then((result) => {
-                this.$router.go(-1);
-              });
-            }
-          });
+          axios
+            .post("/api/admin/new-admin", body, this.headers)
+            .then((response) => {
+              if (response) {
+                this.$swal({
+                  title: "สร้างรายการพนักงานสำเร็จ",
+                  icon: "success",
+                  confirmButtonText: "ยืนยัน",
+                }).then((result) => {
+                  this.$router.go(-1);
+                });
+              }
+            });
         }
       });
     },

@@ -32,19 +32,25 @@ export default{
         return {
             isTableReady : false,
             itemList : [],
-            item: Object
+            item: Object,
+            headers: {
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this.$cookies.get("token"),
+                },
+            },
         }
     },
     methods:{
         getAllItem(){
-            axios.get("/api/item/get-all-item")
+            axios.get("/api/item/get-all-item", this.headers)
             .then((response) =>{
                 this.itemList = response.data;   
                 this.isTableReady = true;     
             })
         },
         viewDetailItem(itemId){
-            axios.get("/api/item/search-item/"+itemId)
+            axios.get("/api/item/search-item/"+itemId, this.headers)
             .then((response) =>{
                 this.item = response.data;   
                 console.table(this.item);     
@@ -61,7 +67,7 @@ export default{
                 reverseButtons: true
             }).then((result) => {
                 if(result.isConfirmed){
-                    axios.delete("/api/item/delete-item/", {data: { "id_item" : itemId}})
+                    axios.delete("/api/item/delete-item/", {data: { "id_item" : itemId}}, this.headers)
                     .then((response) =>{
                     this.getAllItem()
                     })  

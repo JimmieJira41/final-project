@@ -57,6 +57,12 @@ export default {
       title_stock: "",
       description_stock: "",
       total_stock: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -76,7 +82,7 @@ export default {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/stock/new-stock", stockObj).then((response) => {
+          axios.post("/api/stock/new-stock", stockObj, this.headers).then((response) => {
             if (response) {
               this.$router.go(-1);
             }

@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class AdminManagement extends Controller
 {
-    
+
     public function login(Request $request)
     {
         $request->validate([
@@ -38,6 +38,19 @@ class AdminManagement extends Controller
             'token_type' => 'Bearer',
             'abilities' => $token->accessToken->abilities
         ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        if ($request->user()->tokens()->delete()) {
+            return response()->json([
+                'message' => 'logout successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "logout fail!"
+            ], 500);
+        }
     }
 
     public function create(Request $request)

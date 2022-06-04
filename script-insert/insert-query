@@ -208,3 +208,8 @@ INSERT INTO public.promotions(
 title_promotion, number_promotion, created_at, updated_at)
 VALUES ('ฟรี 1 กิโลกรัม', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+// customer 27-05-65
+
+INSERT INTO public.customers(
+	firstname_customer, lastname_customer, tel_customer, line_contact_customer, facebook_contact_customer, default_id_address, id_addresses, created_at, updated_at)
+	VALUES ('', '', '', '', '', '', '', '', '');

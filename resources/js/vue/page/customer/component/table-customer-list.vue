@@ -47,18 +47,24 @@ export default {
       isTableReady: false,
       customerList: [],
       customer: Object,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getAllCustomer() {
-      axios.get("/api/customer/get-all-customer").then((response) => {
+      axios.get("/api/customer/get-all-customer", this.headers).then((response) => {
         this.customerList = response.data;
         this.isTableReady = true;
       });
     },
     viewDetailCustomer(customerId) {
       axios
-        .get("/api/customer/search-customer/" + customerId)
+        .get("/api/customer/search-customer/" + customerId, this.headers)
         .then((response) => {
           this.customer = response.data;
           console.table(this.customer);
@@ -78,7 +84,7 @@ export default {
           axios
             .delete("/api/customer/delete-customer/", {
               data: { id_customer: customerId },
-            })
+            }, this.headers)
             .then((response) => {
               this.getAllCustomer();
             });

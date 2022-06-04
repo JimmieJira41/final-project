@@ -150,11 +150,17 @@ export default {
         input: "DD-MM-YYYY",
       },
       timezone: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getDataAnalysis(body) {
-      axios.post("api/analysis/get-data-analysis", body).then((response) => {
+      axios.post("api/analysis/get-data-analysis", body, this.headers).then((response) => {
         if (response) {
           this.dataAnalysis = response.data;
           this.renderChart();

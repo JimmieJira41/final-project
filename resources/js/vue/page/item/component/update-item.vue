@@ -99,11 +99,17 @@ export default {
       id_stock: null,
       total_use: "",
       stock_list: [],
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getItemById(id_item) {
-      axios.post("/api/item/get-item/" + id_item).then((response) => {
+      axios.post("/api/item/get-item/" + id_item, this.headers).then((response) => {
         if (response) {
           this.title_item = response.data[0].title_item;
           this.description_item = response.data[0].description_item;
@@ -114,7 +120,7 @@ export default {
       });
     },
     getAllStock() {
-      axios.get("/api/stock/get-all-stock").then((response) => {
+      axios.get("/api/stock/get-all-stock", this.headers).then((response) => {
         if (response) {
           this.stock_list = response.data;
         }
@@ -138,7 +144,7 @@ export default {
         cancelButtonText: "ยกกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.put("/api/item/update-item", itemObj).then((response) => {
+          axios.put("/api/item/update-item", itemObj, this.headers).then((response) => {
             if (response) {
               this.$router.go(-1);
             }

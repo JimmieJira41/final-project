@@ -142,11 +142,17 @@ export default {
       preStockList: [],
       historyStockList: [],
       stock: Object,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getAllHistoryStock() {
-      axios.get("/api/stock/get-all-history-stock").then((response) => {
+      axios.get("/api/stock/get-all-history-stock", this.headers).then((response) => {
         if (response) {
           this.historyStockList = response.data;
           this.isTableStockListReady = false;
@@ -156,7 +162,7 @@ export default {
       });
     },
     getAllStock() {
-      axios.get("/api/stock/get-all-stock").then((response) => {
+      axios.get("/api/stock/get-all-stock", this.headers).then((response) => {
         this.stockList = response.data;
         this.isTableStockListReady = true;
         this.isTablePreStockListReady = false;
@@ -164,7 +170,7 @@ export default {
       });
     },
     getPreStock() {
-      axios.get("/api/stock/get-pre-stock").then((response) => {
+      axios.get("/api/stock/get-pre-stock", this.headers).then((response) => {
         this.preStockList = response.data;
         this.isTableStockListReady = false;
         this.isTablePreStockListReady = true;
@@ -175,7 +181,7 @@ export default {
     //     this.$router.push({ name: 'UpdateStock', params: {id: stockId}});
     // },
     viewDetailStock(stockId) {
-      axios.get("/api/stock/search-stock/" + stockId).then((response) => {
+      axios.get("/api/stock/search-stock/" + stockId, this.headers).then((response) => {
         this.stock = response.data;
         console.table(this.stock);
       });
@@ -192,7 +198,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete("/api/stock/delete-stock/", { data: { id_stock: stockId } })
+            .delete("/api/stock/delete-stock/", { data: { id_stock: stockId } }, this.headers)
             .then((response) => {
               this.getAllStock();
             });

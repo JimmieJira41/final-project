@@ -69,8 +69,39 @@
                                 <router-link to="/analysis">วิเคราะห์และสรุปผล</router-link>
                             </span> </a>
                     </li>
+                     <li class="mt-3">
+                        <a href="javascript:;" class="btn btn-danger nav-link px-0 align-middle" v-on:click="logout()">
+                            <span class="ms-1 d-none d-sm-inline">logout</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
     </aside>
 </template>
+<script>
+export default {
+  data: function () {
+    return {
+      side_bar: true,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.$cookies.get("token"),
+        },
+      },
+    };
+  },
+  methods: {
+    logout() {
+      axios.get("/api/admin/logout", this.headers).then((response) => {
+        if (response) {
+          //   this.$cookies.remove("username");
+          this.$cookies.remove("token");
+          this.$router.go("");
+        }
+      });
+    },
+  },
+};
+</script>

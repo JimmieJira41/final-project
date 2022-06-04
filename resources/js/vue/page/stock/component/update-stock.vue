@@ -58,11 +58,17 @@ export default {
             title_stock: "",
             description_stock: "",
             total_stock: 0,
+            headers: {
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this.$cookies.get("token"),
+                },
+            },
         };
     },
     methods: {
         getStockById(stockId) {
-            axios.get("/api/stock/get-stock/" + stockId).then((response) => {
+            axios.get("/api/stock/get-stock/" + stockId, this.headers).then((response) => {
                 if (response) {
                     this.title_stock = response.data[0].title_stock;
                     this.description_stock = response.data[0].description_stock;
@@ -85,10 +91,10 @@ export default {
                 confirmButtonText: "ยืนยัน",
                 cancelButtonText: "ยกกเลิก",
                 reverseButtons: true,
-            }).then((result) => {
+            }, this.headers).then((result) => {
                 if (result.isConfirmed) {
                     axios
-                        .put("/api/stock/update-stock", stockObj)
+                        .put("/api/stock/update-stock", stockObj, this.headers)
                         .then((response) => {
                             if (response) {
                                 this.$swal({

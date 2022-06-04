@@ -213,7 +213,10 @@
         </div>
       </div>
       <div v-if="isTableOrderListReady" class="btn-option-feature text-end">
-        <div class="btn btn-warning mx-2" v-on:click="exportLabel('check-report')">
+        <div
+          class="btn btn-warning mx-2"
+          v-on:click="exportLabel('check-report')"
+        >
           พิมพ์ใบเช็คสินค้า
         </div>
       </div>
@@ -273,6 +276,12 @@ export default {
       selectAllMode: false,
       selectMode: false,
       order: Object,
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -292,7 +301,7 @@ export default {
       this.isTableHistoryOrderListReady = false;
     },
     viewDetailOrder(orderId) {
-      axios.get("/api/order/search-order/" + orderId).then((response) => {
+      axios.get("/api/order/search-order/" + orderId, this.headers).then((response) => {
         this.order = response.data;
         console.table(this.order);
       });
@@ -308,7 +317,15 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete("/api/order/delete-order", { data: { id_order: orderId } })
+            .delete("/api/order/delete-order", {
+              data: {
+                id_order: orderId,
+                delivery_date: new Intl.DateTimeFormat("en-US")
+                  .format(this.delivery_date)
+                  .split("/")
+                  .join("-"),
+              },
+            }, this.headers)
             .then((response) => {
               if (response) {
                 this.$swal({
@@ -333,7 +350,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/order/cut-off-order").then((response) => {
+          axios.get("/api/order/cut-off-order", this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "ตัดรอบรายการสั่งซื้อสำเร็จ",
@@ -360,7 +377,7 @@ export default {
       };
       this.$swal({
         title: "แจ้งเตือน",
-        text: "คุณดาวโหลดไฟล์ "+key.toLocaleUpperCase()+" ใช่หรือไม่ ?",
+        text: "คุณดาวโหลดไฟล์ " + key.toLocaleUpperCase() + " ใช่หรือไม่ ?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "ยืนยัน",
@@ -371,26 +388,35 @@ export default {
             url = "/api/order/get-dhl-label-excel-file";
             title_file =
               "DHL-Label " +
-              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
+              new Intl.DateTimeFormat("en-GB")
+                .format(this.delivery_date)
+                .split("/")
+                .join("-");
           }
           if (key == "kerry") {
             url = "/api/order/get-kerry-label-excel-file";
             title_file =
               "Kerry-Label " +
-              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
+              new Intl.DateTimeFormat("en-GB")
+                .format(this.delivery_date)
+                .split("/")
+                .join("-");
           }
           if (key == "check-report") {
             url = "/api/order/get-check-report-excel-file";
             title_file =
               "ใบเช็ครายการสั่งซื้อ " +
-              new Intl.DateTimeFormat("en-GB").format(this.delivery_date).split("/").join("-");
+              new Intl.DateTimeFormat("en-GB")
+                .format(this.delivery_date)
+                .split("/")
+                .join("-");
           }
           axios({
             url: url,
             method: "post",
             responseType: "blob",
             data: body,
-          }).then((response) => {
+          }, this.headers).then((response) => {
             if (response) {
               var blob = new Blob([response.data], {
                 // type: "application/vnd.ms-excel",

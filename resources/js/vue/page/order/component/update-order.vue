@@ -414,6 +414,12 @@ export default {
       masks: {
         input: "DD-MM-YYYY",
       },
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
@@ -514,7 +520,7 @@ export default {
       this.zipcode_address_customer = "";
     },
     getAllCustomer() {
-      axios.get("/api/customer/get-all-customer").then((response) => {
+      axios.get("/api/customer/get-all-customer", this.headers).then((response) => {
         response.data.map((customer) => {
           if (customer.id_customer == this.id_customer) {
             this.customerSelected = customer.id_customer;
@@ -524,7 +530,7 @@ export default {
       });
     },
     getAllItem() {
-      axios.get("/api/item/get-all-item").then((response) => {
+      axios.get("/api/item/get-all-item", this.headers).then((response) => {
         if (response) {
           response.data.map((item) => {
             item.isSeleted = false;
@@ -538,7 +544,7 @@ export default {
       });
     },
     getAllPromotion() {
-      axios.get("/api/promotion/get-all-promotion").then((response) => {
+      axios.get("/api/promotion/get-all-promotion", this.headers).then((response) => {
         if (response) {
           this.promotionList = response.data;
           this.isTablePromotionListReady = true;
@@ -546,7 +552,7 @@ export default {
       });
     },
     getOrder(id_order) {
-      axios.get("/api/order/get-order/" + id_order).then((response) => {
+      axios.get("/api/order/get-order/" + id_order, this.headers).then((response) => {
         if (response) {
           this.id_customer = response.data.customer.id_customer;
           this.firstname_customer = response.data.customer.firstname_customer;
@@ -576,7 +582,7 @@ export default {
     },
     getCustomer(keyword_search_customer) {
       axios
-        .get("/api/customer/get-customer/" + keyword_search_customer)
+        .get("/api/customer/get-customer/" + keyword_search_customer, this.headers)
         .then((response) => {
           if (response) {
             this.customerList.push(response.data.id_customer);
@@ -598,7 +604,7 @@ export default {
         });
     },
     submitUpdateOrder() {
-      let format_date = new Intl.DateTimeFormat("en-US");
+      let format_date = new Intl.DateTimeFormat("en-US", { day: '2-digit', month : '2-digit', year : 'numeric' });
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -638,7 +644,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios
-              .put("/api/order/update-order", orderObj)
+              .put("/api/order/update-order", orderObj, this.headers)
               .then((response) => {
                 if (response.status) {
                   this.$swal({

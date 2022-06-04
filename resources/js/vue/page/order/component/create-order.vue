@@ -229,9 +229,7 @@
             <tbody v-if="itemChecked.length == 0">
               <tr>
                 <td colspan="8">
-                  <div     
-                    class="text-center text-secondary mt-3"
-                  >
+                  <div class="text-center text-secondary mt-3">
                     <h1><i class="fas fa-shopping-basket"></i></h1>
                     <h3>โปรดเลือกสินค้า</h3>
                   </div>
@@ -513,11 +511,17 @@ export default {
       masks: {
         input: "DD-MM-YYYY",
       },
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     prepareOrder() {
-      axios.get("/api/order/prepare-order").then((response) => {
+      axios.get("/api/order/prepare-order", this.headers).then((response) => {
         if (response) {
           console.log(response.data);
           this.id_order = response.data.id_order;
@@ -623,7 +627,7 @@ export default {
       this.zipcode_address_customer = "";
     },
     getAllCustomer() {
-      axios.get("/api/customer/get-all-customer").then((response) => {
+      axios.get("/api/customer/get-all-customer", this.headers).then((response) => {
         this.customerList = response.data;
         this.customerList.forEach((customer) => {
           customer.select = false;
@@ -633,7 +637,7 @@ export default {
       });
     },
     getAllItem() {
-      axios.get("/api/item/get-all-item").then((response) => {
+      axios.get("/api/item/get-all-item", this.headers).then((response) => {
         if (response) {
           response.data.map((item) => {
             item.isSeleted = false;
@@ -648,7 +652,7 @@ export default {
       });
     },
     getAllPromotion() {
-      axios.get("/api/promotion/get-all-promotion").then((response) => {
+      axios.get("/api/promotion/get-all-promotion", this.headers).then((response) => {
         if (response) {
           this.promotionList = response.data;
           this.isTablePromotionListReady = true;
@@ -683,7 +687,11 @@ export default {
       console.log(this.customerList);
     },
     submitCreateOrder() {
-      let format_date = new Intl.DateTimeFormat("en-US");
+      let format_date = new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
       const orderObj = {};
       let orderNotReady = true;
       orderObj.id_order = this.id_order;
@@ -704,7 +712,7 @@ export default {
         this.firstname_customer + " " + this.lastname_customer;
       orderObj.id_address = this.id_address;
       orderObj.items = this.itemListChecked;
-      orderObj.create_by = "jimmie";
+      orderObj.create_by = this.$cookies.get("username");
       orderObj.delivery_date = format_date
         .format(this.delivery_date)
         .split("/")
@@ -735,7 +743,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios
-              .post("/api/order/new-order", orderObj)
+              .post("/api/order/new-order", orderObj, this.headers)
               .then((response) => {
                 if (response.status == 200) {
                   this.$swal({
@@ -761,7 +769,7 @@ export default {
       }
     },
     getProvinces() {
-      axios.get("/api/address/get-all-province").then((response) => {
+      axios.get("/api/address/get-all-province", this.headers).then((response) => {
         if (response) {
           this.province_list = response.data;
           console.log(this.province_list);
@@ -770,7 +778,7 @@ export default {
     },
     getAmphures() {
       axios
-        .get("/api/address/get-amphures/" + this.province_id_selected)
+        .get("/api/address/get-amphures/" + this.province_id_selected, this.headers)
         .then((response) => {
           // this.logSeleted();
           if (response) {
@@ -787,7 +795,7 @@ export default {
     },
     getTombons() {
       axios
-        .get("/api/address/get-tombons/" + this.amphure_id_selected)
+        .get("/api/address/get-tombons/" + this.amphure_id_selected, this.headers)
         .then((response) => {
           if (response) {
             this.tombon_id_selected = null;
@@ -811,7 +819,7 @@ export default {
       this.getZipcode(this.tombon_id_selected);
     },
     getZipcode(tombon_id) {
-      axios.get("/api/address/get-zipcode/" + tombon_id).then((response) => {
+      axios.get("/api/address/get-zipcode/" + tombon_id, this.headers).then((response) => {
         if (response) {
           this.zipcode_address_customer = response.data[0].zipcode;
         }

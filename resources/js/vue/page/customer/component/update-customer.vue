@@ -140,11 +140,17 @@ export default {
       amphure_list: [],
       tombon_id_selected: null,
       tombon_list: [],
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getCustomerById(customerId) {
-      axios.get("/api/customer/get-customer/" + customerId).then((response) => {
+      axios.get("/api/customer/get-customer/" + customerId, this.headers).then((response) => {
         if (response) {
           this.firstname_customer = response.data.firstname_customer;
           this.lastname_customer = response.data.lastname_customer;
@@ -183,7 +189,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.put("/api/customer/update-customer", body).then((response) => {
+          axios.put("/api/customer/update-customer", body, this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "อัพเดรตสำเร็จ",
@@ -212,7 +218,7 @@ export default {
     //   });
     // },
     getProvinces() {
-      axios.get("/api/address/get-all-province").then((response) => {
+      axios.get("/api/address/get-all-province", this.headers).then((response) => {
         if (response) {
           this.province_list = response.data;
           this.province_list.forEach((province) => {
@@ -226,7 +232,7 @@ export default {
       });
     },
     getAmphures(province_id) {
-      axios.get("/api/address/get-amphures/" + province_id).then((response) => {
+      axios.get("/api/address/get-amphures/" + province_id, this.headers).then((response) => {
         if (response) {
           this.amphure_list = response.data;
           this.amphure_list.forEach((amphure) => {
@@ -243,7 +249,7 @@ export default {
       this.amphure_id_selected = null;
       this.tombon_id_selected = null;
       axios
-        .get("/api/address/get-amphures/" + this.province_id_selected)
+        .get("/api/address/get-amphures/" + this.province_id_selected, this.headers)
         .then((response) => {
           if (response) {
             this.amphure_list = response.data;
@@ -254,7 +260,7 @@ export default {
     getTombonsList() {
       this.tombon_id_selected = null;
       axios
-        .get("/api/address/get-tombons/" + this.amphure_id_selected)
+        .get("/api/address/get-tombons/" + this.amphure_id_selected, this.headers)
         .then((response) => {
           if (response) {
             this.tombon_list = response.data;
@@ -263,7 +269,7 @@ export default {
         });
     },
     getTombons(amphure_id) {
-      axios.get("/api/address/get-tombons/" + amphure_id).then((response) => {
+      axios.get("/api/address/get-tombons/" + amphure_id, this.headers).then((response) => {
         if (response) {
           this.tombon_list = response.data;
           this.tombon_list.forEach((tombon) => {
@@ -285,7 +291,7 @@ export default {
       this.getZipcode(this.tombon_id_selected);
     },
     getZipcode(tombon_id) {
-      axios.get("/api/address/get-zipcode/" + tombon_id).then((response) => {
+      axios.get("/api/address/get-zipcode/" + tombon_id, this.headers).then((response) => {
         if (response) {
           this.zipcode_address_customer = response.data[0].zipcode;
         }

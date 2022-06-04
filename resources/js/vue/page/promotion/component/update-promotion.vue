@@ -42,12 +42,18 @@ export default {
     return {
       id_promotion: "",
       title_promotion: "",
-      number_promotion: ""
+      number_promotion: "",
+      headers: {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.$cookies.get("token"),
+        },
+      },
     };
   },
   methods: {
     getPromotionByIdPromotion(){
-      axios.get('/api/promotion/get-promotion-by-id/'+this.id_promotion).then((response)=>{
+      axios.get('/api/promotion/get-promotion-by-id/'+this.id_promotion, this.headers).then((response)=>{
         if(response){
           this.title_promotion = response.data.title_promotion;
           this.number_promotion = response.data.number_promotion;
@@ -69,7 +75,7 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post("/api/promotion/update-promotion", body).then((response) => {
+          axios.post("/api/promotion/update-promotion", body, this.headers).then((response) => {
             if (response) {
               this.$swal({
                 title: "อัพเดรตโปรโมชั่นสำเร็จ",
