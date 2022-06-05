@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     getItemById(id_item) {
-      axios.post("/api/item/get-item/" + id_item, this.headers).then((response) => {
+      axios.get("/api/item/get-item/" + id_item, this.headers).then((response) => {
         if (response) {
           this.title_item = response.data[0].title_item;
           this.description_item = response.data[0].description_item;

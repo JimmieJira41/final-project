@@ -98,7 +98,7 @@ export default {
         if (response) {
           //   this.$cookies.remove("username");
           this.$cookies.remove("token");
-          this.$router.go("");
+          this.$router.go("/");
         }
       });
     },

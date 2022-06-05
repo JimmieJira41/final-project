@@ -91,7 +91,7 @@ export default {
                 confirmButtonText: "ยืนยัน",
                 cancelButtonText: "ยกกเลิก",
                 reverseButtons: true,
-            }, this.headers).then((result) => {
+            }).then((result) => {
                 if (result.isConfirmed) {
                     axios
                         .put("/api/stock/update-stock", stockObj, this.headers)

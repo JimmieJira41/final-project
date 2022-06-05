@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::put('/update-item', [ItemManagement::class, 'update']);
             Route::delete('/delete-item', [ItemManagement::class, 'delete']);
             Route::get('/get-all-item', [ItemManagement::class, 'getAll']);
-            Route::post('/get-item/{keyword}', [ItemManagement::class, 'getItemById']);
+            Route::get('/get-item/{keyword}', [ItemManagement::class, 'getItemById']);
             Route::get('/search-item/{keyword}', [ItemManagement::class, 'searchItem']);
         });
         Route::prefix('address')->group(function () {

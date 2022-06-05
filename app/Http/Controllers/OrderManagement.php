@@ -107,9 +107,9 @@ class OrderManagement extends Controller
             if (!count($item)) {
                 return response("This item is not found!", 417);
             } else {
-                echo $time->format('m-d-Y');
+                // echo $time->format('m-d-Y');
                 if ($time->format('m-d-Y') == $request->delivery_date) {
-                    echo "now";
+                    // echo "now";
                     $stock = stock::where('id_stock', $item[0]['id_stock'])->first();
                     $cal_total_use = $item[0]['total_use'] * $item_save['number'];
                     if ($item_save['extra_number']) {
