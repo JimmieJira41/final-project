@@ -1,9 +1,10 @@
 <template lang="pug">
-    <aside class="col-12 col-md-3 col-xl-2 p-0 bg-dark flex-shrink-1">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-2 p-0 bg-dark flex-shrink-1">
         <nav class="
-            navbar navbar-expand-md navbar-dark
+            navbar navbar-expand-xl navbar-dark
             bd-dark
-            flex-md-column flex-row
+            flex-xl-column 
+            flex-row
             align-items-center
             py-2
             text-center
@@ -17,12 +18,12 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse order-last" id="nav">
-                <ul class="navbar-nav flex-column w-100 justify-content-center">
+            <div class="collapse navbar-collapse align-lg-start order-last" id="nav">
+                <ul class="navbar-nav flex-column w-100">
                     <li>
                         <a href="javascript:;" class="nav-link align-middle px-0">
                             <i class="fas fa-home fs-3"></i> <span class="ms-1 d-none d-sm-inline">
-                                <router-link to="/">แดชบอร์ด</router-link>
+                                <router-link to="/dashboard">แดชบอร์ด</router-link>
                             </span>
                         </a>
                     </li>
@@ -77,7 +78,7 @@
                 </ul>
             </div>
         </nav>
-    </aside>
+    </div>
 </template>
 <script>
 export default {
@@ -98,7 +99,7 @@ export default {
         if (response) {
           //   this.$cookies.remove("username");
           this.$cookies.remove("token");
-          this.$router.go("/");
+          this.$router.push("/");
         }
       });
     },

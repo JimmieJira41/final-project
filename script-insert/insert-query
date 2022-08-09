@@ -213,3 +213,33 @@ VALUES ('ฟรี 1 กิโลกรัม', 1, CURRENT_TIMESTAMP, CURRENT_TI
 INSERT INTO public.customers(
 	firstname_customer, lastname_customer, tel_customer, line_contact_customer, facebook_contact_customer, default_id_address, id_addresses, created_at, updated_at)
 	VALUES ('', '', '', '', '', '', '', '', '');
+
+// detail_report
+
+INSERT INTO public.details_reports(
+	title, type, status_default, created_at, updated_at)
+	VALUES ('รายได้ทั้งหมด','รายรับ', TRUE , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่าขนส่ง DHL','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่าขนส่ง Kerry','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่าล้าง + ร่อนเบอร์ส้ม','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่างานสา','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่างานหมวย','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+INSERT INTO public.details_reports(
+	title, type, created_at, updated_at)
+	VALUES ('ค่างานเจนี่','รายจ่าย', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

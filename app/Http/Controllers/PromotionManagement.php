@@ -75,6 +75,9 @@ class PromotionManagement extends Controller
             return response()->json($alert);
         }
     }
+    public function deletePromotion(Request $request){
+        return promotion::where('id_promotion',$request->keyword)->delete();
+    }
     public function getAllPromotion(){
         return promotion::all();
     }

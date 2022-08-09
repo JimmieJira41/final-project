@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fiuld px-3">
     <div>
       <h1 class="text-center">จัดการรายการสั่งซื้อ</h1>
     </div>
@@ -83,6 +83,7 @@
       :orderListGroupByCustomer="orderListGroupByCustomer"
       :historyList="historyList"
       :delivery_date="delivery_date_search"
+      @refetch-data="searchAllList"
     ></TableOrderList>
   </div>
 </template>
@@ -162,7 +163,7 @@ export default {
           this.headers
         )
         .then((response) => {
-          this.orderList = response.data;
+          this.orderList = response.data.order_list;
           this.isTableOrderListReady = true;
           this.isTableOrderListGroupByCustomerReady = false;
           this.isTableHistoryOrderListReady = false;

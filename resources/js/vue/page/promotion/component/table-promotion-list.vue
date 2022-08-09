@@ -6,8 +6,8 @@
       </div>
     </div>
     <hr />
-    <div class="table-responsive">
-      <table class="table table-borderless" v-if="isTablePromotionListReady">
+    <div class="tbody-scroll">
+      <table class="table table-borderless">
         <thead>
           <tr>
             <th scope="row">ลำดับ</th>
@@ -16,7 +16,7 @@
             <th class="text-center" scope="row" colspan="2">จัดการ</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="promotionList.length">
           <tr v-for="(promotion, index) in promotionList" v-bind:key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ promotion.title_promotion }}</td>
@@ -53,19 +53,47 @@ export default {
       headers: {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + this.$cookies.get("token"),
+          Authorization: "Bearer " + this.$cookies.get("token"),
         },
       },
     };
   },
   methods: {
-    getAllPromotion() {
-      axios.get("/api/promotion/get-all-promotion", this.headers).then((response) => {
-        if (response) {
-          this.promotionList = response.data;
-          this.isTablePromotionListReady = true;
+    deletePromotion(idPromotion) {
+      this.$swal({
+        title: "แจ้งเตือน",
+        text: "คุณต้องการลบรายการโปรโมชั่น ใช่หรือไม่ ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete("/api/promotion/delete-promotion/" + idPromotion, {headers : this.headers.headers})
+            .then((response) => {
+              if (response) {
+                this.$swal({
+                  title: "ลบรายการโปรโมชั่นสำเร็จ",
+                  icon: "success",
+                  confirmButtonText: "ยืนยัน",
+                }).then((result) => {
+                  this.getAllPromotion();
+                });
+              }
+            });
         }
       });
+    },
+    getAllPromotion() {
+      axios
+        .get("/api/promotion/get-all-promotion", this.headers)
+        .then((response) => {
+          if (response) {
+            this.promotionList = response.data;
+            this.isTablePromotionListReady = true;
+          }
+        });
     },
   },
   mounted() {

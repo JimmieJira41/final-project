@@ -2,38 +2,40 @@
   <div class="table-response card shadow border-0 p-3">
     <h3>รายการพนักงาน</h3>
     <hr />
-    <table class="table table-borderless">
-      <thead>
-        <tr>
-          <th scope="row">ชื่อบัญชี</th>
-          <th scope="row">ชื่อ</th>
-          <th scope="row">เบอร์โทรศัพท์</th>
-          <!-- <th scope="row">Create At</th> -->
-          <th class="text-center" scope="row" colspan="3">จัดการ</th>
-        </tr>
-      </thead>
-      <tbody v-if="isTableReady">
-        <tr v-for="(admin, index) in adminList" v-bind:key="index">
-          <td>{{ admin.username_admin }}</td>
-          <td>{{ admin.name_admin }}</td>
-          <td>{{ admin.tel_admin }}</td>
-          <!-- <td>{{ admin.created_at }}</td> -->
-          <td class="text-center" v-on:click="viewDetailAdmin(admin.id_admin)">
-            <router-link to="/admin/craete-admin"
-              ><i class="fas fa-eye"></i
-            ></router-link>
-          </td>
-          <td class="text-center">
-            <router-link :to="'/admin/update-admin/' + admin.id_admin"
-              ><i class="fas fa-cog"></i
-            ></router-link>
-          </td>
-          <td class="text-center" v-on:click="deleteAdmin(admin.id_admin)">
-            <i class="fas fa-trash-alt"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="tbody-scroll">
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="row">ชื่อบัญชี</th>
+            <th scope="row">ชื่อ</th>
+            <th scope="row">เบอร์โทรศัพท์</th>
+            <!-- <th scope="row">Create At</th> -->
+            <th class="text-center" scope="row" colspan="3">จัดการ</th>
+          </tr>
+        </thead>
+        <tbody v-if="isTableReady">
+          <tr v-for="(admin, index) in adminList" v-bind:key="index">
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.name }}</td>
+            <td>{{ admin.tel }}</td>
+            <!-- <td>{{ admin.created_at }}</td> -->
+            <td class="text-center" v-on:click="viewDetailAdmin(admin.id)">
+              <router-link to="/admin/craete-admin"
+                ><i class="fas fa-eye"></i
+              ></router-link>
+            </td>
+            <td class="text-center">
+              <router-link :to="'/admin/update-admin/' + admin.id"
+                ><i class="fas fa-cog"></i
+              ></router-link>
+            </td>
+            <td class="text-center" v-on:click="deleteAdmin(admin.id)">
+              <i class="fas fa-trash-alt"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 <script>
@@ -46,7 +48,7 @@ export default {
       headers: {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + this.$cookies.get("token"),
+          Authorization: "Bearer " + this.$cookies.get("token"),
         },
       },
     };
@@ -59,10 +61,12 @@ export default {
       });
     },
     viewDetailAdmin(adminId) {
-      axios.get("/api/admin/search-admin/" + adminId, this.headers).then((response) => {
-        this.admin = response.data;
-        console.table(this.admin);
-      });
+      axios
+        .get("/api/admin/search-admin/" + adminId, this.headers)
+        .then((response) => {
+          this.admin = response.data;
+          console.table(this.admin);
+        });
     },
     deleteAdmin(adminId) {
       this.$swal({
@@ -70,15 +74,26 @@ export default {
         text: "คุณต้องการลบบัญชีพนักงาน ใช่หรือไม่ ?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete("/api/admin/delete-admin/", { data: { id_admin: adminId } }, this.headers)
+            .delete(
+              "/api/admin/delete-admin/",
+              { headers: this.headers.headers, data: { id_admin: adminId } },
+              this.headers
+            )
             .then((response) => {
-              this.getAllAdmin();
+              if (response) {
+                this.$swal({
+                  title: "ลบบัญชีพนักงานสำเร็จ",
+                  icon: "success",
+                  confirmButtonText: "ยืนยัน",
+                }).then((result) => {
+                  this.getAllAdmin();
+                });
+              }
             });
         }
       });

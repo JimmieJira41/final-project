@@ -18,7 +18,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import VueCookies from 'vue-cookies'
 import App from './vue/app.vue'
 import Login from './vue/page/register/login.vue'
-import Home from './vue/home.vue'
+import Dashboard from './vue/page/dashborad/dashboard.vue'
 import Admin from './vue/page/admin/admin.vue'
 import CreateAdmin from './vue/page/admin/component/create-admin.vue'
 import UpdateAdmin from './vue/page/admin/component/update-admin.vue'
@@ -39,6 +39,8 @@ import Promotion from './vue/page/promotion/promotion.vue';
 import CreatePromotion from './vue/page/promotion/component/create-promotion.vue';
 import UpdatePromotion from './vue/page/promotion/component/update-promotion.vue';
 import Analysis from './vue/page/analysis/analysis.vue'
+import ReportSummary from './vue/page/analysis/report-summary.vue'
+
 
 const options = {
     confirmButtonColor: '#3085d6',
@@ -52,9 +54,9 @@ const routes = [
         component: Login
     },
     {
-        path: '/home',
-        name: 'Home',
-        component: Home
+        path : '/dashboard',
+        name: 'Dashboard',
+        component : Dashboard
     },
     {
         path: '/admin',
@@ -127,7 +129,7 @@ const routes = [
         component: Stock
     },
     {
-        path: '/stock/craete-stock',
+        path: '/stock/create-stock',
         name: 'CreateStcok',
         component: CreateStock
     },
@@ -155,6 +157,11 @@ const routes = [
         path: '/analysis',
         name: 'Analysis',
         component: Analysis
+    },
+    {
+        path: '/analysis/export-report',
+        name: 'ReportSummary',
+        component: ReportSummary
     }
 ]
 

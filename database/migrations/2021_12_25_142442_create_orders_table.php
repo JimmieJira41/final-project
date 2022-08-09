@@ -19,8 +19,9 @@ class CreateOrdersTable extends Migration
             $table->string('name_customer');
             $table->string('id_customer');
             $table->string('id_address');
-            $table->boolean('status_order');
-            $table->boolean('status_payment');
+            $table->boolean('status_order')->default(false);
+            $table->boolean('status_validate_payment')->default(false);
+            $table->boolean('status_payment')->default(false);
             $table->double('total_cost_order')->default(0);
             $table->date('delivery_date')->useCurrent();
             $table->string('create_by');

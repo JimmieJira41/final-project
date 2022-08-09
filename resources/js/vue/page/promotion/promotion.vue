@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container px-3">
     <div>
       <h1 class="text-center">จัดการโปรโมชั่น</h1>
     </div>

@@ -1,10 +1,17 @@
 <template>
-  <div class="container">
-    <h1 class="text-center">วิเคราะห์และสรุปผล</h1>
+  <div class="container-fiuld px-3">
+    <div>
+      <h1 class="text-center">วิเคราะห์และสรุปผล</h1>
+    </div>
+    <div class="text-end pb-2">
+      <router-link to="/analysis/export-report">
+        <button class="btn btn-primary" type="button">พิมพ์ใบสรุป</button>
+      </router-link>
+    </div>
     <div class="card shadow p-3">
-      <div class="row card-body">
-        <div class="col-12 graph">
-          <div class="filter text-end">
+      <div class="row">
+        <div class="col-12 text-center graph">
+          <div class="filter text-end mb-2">
             <div class="btn btn-primary mx-2" @click="filterOrder()">
               จำนวนรายการสั่งซื้อ
             </div>
@@ -12,11 +19,9 @@
               จำนวนยอดขาย
             </div>
           </div>
-          <canvas
-            ref="canvas"
-            id="chart"
-            :chart-data="datachart"
-          ></canvas>
+          <div class="col-11 mx-auto text-center">
+            <canvas ref="canvas" id="chart" :chart-data="datachart"></canvas>
+          </div>
         </div>
         <hr />
         <div
@@ -28,19 +33,24 @@
             my-0
           "
         >
+          <h5>ประเภทการแบ่ง :</h5>
           <div class="row">
-            <h5>ประเภทการแบ่ง :</h5>
+            <div class="col-4 px-1">
+              <button class="btn btn-primary w-100" @click="typeDay()">
+                แบ่งตามวัน
+              </button>
+            </div>
+            <div class="col-4 px-1">
+              <button class="btn btn-primary w-100" @click="typeMonth()">
+                แบ่งตามเดือน
+              </button>
+            </div>
+            <div class="col-4 px-1">
+              <button class="btn btn-primary w-100" @click="typeYear()">
+                แบ่งตามปี
+              </button>
+            </div>
           </div>
-
-          <button class="btn btn-primary" @click="typeDay()">
-            <b>D</b> แบ่งตามวัน
-          </button>
-          <button class="btn btn-primary" @click="typeMonth()">
-            <b>M</b> แบ่งตามเดือน
-          </button>
-          <button class="btn btn-primary" @click="typeYear()">
-            <b>Y</b> แบ่งตามปี
-          </button>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-6 col-6 filter-analysis-bar">
           <v-date-picker
@@ -65,6 +75,19 @@
             :maximum-view="type_date"
             @selected="start_date_selected = true"
           ></datepicker> -->
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheckDefault"
+                v-model="roundTrip"
+              />
+              <label class="form-check-label" for="flexSwitchCheckDefault"
+                >เริ่มต้น - สิ้นสุด</label
+              >
+            </div>
+          </div>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-6 col-6 filter-analysis-bar">
           <v-date-picker
@@ -72,6 +95,7 @@
             :masks="masks"
             v-model="end_date"
             :timezone="timezone"
+            
           >
             <template #default="{ inputValue, inputEvents }">
               <label><h5 class="mr-2">สิ้นสุด</h5></label>
@@ -79,21 +103,16 @@
                 class="col-12 px-2 py-1 border rounded"
                 :value="inputValue"
                 v-on="inputEvents"
+                :disabled="!roundTrip"
               />
             </template>
           </v-date-picker>
-          <!-- <datepicker
-            placeholder="สิ้นสุด"
-            v-model="end_date"
-            :minimum-view="type_date"
-            :maximum-view="type_date"
-            @selected="end_date_selected = true"
-          ></datepicker> -->
         </div>
-        <div class="col-12 mt-3 filter-analysis-bar text-end">
-          <div class="btn btn-primary" @click="submitDateToAnalysis()">
-            <i class="fas fa-chart-bar fs-3"></i> ประมวลผล
-          </div>
+      </div>
+
+      <div class="col-12 mt-3 filter-analysis-bar text-end">
+        <div class="btn btn-primary" @click="submitDateToAnalysis()">
+          <i class="fas fa-chart-bar fs-3"></i> ประมวลผล
         </div>
       </div>
     </div>
@@ -110,6 +129,7 @@ export default {
   data: function () {
     return {
       side_bar: true,
+      roundTrip: false,
       dataAnalysis: {},
       type_date: "day",
       start_date_selected: false,
@@ -149,23 +169,25 @@ export default {
       masks: {
         input: "DD-MM-YYYY",
       },
-      timezone: "",
+      timezone: "Asia/Bangkok",
       headers: {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + this.$cookies.get("token"),
+          Authorization: "Bearer " + this.$cookies.get("token"),
         },
       },
     };
   },
   methods: {
     getDataAnalysis(body) {
-      axios.post("api/analysis/get-data-analysis", body, this.headers).then((response) => {
-        if (response) {
-          this.dataAnalysis = response.data;
-          this.renderChart();
-        }
-      });
+      axios
+        .post("api/analysis/get-data-analysis", body, this.headers)
+        .then((response) => {
+          if (response) {
+            this.dataAnalysis = response.data;
+            this.renderChart();
+          }
+        });
     },
     renderChart() {
       console.log("Chart-Component mounted.");
@@ -182,12 +204,13 @@ export default {
     },
     submitDateToAnalysis() {
       this.first_chart = false;
-      var start = "",
+      let start = "",
         end = "";
+      console.log(this.start_date.getDate());
       var date = ("0" + this.start_date.getDate()).slice(-2);
       var month = ("0" + (this.start_date.getMonth() + 1)).slice(-2);
       var year = this.start_date.getFullYear();
-      if (!this.end_date) {
+      if (!this.roundTrip) {
         if (this.type_date == "day") {
           start = String(year + "-" + month + "-" + date);
         }
@@ -197,6 +220,7 @@ export default {
         if (this.type_date == "year") {
           start = String(year);
         }
+        console.log("pass : " + start);
       } else {
         var end_date = ("0" + this.end_date.getDate()).slice(-2);
         var end_month = ("0" + (this.end_date.getMonth() + 1)).slice(-2);
@@ -214,6 +238,7 @@ export default {
           end = String(end_year);
         }
       }
+      console.log(start);
       this.body.start_date = start;
       this.body.end_date = end;
       console.log(this.body);
@@ -230,18 +255,21 @@ export default {
       this.end_date = new Date();
     },
     typeDay() {
+      this.masks.input = "DD-MM-YYYY";
       this.body.type = "day";
-      this.type_date = "YYYY-MM-DD";
+      this.type_date = "day";
       this.start_date = new Date();
       this.end_date = new Date();
     },
     typeMonth() {
+      this.masks.input = "MM-YYYY";
       this.body.type = "month";
       this.type_date = "month";
       this.start_date = new Date();
       this.end_date = new Date();
     },
     typeYear() {
+      this.masks.input = "YYYY";
       this.body.type = "year";
       this.type_date = "year";
       this.start_date = new Date();

@@ -159,7 +159,7 @@ class AdminManagement extends Controller
     }
     public function delete(Request $request)
     {
-        if (user::where('id', $request['id'])->delete()) {
+        if (user::where('id', $request->id_admin)->delete()) {
             return response("delete admin success!", 200);
         } else {
             return response("delete admin fail!", 400);

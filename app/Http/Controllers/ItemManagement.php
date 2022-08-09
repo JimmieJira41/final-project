@@ -38,7 +38,8 @@ class ItemManagement extends Controller
             $item->title_item = $request['title_item'];
             $item->description_item = $request['description_item'];
             $item->cost_item = $request['cost_item'];
-            $item->id_stock = $request['id_stock'];
+            $stock_list = implode(",",$request['id_stock']);
+            $item->id_stock = $stock_list;
             $item->total_use = $request['total_use'];
             $item->created_at = $time;
             $item->updated_at = $time;
@@ -66,7 +67,8 @@ class ItemManagement extends Controller
                 $item->cost_item = $request['cost_item'];
             }
             if($request['id_stock']){
-                $item->id_stock = $request['id_stock'];
+                $stock_list = implode(",",$request['id_stock']);
+                $item->id_stock = $stock_list;
             }
             if($request['total_use']){
                 $item->total_use = $request['total_use'];
@@ -92,8 +94,9 @@ class ItemManagement extends Controller
         return response()->json(item::all());
     }
     public function getItemById(Request $request){
-        $item = item::where('id_item', $request->keyword)->get();
+        $item = item::where('id_item', $request->keyword)->get()->first();
         if($item){
+            $item->id_stock = explode(",", $item->id_stock);
             return response()->json($item);
         }
     }
@@ -103,6 +106,8 @@ class ItemManagement extends Controller
         ->orWhere("description_item", "LIKE", "%" .$request->keyword. "%")
         ->get();
         if($item){
+
+           
             return response()->json($item);
         }
     } 

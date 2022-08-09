@@ -177,7 +177,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         // Excel 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        // Image
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -234,6 +235,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         // Excel
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        // Image
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
