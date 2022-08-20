@@ -28,7 +28,8 @@ class ItemManagement extends Controller
         if(!$request['total_use']){
             return response("please enter total_use!");
         }
-        $item_exist = item::where('id_stock', $request['id_stock'])
+        $item_exist = item::where('id_stock', implode(",",$request['id_stock']))
+        // $item_exist = item::where('id_stock', $request['id_stock'])
         ->where('total_use', $request['total_use'])
         ->first();
         if($item_exist !== null){
