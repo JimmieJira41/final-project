@@ -218,8 +218,6 @@ class OrderManagement extends Controller
                             }
                             $msg = 'สร้างรายการสั่งซื้อสำเร็จ';
                         }
-                        // }
-                        // new pre order
                     } else {
                         if (!$existSubOrder) {
                             $subOrder = new subOrder();
@@ -326,7 +324,7 @@ class OrderManagement extends Controller
     {
         $time = Carbon::now();
         $order = order::find($request['id_order']);
-        $order->total_cost_order = 0;
+        $order->total_cost_order = 0.0;
         $checkItemExistFlag = false;
         $subOrderList = [];
         $idStockList = [];

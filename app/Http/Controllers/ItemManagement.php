@@ -32,8 +32,8 @@ class ItemManagement extends Controller
         // $item_exist = item::where('id_stock', $request['id_stock'])
         ->where('total_use', $request['total_use'])
         ->first();
-        if($item_exist !== null){
-            return response("This item is already exist!");
+        if($item_exist != null){
+            return response("This item is already exist!", 417);
         }else{
             $item = new item();
             $item->title_item = $request['title_item'];
@@ -45,9 +45,9 @@ class ItemManagement extends Controller
             $item->created_at = $time;
             $item->updated_at = $time;
             if($item->save()){
-                return response("create item success!");
+                return response("create item success!", 200);
             }else{
-                return response("create item fail!");
+                return response("create item fail!", 500);
             }
         }
        
